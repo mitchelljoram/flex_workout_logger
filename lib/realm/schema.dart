@@ -169,14 +169,68 @@ class _Set{
   late int restUnitAsInt;
   // RestUnitsEnum get restUnit => RestUnitsEnum.values[restUnitAsInt];
   // set restUnit(RestUnitsEnum value) => restUnitAsInt = value.index;
+
+  late double minIntensity;
+  late double maxIntensity;
+
+  @MapTo('exertion')
+  late int exertionAsInt;
+  // RPEEnum get rpe => RPEEnum.values[exertionAsInt];
+  // set rpe(RPEEnum value) => exertionAsInt = value.index;
+  // TODO: RiREnum?
+
+  late DateTime createdAt;
+  late DateTime updatedAt;
 }
 
 // TODO: Add SetEntity converter
 
-/// Routines
+/// Programs
 
+@RealmModel()
+class _Program{
+  @PrimaryKey()
+  late ObjectId id;
 
+  late String icon;
 
+  late String name;
+  late String description;
+  late String focus;
+
+  late int numberOfWeeks;
+  late int numberOfPhases;
+
+  late int minDaysPerWeek;
+  late int maxDaysPerWeek;
+
+  late List<_Phase> phases;
+
+  late DateTime createdAt;
+  late DateTime updatedAt;
+}
+
+@RealmModel()
+class _Phase{
+  late String name;
+
+  late List<_Week> weeks;
+
+  late DateTime createdAt;
+  late DateTime updatedAt;
+}
+
+@RealmModel()
+class _Week{
+  late int week;
+
+  late int repititions;
+
+  late List<_Workout> workouts;
+
+  late DateTime createdAt;
+  late DateTime updatedAt;
+}
 
 /// History
 
