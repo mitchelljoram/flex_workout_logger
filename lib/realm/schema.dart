@@ -253,6 +253,8 @@ class _History{
   late DateTime updatedAt;
 }
 
+// TODO: Add HistoryEntity converter
+
 
 /// Workout Tracker
 
@@ -280,6 +282,8 @@ class _LiveWorkout{
   late DateTime updatedAt;
 }
 
+// TODO: Add LiveWorkoutEntity converter
+
 @RealmModel()
 class _LiveExercise{
   late _ExerciseDetails exercise;
@@ -296,6 +300,8 @@ class _LiveExercise{
   late DateTime createdAt;
   late DateTime updatedAt; 
 }
+
+// TODO: Add LiveExerciseEntity converter
 
 @RealmModel()
 class _LiveSet{
@@ -324,3 +330,5 @@ class _LiveSet{
   late DateTime createdAt;
   late DateTime updatedAt;
 }
+
+// TODO: Add LiveSetEntity converter
