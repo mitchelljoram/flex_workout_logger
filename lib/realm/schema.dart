@@ -96,7 +96,7 @@ class _MuscleGroup {
 class _BaseWeight {
   late double weight;
 
-  @MapTo('units')
+  @MapTo('unit')
   late int unitAsInt;
   // UnitsEnum get unit => UnitsEnum.values[unitAsInt];
   // set unit(UnitsEnum value) => unitAsInt = value.index;
@@ -155,9 +155,9 @@ class _Exercise{
 @RealmModel()
 class _Set{
   @MapTo('sets')
-  late int setAsInt;
-  // SetEnum get setType => SetEnum.values[setAsInt];
-  // set setType(SetEnum value) => setAsInt = value.index;
+  late int typeAsInt;
+  // SetEnum get type => SetEnum.values[typeAsInt];
+  // set type(SetEnum value) => typeAsInt = value.index;
 
   late int minNumberReps;
   late int maxNumberReps;
@@ -165,7 +165,7 @@ class _Set{
   late double minRestTime;
   late double maxRestTime;
 
-  @MapTo('restUnits')
+  @MapTo('restUnit')
   late int restUnitAsInt;
   // RestUnitsEnum get restUnit => RestUnitsEnum.values[restUnitAsInt];
   // set restUnit(RestUnitsEnum value) => restUnitAsInt = value.index;
@@ -175,8 +175,8 @@ class _Set{
 
   @MapTo('exertion')
   late int exertionAsInt;
-  // RPEEnum get rpe => RPEEnum.values[exertionAsInt];
-  // set rpe(RPEEnum value) => exertionAsInt = value.index;
+  // RPEEnum get exertion => RPEEnum.values[exertionAsInt];
+  // set exertion(RPEEnum value) => exertionAsInt = value.index;
   // TODO: RiREnum?
 
   late DateTime createdAt;
@@ -210,6 +210,8 @@ class _Program{
   late DateTime updatedAt;
 }
 
+// TODO: Add ProgramEntity converter
+
 @RealmModel()
 class _Phase{
   late String name;
@@ -219,6 +221,8 @@ class _Phase{
   late DateTime createdAt;
   late DateTime updatedAt;
 }
+
+// TODO: Add PhaseEntity converter
 
 @RealmModel()
 class _Week{
@@ -232,10 +236,91 @@ class _Week{
   late DateTime updatedAt;
 }
 
+// TODO: Add WeekEntity converter
+
 /// History
 
+@RealmModel()
+class _History{
+  @PrimaryKey()
+  late ObjectId id;
 
+  late DateTime archiveDate;
+
+  late _Workout workout;
+
+  late DateTime createdAt;
+  late DateTime updatedAt;
+}
 
 
 /// Workout Tracker
 
+@RealmModel()
+class _LiveWorkout{
+  @PrimaryKey()
+  late ObjectId id;
+
+  late String name;
+
+  late int setsCompleted;
+  late int repsCompleted;
+
+  late double totalVolumeMoved;
+
+  late DateTime startTime;
+
+  late int durationInSecs;
+
+  late double completionPercent;
+
+  late List<_LiveExercise> exercises;
+
+  late DateTime createdAt;
+  late DateTime updatedAt;
+}
+
+@RealmModel()
+class _LiveExercise{
+  late _ExerciseDetails exercise;
+
+  late List<_LiveSet> warmupSets;
+  late List<_LiveSet> workingSets;
+
+  late String notes;
+
+  late bool skipped;
+
+  late List<_ExerciseDetails> alternatives;
+
+  late DateTime createdAt;
+  late DateTime updatedAt; 
+}
+
+@RealmModel()
+class _LiveSet{
+  @MapTo('type')
+  late int typeAsInt;
+  // SetEnum get type => SetEnum.values[typeAsInt];
+  // set type(SetEnum value) => typeAsInt = value.index;
+
+  late _Set target;
+
+  late double weight;
+
+  @MapTo('unit')
+  late int unitAsInt;
+  // UnitsEnum get unit => UnitsEnum.values[unitAsInt];
+  // set unit(UnitsEnum value) => unitAsInt = value.index;
+
+  late int reps;
+
+  @MapTo('exertion')
+  late int exertionAsInt;
+  // RPEEnum get exertion => RPEEnum.values[exertionAsInt];
+  // set exertion(RPEEnum value) => exertionAsInt = value.index;
+  // TODO: RiREnum?
+
+  late DateTime createdAt;
+  late DateTime updatedAt;
+}
