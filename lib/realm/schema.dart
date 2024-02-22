@@ -5,13 +5,13 @@ part 'schema.g.dart';
 /// Exercises
 
 @RealmModel()
-class _Exercise {
+class _ExerciseDetails {
   @PrimaryKey()
   late ObjectId id;
 
   late String icon;
 
-  late _Exercise? baseExercise;
+  late _ExerciseDetails? baseExercise;
 
   late String name;
   late String description;
@@ -22,13 +22,13 @@ class _Exercise {
 
   @MapTo('engagement')
   late int engagementAsInt;
-  // Engagement get engagement => Engagement.values[engagementAsInt];
-  // set engagement(Engagement value) => engagementAsInt = value.index;
+  // EngagementEnum get engagement => EngagementEnum.values[engagementAsInt];
+  // set engagement(EngagementEnum value) => engagementAsInt = value.index;
 
   @MapTo('type')
   late int typeAsInt;
-  // Type get type => Type.values[typeAsInt];
-  // set type(Type value) => typeAsInt = value.index;
+  // TypeEnum get type => TypeEnum.values[typeAsInt];
+  // set type(TypeEnum value) => typeAsInt = value.index;
 
   late List<_MuscleGroup> primaryMuscleGroups;
   late List<_MuscleGroup> secondaryMuscleGroups;
@@ -41,7 +41,7 @@ class _Exercise {
   late DateTime updatedAt;
 }
 
-// TODO: Add ExerciseEntity converter
+// TODO: Add ExerciseDetailsEntity converter
 
 @RealmModel()
 class _MovementPattern {
@@ -94,15 +94,12 @@ class _MuscleGroup {
 
 @RealmModel()
 class _BaseWeight {
-  @PrimaryKey()
-  late ObjectId id;
-
   late double weight;
 
   @MapTo('units')
   late int unitAsInt;
-  // Unit get unit => Unit.values[unitAsInt];
-  // set unit(Unit value) => unitAsInt = value.index;
+  // UnitsEnum get unit => UnitsEnum.values[unitAsInt];
+  // set unit(UnitsEnum value) => unitAsInt = value.index;
 
   late bool assisted;
   late bool bodyWeight;
@@ -116,8 +113,65 @@ class _BaseWeight {
 
 /// Workouts
 
+@RealmModel()
+class _Workout {
+  @PrimaryKey()
+  late ObjectId id;
 
+  late String icon;
 
+  late String name;
+  late String description;
+  late String focus;
+
+  late int numberOfLifts;
+  late int estimatedTime;
+
+  late List<_Exercise> exercises;
+
+  late DateTime createdAt;
+  late DateTime updatedAt;
+}
+
+// TODO: Add WorkoutEntity converter
+
+@RealmModel()
+class _Exercise{
+  late _ExerciseDetails exercise;
+
+  late List<_Set> warmupSets;
+  late List<_Set> workingSets;
+
+  late String notes;
+
+  late List<_ExerciseDetails> alternatives;
+
+  late DateTime createdAt;
+  late DateTime updatedAt;  
+}
+
+// TODO: Add ExerciseEntity converter
+
+@RealmModel()
+class _Set{
+  @MapTo('sets')
+  late int setAsInt;
+  // SetEnum get setType => SetEnum.values[setAsInt];
+  // set setType(SetEnum value) => setAsInt = value.index;
+
+  late int minNumberReps;
+  late int maxNumberReps;
+
+  late double minRestTime;
+  late double maxRestTime;
+
+  @MapTo('restUnits')
+  late int restUnitAsInt;
+  // RestUnitsEnum get restUnit => RestUnitsEnum.values[restUnitAsInt];
+  // set restUnit(RestUnitsEnum value) => restUnitAsInt = value.index;
+}
+
+// TODO: Add SetEntity converter
 
 /// Routines
 
