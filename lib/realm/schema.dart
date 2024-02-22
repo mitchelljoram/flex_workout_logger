@@ -154,7 +154,7 @@ class _Exercise{
 
 @RealmModel()
 class _Set{
-  @MapTo('sets')
+  @MapTo('type')
   late int typeAsInt;
   // SetEnum get type => SetEnum.values[typeAsInt];
   // set type(SetEnum value) => typeAsInt = value.index;
