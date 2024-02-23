@@ -35,7 +35,7 @@ class _ExerciseDetails {
 
   late _BaseWeight baseWeight;
 
-  // TODO: personal records?
+  late _PersonalRecord personalRecords;
 
   late DateTime createdAt;
   late DateTime updatedAt;
@@ -109,6 +109,30 @@ class _BaseWeight {
 }
 
 // TODO: Add BaseWeightEntity converter
+
+@RealmModel()
+class _PersonalRecord {
+  @MapTo('type')
+  late int typeAsInt;
+  // PREnum get type => PREnum.values[typeAsInt];
+  // set type(PREnum value) => typeAsInt = value.index;
+}
+
+@RealmModel()
+class _RepititionPersonalRecord extends _PersonalRecord{
+  late double oneRepMaxEstimate;
+  late double tenRepMaxEstimate;
+  late double maxWeight;
+}
+
+// TODO: Add RepititionPersonalRecordEntity converter
+
+@RealmModel()
+class _TimedPersonalRecord extends _PersonalRecord{
+  late double bestTime;
+}
+
+// TODO: Add TimedPersonalRecordEntity converter
 
 
 /// Workouts
@@ -185,6 +209,7 @@ class _Set{
 
 // TODO: Add SetEntity converter
 
+
 /// Programs
 
 @RealmModel()
@@ -237,6 +262,7 @@ class _Week{
 }
 
 // TODO: Add WeekEntity converter
+
 
 /// History
 
