@@ -30,6 +30,10 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+/coverage/
+**/*.freezed.dart
+**/*.mocks.dart
+**/*.g.dart
 
 # Symbolication related
 app.*.symbols
@@ -41,3 +45,4 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+*.config.json
