@@ -41,7 +41,7 @@ class _ExerciseDetails {
   late DateTime updatedAt;
 }
 
-// TODO: Add ExerciseDetailsEntity converter
+/// TODO: Add ExerciseDetailsEntity converter
 
 @RealmModel()
 class _MovementPattern {
@@ -60,7 +60,7 @@ class _MovementPattern {
   late DateTime updatedAt;
 }
 
-// TODO: Add MovementPatternEntity converter
+/// TODO: Add MovementPatternEntity converter
 
 @RealmModel()
 class _Equipment {
@@ -75,7 +75,7 @@ class _Equipment {
   late DateTime updatedAt;
 }
 
-// TODO: Add EquipmentEntity converter
+/// TODO: Add EquipmentEntity converter
 
 @RealmModel()
 class _MuscleGroup {
@@ -90,7 +90,7 @@ class _MuscleGroup {
   late DateTime updatedAt;
 }
 
-// TODO: Add MuscleGroupEntity converter
+/// TODO: Add MuscleGroupEntity converter
 
 @RealmModel()
 class _BaseWeight {
@@ -108,7 +108,7 @@ class _BaseWeight {
   late DateTime updatedAt;
 }
 
-// TODO: Add BaseWeightEntity converter
+/// TODO: Add BaseWeightEntity converter
 
 @RealmModel()
 class _PersonalRecord {
@@ -124,7 +124,7 @@ class _PersonalRecord {
   late double bestTime;
 }
 
-// TODO: Add PersonalRecordEntity converter
+/// TODO: Add PersonalRecordEntity converter
 
 
 /// Workouts
@@ -149,7 +149,7 @@ class _Workout {
   late DateTime updatedAt;
 }
 
-// TODO: Add WorkoutEntity converter
+/// TODO: Add WorkoutEntity converter
 
 @RealmModel()
 class _Exercise{
@@ -166,7 +166,7 @@ class _Exercise{
   late DateTime updatedAt;  
 }
 
-// TODO: Add ExerciseEntity converter
+/// TODO: Add ExerciseEntity converter
 
 @RealmModel()
 class _Set{
@@ -193,13 +193,13 @@ class _Set{
   late int exertionAsInt;
   // RPEEnum get exertion => RPEEnum.values[exertionAsInt];
   // set exertion(RPEEnum value) => exertionAsInt = value.index;
-  // TODO: RiREnum?
+  /// TODO: RiREnum?
 
   late DateTime createdAt;
   late DateTime updatedAt;
 }
 
-// TODO: Add SetEntity converter
+/// TODO: Add SetEntity converter
 
 
 /// Programs
@@ -227,7 +227,7 @@ class _Program{
   late DateTime updatedAt;
 }
 
-// TODO: Add ProgramEntity converter
+/// TODO: Add ProgramEntity converter
 
 @RealmModel()
 class _Phase{
@@ -239,7 +239,7 @@ class _Phase{
   late DateTime updatedAt;
 }
 
-// TODO: Add PhaseEntity converter
+/// TODO: Add PhaseEntity converter
 
 @RealmModel()
 class _Week{
@@ -253,7 +253,7 @@ class _Week{
   late DateTime updatedAt;
 }
 
-// TODO: Add WeekEntity converter
+/// TODO: Add WeekEntity converter
 
 
 /// History
@@ -271,7 +271,7 @@ class _History{
   late DateTime updatedAt;
 }
 
-// TODO: Add HistoryEntity converter
+/// TODO: Add HistoryEntity converter
 
 
 /// Workout Tracker
@@ -300,7 +300,7 @@ class _LiveWorkout{
   late DateTime updatedAt;
 }
 
-// TODO: Add LiveWorkoutEntity converter
+/// TODO: Add LiveWorkoutEntity converter
 
 @RealmModel()
 class _LiveExercise{
@@ -319,7 +319,7 @@ class _LiveExercise{
   late DateTime updatedAt; 
 }
 
-// TODO: Add LiveExerciseEntity converter
+/// TODO: Add LiveExerciseEntity converter
 
 @RealmModel()
 class _LiveSet{
@@ -343,10 +343,10 @@ class _LiveSet{
   late int exertionAsInt;
   // RPEEnum get exertion => RPEEnum.values[exertionAsInt];
   // set exertion(RPEEnum value) => exertionAsInt = value.index;
-  // TODO: RiREnum?
+  /// TODO: RiREnum?
 
   late DateTime createdAt;
   late DateTime updatedAt;
 }
 
-// TODO: Add LiveSetEntity converter
+/// TODO: Add LiveSetEntity converter
