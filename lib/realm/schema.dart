@@ -33,9 +33,9 @@ class _ExerciseDetails {
   late List<_MuscleGroup> primaryMuscleGroups;
   late List<_MuscleGroup> secondaryMuscleGroups;
 
-  late _BaseWeight baseWeight;
+  late _BaseWeight? baseWeight;
 
-  late _PersonalRecord personalRecords;
+  late _PersonalRecord? personalRecords;
 
   late DateTime createdAt;
   late DateTime updatedAt;
@@ -116,23 +116,15 @@ class _PersonalRecord {
   late int typeAsInt;
   // PREnum get type => PREnum.values[typeAsInt];
   // set type(PREnum value) => typeAsInt = value.index;
-}
 
-@RealmModel()
-class _RepititionPersonalRecord extends _PersonalRecord{
   late double oneRepMaxEstimate;
   late double tenRepMaxEstimate;
   late double maxWeight;
-}
 
-// TODO: Add RepititionPersonalRecordEntity converter
-
-@RealmModel()
-class _TimedPersonalRecord extends _PersonalRecord{
   late double bestTime;
 }
 
-// TODO: Add TimedPersonalRecordEntity converter
+// TODO: Add PersonalRecordEntity converter
 
 
 /// Workouts
@@ -161,7 +153,7 @@ class _Workout {
 
 @RealmModel()
 class _Exercise{
-  late _ExerciseDetails exercise;
+  late _ExerciseDetails? exercise;
 
   late List<_Set> warmupSets;
   late List<_Set> workingSets;
@@ -273,7 +265,7 @@ class _History{
 
   late DateTime archiveDate;
 
-  late _Workout workout;
+  late _Workout? workout;
 
   late DateTime createdAt;
   late DateTime updatedAt;
@@ -312,7 +304,7 @@ class _LiveWorkout{
 
 @RealmModel()
 class _LiveExercise{
-  late _ExerciseDetails exercise;
+  late _ExerciseDetails? exercise;
 
   late List<_LiveSet> warmupSets;
   late List<_LiveSet> workingSets;
@@ -336,7 +328,7 @@ class _LiveSet{
   // SetEnum get type => SetEnum.values[typeAsInt];
   // set type(SetEnum value) => typeAsInt = value.index;
 
-  late _Set target;
+  late _Set? target;
 
   late double weight;
 
