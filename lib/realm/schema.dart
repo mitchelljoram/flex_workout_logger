@@ -198,9 +198,12 @@ class _PersonalRecord {
   ExerciseType get type => ExerciseType.values[typeAsInt];
   set type(ExerciseType value) => typeAsInt = value.index;
 
-  late double oneRepMaxEstimate;
-  late double tenRepMaxEstimate;
-  late double maxWeight;
+  late double oneRepMaxEstimateKgs;
+  late double oneRepMaxEstimateLbs;
+  late double tenRepMaxEstimateKgs;
+  late double tenRepMaxEstimateLbs;
+  late double maxWeightKgs;
+  late double maxWeightLbs;
 
   late int bestTime;
 
@@ -214,9 +217,12 @@ extension ConvertPersonalRecord on _PersonalRecord {
   PersonalRecordEntity toEntity() {
     return PersonalRecordEntity(
       type: type,
-      oneRepMaxEstimate: oneRepMaxEstimate,
-      tenRepMaxEstimate: tenRepMaxEstimate,
-      maxWeight: maxWeight,
+      oneRepMaxEstimateKgs: oneRepMaxEstimateKgs,
+      oneRepMaxEstimateLbs: oneRepMaxEstimateLbs,
+      tenRepMaxEstimateKgs: tenRepMaxEstimateKgs,
+      tenRepMaxEstimateLbs: tenRepMaxEstimateLbs,
+      maxWeightKgs: maxWeightKgs,
+      maxWeightLbs: maxWeightLbs,
       bestTime: bestTime,
       createdAt: createdAt, 
       updatedAt: updatedAt
@@ -390,7 +396,8 @@ class _LiveWorkout{
   late int setsCompleted;
   late int repsCompleted;
 
-  late double totalVolumeMoved;
+  late double totalVolumeMovedKgs;
+  late double totalVolumeMovedLbs;
 
   late DateTime startTime;
 
@@ -436,12 +443,8 @@ class _LiveSet{
 
   late _Set? target;
 
-  late double weight;
-
-  @MapTo('unit')
-  late int unitAsInt;
-  // WeightUnits get unit => WeightUnits.values[unitAsInt];
-  // set unit(WeightUnits value) => unitAsInt = value.index;
+  late double weightKgs;
+  late double weightLbs;
 
   late int reps;
 
