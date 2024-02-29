@@ -7,7 +7,7 @@ import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:fpdart/src/either.dart';
 import 'package:realm/realm.dart';
 
-/// Fully implemented repository for exercises
+/// Fully implemented repository for exercise details
 class ExerciseDetailsRepository implements IExerciseDetailsRepository {
   /// Constructor
   ExerciseDetailsRepository({required this.realm});
