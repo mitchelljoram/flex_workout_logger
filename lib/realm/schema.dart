@@ -1,3 +1,10 @@
+import 'package:flex_workout_logger/features/exercises/domain/entities/base_weight.entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/equipment.entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_details.entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern.entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/muscle_group.entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/personal_record.entity.dart';
+import 'package:flex_workout_logger/utils/enums.dart';
 import 'package:realm/realm.dart';
 
 part 'schema.g.dart';
@@ -22,26 +29,50 @@ class _ExerciseDetails {
 
   @MapTo('engagement')
   late int engagementAsInt;
-  // EngagementEnum get engagement => EngagementEnum.values[engagementAsInt];
-  // set engagement(EngagementEnum value) => engagementAsInt = value.index;
+  Engagement get engagement => Engagement.values[engagementAsInt];
+  set engagement(Engagement value) => engagementAsInt = value.index;
 
   @MapTo('type')
   late int typeAsInt;
-  // TypeEnum get type => TypeEnum.values[typeAsInt];
-  // set type(TypeEnum value) => typeAsInt = value.index;
+  ExerciseType get type => ExerciseType.values[typeAsInt];
+  set type(ExerciseType value) => typeAsInt = value.index;
 
   late List<_MuscleGroup> primaryMuscleGroups;
   late List<_MuscleGroup> secondaryMuscleGroups;
 
   late _BaseWeight? baseWeight;
 
-  late _PersonalRecord? personalRecords;
+  late _PersonalRecord? personalRecord;
 
   late DateTime createdAt;
   late DateTime updatedAt;
 }
 
-/// TODO: Add ExerciseDetailsEntity converter
+/// _ExerciseDetails extension
+extension ConvertExerciseDetails on _ExerciseDetails {
+  /// Convert [_Exercise] to [ExerciseDetailsEntity]
+  ExerciseDetailsEntity toEntity() {
+    return ExerciseDetailsEntity(
+      id: id.hexString, 
+      icon: icon, 
+      baseExercise: baseExercise?.toEntity(),
+      name: name, 
+      description: description, 
+      movementPattern: movementPattern?.toEntity(),
+      equipment: equipment?.toEntity(),
+      engagement: engagement, 
+      type: type, 
+      primaryMuscleGroups:
+          primaryMuscleGroups.map((e) => e.toEntity()).toList(),
+      secondaryMuscleGroups:
+          secondaryMuscleGroups.map((e) => e.toEntity()).toList(),
+      baseWeight: baseWeight?.toEntity(),
+      personalRecord: personalRecord?.toEntity(),
+      createdAt: createdAt, 
+      updatedAt: updatedAt,
+    );
+  }
+}
 
 @RealmModel()
 class _MovementPattern {
@@ -60,7 +91,24 @@ class _MovementPattern {
   late DateTime updatedAt;
 }
 
-/// TODO: Add MovementPatternEntity converter
+/// _MovementPattern extension
+extension ConvertMovementPattern on _MovementPattern {
+  /// Convert [_MovementPattern] to [MovementPatternEntity]
+  MovementPatternEntity toEntity() {
+    return MovementPatternEntity(
+      id: id.hexString, 
+      icon: icon, 
+      name: name, 
+      description: description, 
+      primaryMuscleGroups:
+          primaryMuscleGroups.map((e) => e.toEntity()).toList(),
+      secondaryMuscleGroups:
+          secondaryMuscleGroups.map((e) => e.toEntity()).toList(),
+      createdAt: createdAt, 
+      updatedAt: updatedAt
+    );
+  }
+}
 
 @RealmModel()
 class _Equipment {
@@ -75,7 +123,19 @@ class _Equipment {
   late DateTime updatedAt;
 }
 
-/// TODO: Add EquipmentEntity converter
+/// _Equipment extension
+extension ConvertEquipment on _Equipment {
+  /// Convert [_Equipment] to [EquipmentEntity]
+  EquipmentEntity toEntity() {
+    return EquipmentEntity(
+      id: id.hexString, 
+      icon: icon, 
+      name: name,
+      createdAt: createdAt, 
+      updatedAt: updatedAt
+    );
+  }
+}
 
 @RealmModel()
 class _MuscleGroup {
@@ -90,16 +150,24 @@ class _MuscleGroup {
   late DateTime updatedAt;
 }
 
-/// TODO: Add MuscleGroupEntity converter
+/// _MuscleGroup extension
+extension ConvertMuscleGroup on _MuscleGroup {
+  /// Convert [_Equipment] to [MuscleGroupEntity]
+  MuscleGroupEntity toEntity() {
+    return MuscleGroupEntity(
+      id: id.hexString, 
+      icon: icon, 
+      name: name,
+      createdAt: createdAt, 
+      updatedAt: updatedAt
+    );
+  }
+}
 
-@RealmModel()
+@RealmModel(ObjectType.embeddedObject)
 class _BaseWeight {
-  late double weight;
-
-  @MapTo('unit')
-  late int unitAsInt;
-  // UnitsEnum get unit => UnitsEnum.values[unitAsInt];
-  // set unit(UnitsEnum value) => unitAsInt = value.index;
+  late double weightKgs;
+  late double weightLbs;
 
   late bool assisted;
   late bool bodyWeight;
@@ -108,23 +176,59 @@ class _BaseWeight {
   late DateTime updatedAt;
 }
 
-/// TODO: Add BaseWeightEntity converter
+/// _BaseWeight extension
+extension ConvertBaseWeight on _BaseWeight {
+  /// Convert [_BaseWeight] to [BaseWeightEntity]
+  BaseWeightEntity toEntity() {
+    return BaseWeightEntity(
+      weightKgs: weightKgs,
+      weightLbs: weightLbs,
+      assisted: assisted,
+      bodyWeight: bodyWeight,
+      createdAt: createdAt, 
+      updatedAt: updatedAt
+    );
+  }
+}
 
-@RealmModel()
+@RealmModel(ObjectType.embeddedObject)
 class _PersonalRecord {
   @MapTo('type')
   late int typeAsInt;
-  // PREnum get type => PREnum.values[typeAsInt];
-  // set type(PREnum value) => typeAsInt = value.index;
+  ExerciseType get type => ExerciseType.values[typeAsInt];
+  set type(ExerciseType value) => typeAsInt = value.index;
 
-  late double oneRepMaxEstimate;
-  late double tenRepMaxEstimate;
-  late double maxWeight;
+  late double oneRepMaxEstimateKgs;
+  late double oneRepMaxEstimateLbs;
+  late double tenRepMaxEstimateKgs;
+  late double tenRepMaxEstimateLbs;
+  late double maxWeightKgs;
+  late double maxWeightLbs;
 
-  late double bestTime;
+  late int bestTime;
+
+  late DateTime createdAt;
+  late DateTime updatedAt;
 }
 
-/// TODO: Add PersonalRecordEntity converter
+/// _PersonalRecord extension
+extension ConvertPersonalRecord on _PersonalRecord {
+  /// Convert [_PersonalRecord] to [PersonalRecordEntity]
+  PersonalRecordEntity toEntity() {
+    return PersonalRecordEntity(
+      type: type,
+      oneRepMaxEstimateKgs: oneRepMaxEstimateKgs,
+      oneRepMaxEstimateLbs: oneRepMaxEstimateLbs,
+      tenRepMaxEstimateKgs: tenRepMaxEstimateKgs,
+      tenRepMaxEstimateLbs: tenRepMaxEstimateLbs,
+      maxWeightKgs: maxWeightKgs,
+      maxWeightLbs: maxWeightLbs,
+      bestTime: bestTime,
+      createdAt: createdAt, 
+      updatedAt: updatedAt
+    );
+  }
+}
 
 
 /// Workouts
@@ -149,9 +253,10 @@ class _Workout {
   late DateTime updatedAt;
 }
 
+/// _Workout extension
 /// TODO: Add WorkoutEntity converter
 
-@RealmModel()
+@RealmModel(ObjectType.embeddedObject)
 class _Exercise{
   late _ExerciseDetails? exercise;
 
@@ -166,14 +271,15 @@ class _Exercise{
   late DateTime updatedAt;  
 }
 
+/// _Exercise extension
 /// TODO: Add ExerciseEntity converter
 
-@RealmModel()
+@RealmModel(ObjectType.embeddedObject)
 class _Set{
   @MapTo('type')
   late int typeAsInt;
-  // SetEnum get type => SetEnum.values[typeAsInt];
-  // set type(SetEnum value) => typeAsInt = value.index;
+  // SetType get type => SetType.values[typeAsInt];
+  // set type(SetType value) => typeAsInt = value.index;
 
   late int minNumberReps;
   late int maxNumberReps;
@@ -183,22 +289,23 @@ class _Set{
 
   @MapTo('restUnit')
   late int restUnitAsInt;
-  // RestUnitsEnum get restUnit => RestUnitsEnum.values[restUnitAsInt];
-  // set restUnit(RestUnitsEnum value) => restUnitAsInt = value.index;
+  // RestUnits get restUnit => RestUnits.values[restUnitAsInt];
+  // set restUnit(RestUnits value) => restUnitAsInt = value.index;
 
   late double minIntensity;
   late double maxIntensity;
 
   @MapTo('exertion')
   late int exertionAsInt;
-  // RPEEnum get exertion => RPEEnum.values[exertionAsInt];
-  // set exertion(RPEEnum value) => exertionAsInt = value.index;
-  /// TODO: RiREnum?
+  // RPE get exertion => RPE.values[exertionAsInt];
+  // set exertion(RPE value) => exertionAsInt = value.index;
+  /// TODO: RiR?
 
   late DateTime createdAt;
   late DateTime updatedAt;
 }
 
+/// _Set extension
 /// TODO: Add SetEntity converter
 
 
@@ -227,9 +334,10 @@ class _Program{
   late DateTime updatedAt;
 }
 
+/// _Program extension
 /// TODO: Add ProgramEntity converter
 
-@RealmModel()
+@RealmModel(ObjectType.embeddedObject)
 class _Phase{
   late String name;
 
@@ -241,7 +349,7 @@ class _Phase{
 
 /// TODO: Add PhaseEntity converter
 
-@RealmModel()
+@RealmModel(ObjectType.embeddedObject)
 class _Week{
   late int week;
 
@@ -253,6 +361,7 @@ class _Week{
   late DateTime updatedAt;
 }
 
+/// _Week extension
 /// TODO: Add WeekEntity converter
 
 
@@ -271,6 +380,7 @@ class _History{
   late DateTime updatedAt;
 }
 
+/// _History extension
 /// TODO: Add HistoryEntity converter
 
 
@@ -286,7 +396,8 @@ class _LiveWorkout{
   late int setsCompleted;
   late int repsCompleted;
 
-  late double totalVolumeMoved;
+  late double totalVolumeMovedKgs;
+  late double totalVolumeMovedLbs;
 
   late DateTime startTime;
 
@@ -300,9 +411,10 @@ class _LiveWorkout{
   late DateTime updatedAt;
 }
 
+/// _LiveWorkout extension
 /// TODO: Add LiveWorkoutEntity converter
 
-@RealmModel()
+@RealmModel(ObjectType.embeddedObject)
 class _LiveExercise{
   late _ExerciseDetails? exercise;
 
@@ -319,34 +431,32 @@ class _LiveExercise{
   late DateTime updatedAt; 
 }
 
+/// _LiveExercise extension
 /// TODO: Add LiveExerciseEntity converter
 
-@RealmModel()
+@RealmModel(ObjectType.embeddedObject)
 class _LiveSet{
   @MapTo('type')
   late int typeAsInt;
-  // SetEnum get type => SetEnum.values[typeAsInt];
-  // set type(SetEnum value) => typeAsInt = value.index;
+  // SetType get type => SetType.values[typeAsInt];
+  // set type(SetType value) => typeAsInt = value.index;
 
   late _Set? target;
 
-  late double weight;
-
-  @MapTo('unit')
-  late int unitAsInt;
-  // UnitsEnum get unit => UnitsEnum.values[unitAsInt];
-  // set unit(UnitsEnum value) => unitAsInt = value.index;
+  late double weightKgs;
+  late double weightLbs;
 
   late int reps;
 
   @MapTo('exertion')
   late int exertionAsInt;
-  // RPEEnum get exertion => RPEEnum.values[exertionAsInt];
-  // set exertion(RPEEnum value) => exertionAsInt = value.index;
-  /// TODO: RiREnum?
+  // RPE get exertion => RPE.values[exertionAsInt];
+  // set exertion(RPE value) => exertionAsInt = value.index;
+  /// TODO: RiR?
 
   late DateTime createdAt;
   late DateTime updatedAt;
 }
 
+/// _LiveSet extension
 /// TODO: Add LiveSetEntity converter
