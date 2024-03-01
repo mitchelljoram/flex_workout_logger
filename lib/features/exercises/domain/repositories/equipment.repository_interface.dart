@@ -1,9 +1,8 @@
 import 'dart:async';
 
-
-
 import 'package:flex_workout_logger/features/exercises/domain/entities/equipment.entity.dart';
-/// TODO: import validations
+import 'package:flex_workout_logger/features/exercises/domain/validations/equipment/icon.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/equipment/name.validation.dart';
 import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -19,15 +18,15 @@ abstract class IEquipmentRepository {
 
   /// Create Equipment
   FutureOr<Either<Failure, EquipmentEntity>> createEquipment(
-    // EquipmentIcon icon,
-    // EquipmentName name,
+    EquipmentIcon icon,
+    EquipmentName name,
   );
 
   /// Update Equipment
   FutureOr<Either<Failure, EquipmentEntity>> updateEquipment(
     String? id,
-    // EquipmentIcon? icon,
-    // EquipmentName? name,
+    EquipmentIcon? icon,
+    EquipmentName? name,
   );
 
   /// Delete Equipment by id
