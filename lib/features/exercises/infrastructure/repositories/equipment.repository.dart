@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flex_workout_logger/features/exercises/domain/entities/equipment.entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/repositories/equipment.repository_interface.dart';
-/// TODO: import validations
+import 'package:flex_workout_logger/features/exercises/domain/validations/equipment/icon.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/equipment/name.validation.dart';
 import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:fpdart/src/either.dart';
 import 'package:realm/realm.dart';
@@ -16,7 +17,10 @@ class EquipmentRepository implements IEquipmentRepository {
   final Realm realm;
 
   @override
-  FutureOr<Either<Failure, EquipmentEntity>> createEquipment() {
+  FutureOr<Either<Failure, EquipmentEntity>> createEquipment(
+    EquipmentIcon icon,
+    EquipmentName name,
+  ) {
     // TODO: implement createEquipment
     throw UnimplementedError();
   }
@@ -40,7 +44,11 @@ class EquipmentRepository implements IEquipmentRepository {
   }
 
   @override
-  FutureOr<Either<Failure, EquipmentEntity>> updateEquipment(String? id) {
+  FutureOr<Either<Failure, EquipmentEntity>> updateEquipment(
+    String? id,
+    EquipmentIcon? icon,
+    EquipmentName? name,
+  ) {
     // TODO: implement updateEquipment
     throw UnimplementedError();
   }

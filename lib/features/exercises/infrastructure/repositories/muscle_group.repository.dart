@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flex_workout_logger/features/exercises/domain/entities/muscle_group.entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/repositories/muscle_group.repository_interface.dart';
-/// TODO: import validations
+import 'package:flex_workout_logger/features/exercises/domain/validations/muscle_group/icon.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/muscle_group/name.validation.dart';
 import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:fpdart/src/either.dart';
 import 'package:realm/realm.dart';
@@ -16,7 +17,10 @@ class MuscleGroupRepository implements IMuscleGroupRepository {
   final Realm realm;
 
   @override
-  FutureOr<Either<Failure, MuscleGroupEntity>> createMuscleGroup() {
+  FutureOr<Either<Failure, MuscleGroupEntity>> createMuscleGroup(
+    MuscleGroupIcon icon,
+    MuscleGroupName name,
+  ) {
     /// TODO: implement createMuscleGroup
     throw UnimplementedError();
   }
@@ -40,7 +44,11 @@ class MuscleGroupRepository implements IMuscleGroupRepository {
   }
 
   @override
-  FutureOr<Either<Failure, MuscleGroupEntity>> updateMuscleGroup(String? id) {
+  FutureOr<Either<Failure, MuscleGroupEntity>> updateMuscleGroup(
+    String? id,
+    MuscleGroupIcon? icon,
+    MuscleGroupName? name,
+  ) {
     /// TODO: implement updateMuscleGroup
     throw UnimplementedError();
   }

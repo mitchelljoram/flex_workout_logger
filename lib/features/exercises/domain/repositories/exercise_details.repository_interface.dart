@@ -1,7 +1,17 @@
 import 'dart:async';
 
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_details.entity.dart';
-/// TODO: import validations
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/base_exercise.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/base_weight.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/description.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/engagement.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/equipment.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/icon.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/movement_pattern.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/muscle_groups.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/name.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/personal_record.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/type.validation.dart';
 import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -15,35 +25,35 @@ abstract class IExerciseDetailsRepository {
 
   /// Create Exercise
   FutureOr<Either<Failure, ExerciseDetailsEntity>> createExercise(
-    // ExerciseIcon icon,
-    // ExerciseBaseExercise? baseExercise,
-    // ExerciseName name,
-    // ExerciseDescription description,
-    // ExerciseMovementPattern? movementPattern,
-    // ExerciseEquipment equipment,
-    // ExerciseEngagement engagement,
-    // ExerciseType type,
-    // ExerciseMuscleGroups primaryMuscleGroups,
-    // ExerciseMuscleGroups secondaryMuscleGroups,
-    // ExerciseBaseWeight baseWeight,
-    // ExercisePersonalRecord personalRecord,
+    ExerciseDetailsIcon icon,
+    ExerciseDetailsBaseExercise? baseExercise,
+    ExerciseDetailsName name,
+    ExerciseDetailsDescription description,
+    ExerciseDetailsMovementPattern? movementPattern,
+    ExerciseDetailsEquipment? equipment,
+    ExerciseDetailsEngagement engagement,
+    ExerciseDetailsType type,
+    ExerciseDetailsMuscleGroups primaryMuscleGroups,
+    ExerciseDetailsMuscleGroups secondaryMuscleGroups,
+    ExerciseDetailsBaseWeight baseWeight,
+    ExerciseDetailsPersonalRecord personalRecord,
   );
 
   /// Update Exercise
   FutureOr<Either<Failure, ExerciseDetailsEntity>> updateExercise(
-    // String id,
-    // ExerciseIcon icon,
-    // ExerciseBaseExercise? baseExercise,
-    // ExerciseName name,
-    // ExerciseDescription description,
-    // ExerciseMovementPattern? movementPattern,
-    // ExerciseEquipment equipment,
-    // ExerciseEngagement engagement,
-    // ExerciseType type,
-    // ExerciseMuscleGroups primaryMuscleGroups,
-    // ExerciseMuscleGroups secondaryMuscleGroups,
-    // ExerciseBaseWeight baseWeight,
-    // ExercisePersonalRecord personalRecord,
+    String? id,
+    ExerciseDetailsIcon? icon,
+    ExerciseDetailsBaseExercise? baseExercise,
+    ExerciseDetailsName? name,
+    ExerciseDetailsDescription? description,
+    ExerciseDetailsMovementPattern? movementPattern,
+    ExerciseDetailsEquipment? equipment,
+    ExerciseDetailsEngagement? engagement,
+    ExerciseDetailsType? type,
+    ExerciseDetailsMuscleGroups? primaryMuscleGroups,
+    ExerciseDetailsMuscleGroups? secondaryMuscleGroups,
+    ExerciseDetailsBaseWeight? baseWeight,
+    ExerciseDetailsPersonalRecord? personalRecord,
   );
 
   /// Delete Exercise by id

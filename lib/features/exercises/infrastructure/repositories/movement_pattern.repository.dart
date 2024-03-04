@@ -2,7 +2,10 @@ import 'dart:async';
 
 import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern.entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/repositories/movement_pattern.repository_interface.dart';
-/// TODO: import validations
+import 'package:flex_workout_logger/features/exercises/domain/validations/movement_pattern/description.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/movement_pattern/icon.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/movement_pattern/muscle_groups.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/movement_pattern/name.validation.dart';
 import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:fpdart/src/either.dart';
 import 'package:realm/realm.dart';
@@ -16,7 +19,13 @@ class MovementPatternRepository implements IMovementPatternRepository {
   final Realm realm;
 
   @override
-  FutureOr<Either<Failure, MovementPatternEntity>> createMovementPattern() {
+  FutureOr<Either<Failure, MovementPatternEntity>> createMovementPattern(
+    MovementPatternIcon icon,
+    MovementPatternName name,
+    MovementPatternDescription description,
+    MovementPatternMuscleGroups primaryMuscleGroups,
+    MovementPatternMuscleGroups secondaryMuscleGroups,
+  ) {
     // TODO: implement createMovementPattern
     throw UnimplementedError();
   }
@@ -40,7 +49,14 @@ class MovementPatternRepository implements IMovementPatternRepository {
   }
 
   @override
-  FutureOr<Either<Failure, MovementPatternEntity>> updateMovementPattern(String? id) {
+  FutureOr<Either<Failure, MovementPatternEntity>> updateMovementPattern(
+    String? id,
+    MovementPatternIcon? icon,
+    MovementPatternName? name,
+    MovementPatternDescription? description,
+    MovementPatternMuscleGroups? primaryMuscleGroups,
+    MovementPatternMuscleGroups? secondaryMuscleGroups,
+  ) {
     // TODO: implement updateMovementPattern
     throw UnimplementedError();
   }
