@@ -18,6 +18,5 @@ class MovementPatternEntity
     @Default([]) List<MuscleGroupEntity> secondaryMuscleGroups,
     required DateTime createdAt,
     required DateTime updatedAt,
-    List<String>? exerciseIds,
   }) = _MovementPatternEntity;
 }
