@@ -1,4 +1,5 @@
 import 'package:flex_workout_logger/realm/schema.dart';
+import 'package:flex_workout_logger/realm/seed.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:realm/realm.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -23,7 +24,7 @@ Future<Realm> realm(RealmRef ref) async {
       /// Workout Tracker
       LiveWorkout.schema, LiveExercise.schema, LiveSet.schema, 
     ],
-    // initialDataCallback: realmSeed,
+    initialDataCallback: realmSeed,
   );
   return Realm(config);
 }
