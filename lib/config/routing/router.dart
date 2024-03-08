@@ -8,8 +8,8 @@ final router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      name: ExercisesLibraryScreen.routeName,
-      builder: (context, state) => const ExercisesLibraryScreen(),
+      name: LibraryScreen.routeName,
+      builder: (context, state) => const LibraryScreen(),
       routes: [
         // GoRoute(
         //   path: ExercisesCreateScreen.routePath,

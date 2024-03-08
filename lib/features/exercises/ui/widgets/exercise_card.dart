@@ -112,7 +112,7 @@ class ExercisesCard extends ConsumerWidget {
   }
 }
 
-/// A selectable card
+/// A selectable exercise card
 class ExerciseListTile extends StatelessWidget {
   ///
   const ExerciseListTile({
