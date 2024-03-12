@@ -13,6 +13,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/name.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/personal_record.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/type.validation.dart';
+import 'package:flex_workout_logger/realm/schema.dart';
 import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:fpdart/src/either.dart';
 import 'package:realm/realm.dart';
@@ -64,8 +65,17 @@ class ExerciseDetailsRepository implements IExerciseDetailsRepository {
 
   @override
   FutureOr<Either<Failure, List<ExerciseDetailsEntity>>> getExercises() {
-    // TODO: implement getExercises
-    throw UnimplementedError();
+    try {
+      final res = realm.all<ExerciseDetails>();
+
+      return right(res.map((e) => e.toEntity()).toList());
+    } catch (e) {
+      return left(
+        Failure.internalServerError(
+          message: e.toString(),
+        ),
+      );
+    }
   }
 
   @override
