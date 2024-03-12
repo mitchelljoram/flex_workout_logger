@@ -14,4 +14,7 @@ class AppLayout {
 
   ///
   static const double miniPadding = 8;
+
+  ///
+  static const double extraMiniPadding = 4;
 }

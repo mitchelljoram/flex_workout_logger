@@ -13,7 +13,7 @@ class AppTextThemeExtension extends ThemeExtension<AppTextThemeExtension> {
     required this.titleLarge,
     // required this.titleMedium,
     required this.titleSmall,
-    // required this.bodyLarge,
+    required this.bodyLarge,
     required this.bodyMedium,
     required this.bodySmall,
     required this.label,
@@ -30,7 +30,7 @@ class AppTextThemeExtension extends ThemeExtension<AppTextThemeExtension> {
   final TextStyle titleLarge;
   // final TextStyle titleMedium;
   final TextStyle titleSmall;
-  // final TextStyle bodyLarge;
+  final TextStyle bodyLarge;
   final TextStyle bodyMedium;
   final TextStyle bodySmall;
   final TextStyle label;
@@ -69,7 +69,7 @@ class AppTextThemeExtension extends ThemeExtension<AppTextThemeExtension> {
       titleLarge: titleLarge ?? this.titleLarge,
       // titleMedium: titleMedium ?? this.titleMedium,
       titleSmall: titleSmall ?? this.titleSmall,
-      // bodyLarge: bodyLarge ?? this.bodyLarge,
+      bodyLarge: bodyLarge ?? this.bodyLarge,
       bodyMedium: bodyMedium ?? this.bodyMedium,
       bodySmall: bodySmall ?? this.bodySmall,
       label: label ?? this.label,
@@ -97,7 +97,7 @@ class AppTextThemeExtension extends ThemeExtension<AppTextThemeExtension> {
       titleLarge: TextStyle.lerp(titleLarge, other.titleLarge, t)!,
       // titleMedium: TextStyle.lerp(titleMedium, other.titleMedium, t)!,
       titleSmall: TextStyle.lerp(titleSmall, other.titleSmall, t)!,
-      // bodyLarge: TextStyle.lerp(bodyLarge, other.bodyLarge, t)!,
+      bodyLarge: TextStyle.lerp(bodyLarge, other.bodyLarge, t)!,
       bodyMedium: TextStyle.lerp(bodyMedium, other.bodyMedium, t)!,
       bodySmall: TextStyle.lerp(bodySmall, other.bodySmall, t)!,
       label: TextStyle.lerp(label, other.label, t)!,

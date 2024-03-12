@@ -26,6 +26,12 @@ abstract class AppTypography {
     fontWeight: FontWeight.w600,
   );
 
+  /// Body Large
+  static const bodyLarge = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+  );
+
   /// Body Medium
   static const bodyMedium = TextStyle(
     fontSize: 14,

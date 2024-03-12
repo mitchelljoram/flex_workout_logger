@@ -41,10 +41,12 @@ flutter:
   uses-material-design: true
   generate: true
   assets:
+    - assets/icons/engagement.100x100.png
     - assets/icons/equipment.100x100.png
     - assets/icons/exercise.100x100.png
     - assets/icons/movement.100x100.png
     - assets/icons/muscle.100x100.png
+    - assets/icons/type.100x100.png
 
 flutter_launcher_icons:
   ios: true

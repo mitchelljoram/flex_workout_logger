@@ -1,4 +1,5 @@
 import 'package:flex_workout_logger/config/routing/error.screen.dart';
+import 'package:flex_workout_logger/features/exercises/ui/screens/exercise_view.screen.dart';
 import 'package:flex_workout_logger/ui/screens/library.screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -11,17 +12,17 @@ final router = GoRouter(
       name: LibraryScreen.routeName,
       builder: (context, state) => const LibraryScreen(),
       routes: [
+        GoRoute(
+          path: ExerciseViewScreen.routePath,
+          name: ExerciseViewScreen.routeName,
+          builder: (context, state) => ExerciseViewScreen(
+            id: state.pathParameters['eid']!,
+          ),
+        ),
         // GoRoute(
         //   path: ExercisesCreateScreen.routePath,
         //   name: ExercisesCreateScreen.routeName,
         //   builder: (context, state) => const ExercisesCreateScreen(),
-        // ),
-        // GoRoute(
-        //   path: ExercisesViewScreen.routePath,
-        //   name: ExercisesViewScreen.routeName,
-        //   builder: (context, state) => ExercisesViewScreen(
-        //     id: state.pathParameters['eid']!,
-        //   ),
         // ),
         // GoRoute(
         //   path: ExercisesEditScreen.routePath,

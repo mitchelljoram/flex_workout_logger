@@ -1,14 +1,14 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_details.entity.dart';
+import 'package:flex_workout_logger/features/exercises/ui/screens/exercise_view.screen.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 
 /// A selectable card with [Exercise Title]
-class ExercisesCard extends ConsumerWidget {
+class ExercisesCard extends StatelessWidget {
   ///
   const ExercisesCard({required this.exercise, super.key});
 
@@ -16,7 +16,7 @@ class ExercisesCard extends ConsumerWidget {
   final ExerciseDetailsEntity exercise;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Slidable(
       groupTag: '0',
       endActionPane: ActionPane(
@@ -100,12 +100,12 @@ class ExercisesCard extends ConsumerWidget {
         exercise: exercise,
         trailingIcon: CupertinoIcons.info_circle,
         onTap: () => {
-          // context.goNamed(
-          //   ExercisesViewScreen.routeName,
-          //   pathParameters: {
-          //     'eid': exercise.id,
-          //   },
-          // )
+          context.goNamed(
+            ExerciseViewScreen.routeName,
+            pathParameters: {
+              'eid': exercise.id,
+            },
+          )
         },
       ),
     );
@@ -173,7 +173,7 @@ class ExerciseListTile extends StatelessWidget {
       onTap: onTap,
       leading: ImageIcon(
         AssetImage('assets/icons/${exercise.icon}'),
-        size: 25,
+        size: 27,
       ),
       trailing: (trailingIcon != null)
           ? Padding(
