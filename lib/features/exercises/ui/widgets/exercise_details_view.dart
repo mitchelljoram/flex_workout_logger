@@ -57,6 +57,7 @@ class ExerciseDetailsView extends StatelessWidget {
                   Text(
                     'Variation',
                     style: context.textTheme.labelMedium.copyWith(
+                      fontWeight: FontWeight.w400,
                       color: context.colorScheme.foregroundSecondary,
                     ),
                   ),
@@ -90,6 +91,7 @@ class ExerciseDetailsView extends StatelessWidget {
                   Text(
                     '~1RM',
                     style: context.textTheme.labelMedium.copyWith(
+                      fontWeight: FontWeight.w400,
                       color: context.colorScheme.foregroundSecondary,
                     ),
                   ),
@@ -125,6 +127,7 @@ class ExerciseDetailsView extends StatelessWidget {
                   Text(
                     'Max weight',
                     style: context.textTheme.labelMedium.copyWith(
+                      fontWeight: FontWeight.w400,
                       color: context.colorScheme.foregroundSecondary,
                     ),
                   ),

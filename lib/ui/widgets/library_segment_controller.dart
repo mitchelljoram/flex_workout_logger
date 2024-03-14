@@ -29,8 +29,7 @@ class LibrarySegementedController extends StatelessWidget {
       children: {
         1: Text(
           'Programs',
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
+          style: context.textTheme.labelLarge.copyWith(
             color: selectedValue == 1
                 ? context.colorScheme.backgroundPrimary
                 : context.colorScheme.foregroundPrimary,
@@ -38,8 +37,7 @@ class LibrarySegementedController extends StatelessWidget {
         ),
         2: Text(
           'Workouts',
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
+          style: context.textTheme.labelLarge.copyWith(
             color: selectedValue == 2
                 ? context.colorScheme.backgroundPrimary
                 : context.colorScheme.foregroundPrimary,
@@ -47,8 +45,7 @@ class LibrarySegementedController extends StatelessWidget {
         ),
         3: Text(
           'Exercises',
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
+          style: context.textTheme.labelLarge.copyWith(
             color: selectedValue == 3
                 ? context.colorScheme.backgroundPrimary
                 : context.colorScheme.foregroundPrimary,
