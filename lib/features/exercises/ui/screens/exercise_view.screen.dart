@@ -27,15 +27,15 @@ class ExerciseViewScreen extends ConsumerWidget {
     final exercise = ref.watch(exercisesViewControllerProvider(id));
 
     return Scaffold(
-      backgroundColor: context.colorScheme.offBackground,
+      backgroundColor: context.colorScheme.backgroundPrimary,
       appBar: CupertinoNavigationBar(
         padding: EdgeInsetsDirectional.zero,
-        backgroundColor: context.colorScheme.offBackground,
+        backgroundColor: context.colorScheme.backgroundSecondary,
         leading: IconButton(
           padding: EdgeInsets.zero,
           onPressed: () => context.pop(),
           icon: const Icon(Icons.chevron_left),
-          color: context.colorScheme.foreground,
+          color: context.colorScheme.foregroundPrimary,
           iconSize: 24,
         ),
         middle: exercise.when(
@@ -43,7 +43,7 @@ class ExerciseViewScreen extends ConsumerWidget {
             data.name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(color: context.colorScheme.foreground),
+            style: TextStyle(color: context.colorScheme.foregroundPrimary),
           ),
           error: (error, stackTrace) => const Text('Error'),
           loading: () => const Text(''),
@@ -52,36 +52,34 @@ class ExerciseViewScreen extends ConsumerWidget {
           padding: EdgeInsets.zero,
           onPressed: () => context.pop(),
           icon: const Icon(CupertinoIcons.info_circle,),
-          color: context.colorScheme.foreground,
+          color: context.colorScheme.foregroundPrimary,
           iconSize: 20,
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(
-          left: AppLayout.defaultPadding,
-          right: AppLayout.defaultPadding,
-          top: AppLayout.defaultPadding,
-        ),
-        child: CustomScrollView(
-          scrollBehavior: const CupertinoScrollBehavior(),
-          slivers: <Widget>[
-            exercise.when(
-              data: (data) => SliverToBoxAdapter(
-                child: ExerciseDetailsView(exercise: data),
-              ),
-              error: (o, e) => SliverToBoxAdapter(
-                child: AppError(
-                  title: o.toString(),
-                ),
-              ),
-              loading: () => const SliverToBoxAdapter(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
+      body: CustomScrollView(
+        scrollBehavior: const CupertinoScrollBehavior(),
+        slivers: <Widget>[
+          exercise.when(
+            data: (data) => SliverToBoxAdapter(
+              child: ExerciseDetailsView(exercise: data),
+            ),
+            error: (o, e) => SliverToBoxAdapter(
+              child: AppError(
+                title: o.toString(),
               ),
             ),
-          ],
-        ),
+            loading: () => const SliverToBoxAdapter(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ),
+          // TODO: Overview
+            // TODO: Muscle groups targeted
+            // TODO: History
+          // TODO: Insights and analytics
+          // TODO: Variants and similar exercises
+        ],
       ),
     );
   }

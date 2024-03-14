@@ -34,12 +34,12 @@ class AppTheme with ChangeNotifier {
   /// Light Mode Theme Data
   static final light = ThemeData.light(useMaterial3: true).copyWith(
     textSelectionTheme: TextSelectionThemeData(
-      cursorColor: AppColors.surfaceLight.foreground,
-      selectionColor: AppColors.surfaceLight.foreground.withOpacity(0.3),
-      selectionHandleColor: AppColors.surfaceLight.foreground,
+      cursorColor: AppColors.lightMode.foregroundPrimary,
+      selectionColor: AppColors.lightMode.foregroundTertiary,
+      selectionHandleColor: AppColors.lightMode.foregroundPrimary,
     ),
     cupertinoOverrideTheme: CupertinoThemeData(
-      primaryColor: AppColors.surfaceLight.foreground,
+      primaryColor: AppColors.lightMode.foregroundPrimary,
     ),
     extensions: [
       _lightAppColors,
@@ -48,24 +48,32 @@ class AppTheme with ChangeNotifier {
   );
 
   static final _lightAppColors = AppColorsExtension(
-    foreground: AppColors.surfaceLight.foreground,
-    offForeground: AppColors.surfaceLight.offForeground,
-    mutedForeground: AppColors.surfaceLight.mutedForeground,
-    divider: AppColors.surfaceLight.divider,
-    muted: AppColors.surfaceLight.muted,
-    offBackground: AppColors.surfaceLight.offBackground,
-    background: AppColors.surfaceLight.background,
+    backgroundPrimary: AppColors.lightMode.backgroundPrimary,
+    backgroundSecondary: AppColors.lightMode.backgroundSecondary,
+    backgroundTertiary: AppColors.lightMode.backgroundTertiary,
+    foregroundPrimary: AppColors.lightMode.foregroundPrimary,
+    foregroundSecondary: AppColors.lightMode.foregroundSecondary,
+    foregroundTertiary: AppColors.lightMode.foregroundTertiary,
+    foregroundQuaternary: AppColors.lightMode.foregroundQuaternary,
+    divider: AppColors.lightMode.divider,
+    overlay: AppColors.lightMode.overlay,
+    pink: AppColors.lightMode.pink,
+    purple: AppColors.lightMode.purple,
+    blue: AppColors.lightMode.blue,
+    green: AppColors.lightMode.green,
+    yellow: AppColors.lightMode.yellow,
+    orange: AppColors.lightMode.orange,
   );
 
   /// Dark Mode Theme Data
   static final dark = ThemeData.dark(useMaterial3: true).copyWith(
     textSelectionTheme: TextSelectionThemeData(
-      cursorColor: AppColors.surfaceDark.foreground,
-      selectionColor: AppColors.surfaceDark.foreground.withOpacity(0.3),
-      selectionHandleColor: AppColors.surfaceDark.foreground,
+      cursorColor: AppColors.darkMode.foregroundPrimary,
+      selectionColor: AppColors.darkMode.foregroundTertiary,
+      selectionHandleColor: AppColors.darkMode.foregroundPrimary,
     ),
     cupertinoOverrideTheme: CupertinoThemeData(
-      primaryColor: AppColors.surfaceDark.foreground,
+      primaryColor: AppColors.darkMode.foregroundPrimary,
     ),
     extensions: [
       _darkAppColors,
@@ -74,13 +82,21 @@ class AppTheme with ChangeNotifier {
   );
 
   static final _darkAppColors = AppColorsExtension(
-    foreground: AppColors.surfaceDark.foreground,
-    offForeground: AppColors.surfaceDark.offForeground,
-    mutedForeground: AppColors.surfaceDark.mutedForeground,
-    divider: AppColors.surfaceDark.divider,
-    muted: AppColors.surfaceDark.muted,
-    offBackground: AppColors.surfaceDark.offBackground,
-    background: AppColors.surfaceDark.background,
+    backgroundPrimary: AppColors.darkMode.backgroundPrimary,
+    backgroundSecondary: AppColors.darkMode.backgroundSecondary,
+    backgroundTertiary: AppColors.darkMode.backgroundTertiary,
+    foregroundPrimary: AppColors.darkMode.foregroundPrimary,
+    foregroundSecondary: AppColors.darkMode.foregroundSecondary,
+    foregroundTertiary: AppColors.darkMode.foregroundTertiary,
+    foregroundQuaternary: AppColors.darkMode.foregroundQuaternary,
+    divider: AppColors.darkMode.divider,
+    overlay: AppColors.darkMode.overlay,
+    pink: AppColors.darkMode.pink,
+    purple: AppColors.darkMode.purple,
+    blue: AppColors.darkMode.blue,
+    green: AppColors.darkMode.green,
+    yellow: AppColors.darkMode.yellow,
+    orange: AppColors.darkMode.orange,
   );
 }
 

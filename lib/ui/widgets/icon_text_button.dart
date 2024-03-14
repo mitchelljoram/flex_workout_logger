@@ -39,7 +39,7 @@ class IconTextButton extends StatelessWidget {
           Ink(
             padding: const EdgeInsets.all(8),
             decoration: ShapeDecoration(
-              color: context.colorScheme.muted,
+              color: context.colorScheme.backgroundTertiary,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(8),
@@ -48,7 +48,7 @@ class IconTextButton extends StatelessWidget {
             ),
             child: Icon(
               icon,
-              color: context.colorScheme.foreground,
+              color: context.colorScheme.foregroundPrimary,
             ),
           ),
           const SizedBox(
@@ -57,7 +57,7 @@ class IconTextButton extends StatelessWidget {
           Text(
             text,
             style: context.textTheme.bodySmall.copyWith(
-              color: context.colorScheme.foreground,
+              color: context.colorScheme.foregroundPrimary,
             ),
           ),
         ],

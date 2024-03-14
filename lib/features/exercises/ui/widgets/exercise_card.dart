@@ -31,8 +31,8 @@ class ExercisesCard extends StatelessWidget {
               //   },
               // );
             },
-            backgroundColor: context.colorScheme.muted,
-            foregroundColor: context.colorScheme.foreground,
+            backgroundColor: context.colorScheme.backgroundSecondary,
+            foregroundColor: context.colorScheme.foregroundPrimary,
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -81,8 +81,8 @@ class ExercisesCard extends StatelessWidget {
               //   },
               // ),
             },
-            backgroundColor: context.colorScheme.foreground,
-            foregroundColor: context.colorScheme.background,
+            backgroundColor: context.colorScheme.foregroundPrimary,
+            foregroundColor: context.colorScheme.backgroundPrimary,
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -139,7 +139,7 @@ class ExerciseListTile extends StatelessWidget {
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
         style: context.textTheme.listTitle.copyWith(
-          color: context.colorScheme.foreground,
+          color: context.colorScheme.foregroundPrimary,
         ),
       ),
       subtitle: Row(
@@ -152,7 +152,7 @@ class ExerciseListTile extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: context.textTheme.listSubtitle.copyWith(
-                color: context.colorScheme.offForeground,
+                color: context.colorScheme.foregroundSecondary,
               ),
             ),
           if (exercise.movementPattern != null || exercise.baseExercise != null)
@@ -164,7 +164,7 @@ class ExerciseListTile extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: context.textTheme.listSubtitle.copyWith(
-                  color: context.colorScheme.offForeground,
+                  color: context.colorScheme.foregroundSecondary,
                 ),
               ),
             ),
