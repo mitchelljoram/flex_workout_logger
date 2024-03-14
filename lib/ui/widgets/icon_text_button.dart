@@ -56,7 +56,7 @@ class IconTextButton extends StatelessWidget {
           ),
           Text(
             text,
-            style: context.textTheme.bodySmall.copyWith(
+            style: context.textTheme.labelSmall.copyWith(
               color: context.colorScheme.foregroundPrimary,
             ),
           ),

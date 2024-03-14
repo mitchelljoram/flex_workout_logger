@@ -31,12 +31,14 @@ class ExerciseDetailsView extends StatelessWidget {
               //       Text(
               //         exercise.baseExercise!.name,
               //         style: context.textTheme.bodyLarge.copyWith(
+              //           fontWeight: FontWeight.w500,
               //           color: context.colorScheme.foreground,
               //         ),
               //       ),
               //       Text(
               //         'Variation',
               //         style: context.textTheme.bodySmall.copyWith(
+              //           fontWeight: FontWeight.w500,
               //           color: context.colorScheme.mutedForeground,
               //         ),
               //       ),
@@ -48,12 +50,13 @@ class ExerciseDetailsView extends StatelessWidget {
                   Text(
                     'Chest Press',
                     style: context.textTheme.bodyLarge.copyWith(
+                      fontWeight: FontWeight.w500,
                       color: context.colorScheme.foregroundPrimary,
                     ),
                   ),
                   Text(
                     'Variation',
-                    style: context.textTheme.bodySmall.copyWith(
+                    style: context.textTheme.labelMedium.copyWith(
                       color: context.colorScheme.foregroundSecondary,
                     ),
                   ),
@@ -69,6 +72,7 @@ class ExerciseDetailsView extends StatelessWidget {
                       Text(
                         '223.4',
                         style: context.textTheme.bodyLarge.copyWith(
+                          fontWeight: FontWeight.w500,
                           color: context.colorScheme.foregroundPrimary,
                         ),
                       ),
@@ -77,7 +81,7 @@ class ExerciseDetailsView extends StatelessWidget {
                       ),
                       Text(
                         'lbs',
-                        style: context.textTheme.bodySmall.copyWith(
+                        style: context.textTheme.labelMedium.copyWith(
                           color: context.colorScheme.foregroundSecondary,
                         ),
                       ),
@@ -85,7 +89,7 @@ class ExerciseDetailsView extends StatelessWidget {
                   ),
                   Text(
                     '~1RM',
-                    style: context.textTheme.bodySmall.copyWith(
+                    style: context.textTheme.labelMedium.copyWith(
                       color: context.colorScheme.foregroundSecondary,
                     ),
                   ),
@@ -103,6 +107,7 @@ class ExerciseDetailsView extends StatelessWidget {
                       Text(
                         '205',
                         style: context.textTheme.bodyLarge.copyWith(
+                          fontWeight: FontWeight.w500,
                           color: context.colorScheme.foregroundPrimary,
                         ),
                       ),
@@ -111,7 +116,7 @@ class ExerciseDetailsView extends StatelessWidget {
                       ),
                       Text(
                         'lbs',
-                        style: context.textTheme.bodySmall.copyWith(
+                        style: context.textTheme.labelMedium.copyWith(
                           color: context.colorScheme.foregroundSecondary,
                         ),
                       ),
@@ -119,7 +124,7 @@ class ExerciseDetailsView extends StatelessWidget {
                   ),
                   Text(
                     'Max weight',
-                    style: context.textTheme.bodySmall.copyWith(
+                    style: context.textTheme.labelMedium.copyWith(
                       color: context.colorScheme.foregroundSecondary,
                     ),
                   ),
@@ -218,18 +223,19 @@ class ExerciseDetailsView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (exercise.description.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: AppLayout.smallPadding,
-                    ),
-                    child: Text(
-                      exercise.description,
-                      style: context.textTheme.bodyMedium.copyWith(
-                        color: context.colorScheme.foregroundSecondary,
+                  Column(
+                    children: [
+                      Text(
+                        exercise.description,
+                        style: context.textTheme.bodyMedium.copyWith(
+                          color: context.colorScheme.foregroundSecondary,
+                        ),
                       ),
-                    ),
+                      const SizedBox(
+                        height: AppLayout.defaultPadding,
+                      ),
+                    ]
                   ),
-                const SizedBox(height: AppLayout.defaultPadding),
                 Wrap(
                   spacing: AppLayout.miniPadding,
                   runSpacing: AppLayout.miniPadding,
@@ -281,7 +287,7 @@ class ExerciseDetailsView extends StatelessWidget {
             ),
             Text(
               text,
-              style: context.textTheme.bodySmall.copyWith(
+              style: context.textTheme.labelMedium.copyWith(
                 color: context.colorScheme.foregroundPrimary,
               ),
             ),

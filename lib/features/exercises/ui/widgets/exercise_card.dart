@@ -138,7 +138,7 @@ class ExerciseListTile extends StatelessWidget {
         exercise.name,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
-        style: context.textTheme.listTitle.copyWith(
+        style: context.textTheme.labelLarge.copyWith(
           color: context.colorScheme.foregroundPrimary,
         ),
       ),
@@ -151,7 +151,7 @@ class ExerciseListTile extends StatelessWidget {
                   : exercise.movementPattern?.name ?? '',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: context.textTheme.listSubtitle.copyWith(
+              style: context.textTheme.labelMedium.copyWith(
                 color: context.colorScheme.foregroundSecondary,
               ),
             ),
@@ -163,7 +163,7 @@ class ExerciseListTile extends StatelessWidget {
                 exercise.primaryMuscleGroups.map((e) => e.name).join(' • ') + (exercise.secondaryMuscleGroups.isNotEmpty ? (' • ') + exercise.secondaryMuscleGroups.map((e) => e.name).join(' • ') : ''),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: context.textTheme.listSubtitle.copyWith(
+                style: context.textTheme.labelMedium.copyWith(
                   color: context.colorScheme.foregroundSecondary,
                 ),
               ),

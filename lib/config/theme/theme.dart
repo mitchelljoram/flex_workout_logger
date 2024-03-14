@@ -19,16 +19,16 @@ class AppTheme with ChangeNotifier {
   }
 
   static const _textTheme = AppTextThemeExtension(
+    headlineLarge: AppTypography.headlineLarge,
+    headlineMedium: AppTypography.headlineMedium,
+    headlineSmall: AppTypography.headlineSmall,
     bodySmall: AppTypography.bodySmall,
     bodyMedium: AppTypography.bodyMedium,
     bodyLarge: AppTypography.bodyLarge,
-    headlineLarge: AppTypography.headlineLarge,
-    headlineSmall: AppTypography.headlineSmall,
-    titleLarge: AppTypography.titleLarge,
-    titleSmall: AppTypography.titleSmall,
-    label: AppTypography.label,
-    listTitle: AppTypography.listTitle,
-    listSubtitle: AppTypography.listSubtitle,
+    labelLarge: AppTypography.labelLarge,
+    labelMedium: AppTypography.labelMedium,
+    labelSmall: AppTypography.labelSmall,
+    labelXSmall: AppTypography.labelXSmall,
   );
 
   /// Light Mode Theme Data
