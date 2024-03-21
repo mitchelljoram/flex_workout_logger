@@ -1,14 +1,14 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_details.entity.dart';
+import 'package:flex_workout_logger/features/exercises/ui/screens/exercise_view.screen.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 
 /// A selectable card with [Exercise Title]
-class ExercisesCard extends ConsumerWidget {
+class ExercisesCard extends StatelessWidget {
   ///
   const ExercisesCard({required this.exercise, super.key});
 
@@ -16,7 +16,7 @@ class ExercisesCard extends ConsumerWidget {
   final ExerciseDetailsEntity exercise;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Slidable(
       groupTag: '0',
       endActionPane: ActionPane(
@@ -31,8 +31,8 @@ class ExercisesCard extends ConsumerWidget {
               //   },
               // );
             },
-            backgroundColor: context.colorScheme.muted,
-            foregroundColor: context.colorScheme.foreground,
+            backgroundColor: context.colorScheme.backgroundSecondary,
+            foregroundColor: context.colorScheme.foregroundPrimary,
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -81,8 +81,8 @@ class ExercisesCard extends ConsumerWidget {
               //   },
               // ),
             },
-            backgroundColor: context.colorScheme.foreground,
-            foregroundColor: context.colorScheme.background,
+            backgroundColor: context.colorScheme.foregroundPrimary,
+            foregroundColor: context.colorScheme.backgroundPrimary,
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -100,12 +100,12 @@ class ExercisesCard extends ConsumerWidget {
         exercise: exercise,
         trailingIcon: CupertinoIcons.info_circle,
         onTap: () => {
-          // context.goNamed(
-          //   ExercisesViewScreen.routeName,
-          //   pathParameters: {
-          //     'eid': exercise.id,
-          //   },
-          // )
+          context.goNamed(
+            ExerciseViewScreen.routeName,
+            pathParameters: {
+              'eid': exercise.id,
+            },
+          )
         },
       ),
     );
@@ -138,8 +138,8 @@ class ExerciseListTile extends StatelessWidget {
         exercise.name,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
-        style: context.textTheme.listTitle.copyWith(
-          color: context.colorScheme.foreground,
+        style: context.textTheme.labelLarge.copyWith(
+          color: context.colorScheme.foregroundPrimary,
         ),
       ),
       subtitle: Row(
@@ -151,8 +151,8 @@ class ExerciseListTile extends StatelessWidget {
                   : exercise.movementPattern?.name ?? '',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: context.textTheme.listSubtitle.copyWith(
-                color: context.colorScheme.offForeground,
+              style: context.textTheme.labelMedium.copyWith(
+                color: context.colorScheme.foregroundSecondary,
               ),
             ),
           if (exercise.movementPattern != null || exercise.baseExercise != null)
@@ -163,8 +163,8 @@ class ExerciseListTile extends StatelessWidget {
                 exercise.primaryMuscleGroups.map((e) => e.name).join(' • ') + (exercise.secondaryMuscleGroups.isNotEmpty ? (' • ') + exercise.secondaryMuscleGroups.map((e) => e.name).join(' • ') : ''),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: context.textTheme.listSubtitle.copyWith(
-                  color: context.colorScheme.offForeground,
+                style: context.textTheme.labelMedium.copyWith(
+                  color: context.colorScheme.foregroundSecondary,
                 ),
               ),
             ),
@@ -173,7 +173,7 @@ class ExerciseListTile extends StatelessWidget {
       onTap: onTap,
       leading: ImageIcon(
         AssetImage('assets/icons/${exercise.icon}'),
-        size: 25,
+        size: 27,
       ),
       trailing: (trailingIcon != null)
           ? Padding(

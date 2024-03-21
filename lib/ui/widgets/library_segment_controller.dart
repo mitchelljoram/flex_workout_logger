@@ -29,38 +29,35 @@ class LibrarySegementedController extends StatelessWidget {
       children: {
         1: Text(
           'Programs',
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
+          style: context.textTheme.labelLarge.copyWith(
             color: selectedValue == 1
-                ? context.colorScheme.background
-                : context.colorScheme.foreground,
+                ? context.colorScheme.backgroundPrimary
+                : context.colorScheme.foregroundPrimary,
           ),
         ),
         2: Text(
           'Workouts',
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
+          style: context.textTheme.labelLarge.copyWith(
             color: selectedValue == 2
-                ? context.colorScheme.background
-                : context.colorScheme.foreground,
+                ? context.colorScheme.backgroundPrimary
+                : context.colorScheme.foregroundPrimary,
           ),
         ),
         3: Text(
           'Exercises',
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
+          style: context.textTheme.labelLarge.copyWith(
             color: selectedValue == 3
-                ? context.colorScheme.background
-                : context.colorScheme.foreground,
+                ? context.colorScheme.backgroundPrimary
+                : context.colorScheme.foregroundPrimary,
           ),
         ),
       },
       decoration: BoxDecoration(
-        color: context.colorScheme.muted,
+        color: context.colorScheme.backgroundSecondary,
         borderRadius: BorderRadius.circular(999),
       ),
       thumbDecoration: BoxDecoration(
-        color: context.colorScheme.foreground,
+        color: context.colorScheme.foregroundPrimary,
         borderRadius: BorderRadius.circular(999),
       ),
       duration: const Duration(milliseconds: 400),

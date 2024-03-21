@@ -33,16 +33,16 @@ class _LibraryScreenState extends State<LibraryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.colorScheme.background,
+      backgroundColor: context.colorScheme.backgroundPrimary,
       body: CustomScrollView(
         scrollBehavior: const CupertinoScrollBehavior(),
         slivers: <Widget>[
           CupertinoSliverNavigationBar(
             largeTitle: Text(
               'Library',
-              style: TextStyle(color: context.colorScheme.foreground),
+              style: TextStyle(color: context.colorScheme.foregroundPrimary),
             ),
-            backgroundColor: context.colorScheme.offBackground,
+            backgroundColor: context.colorScheme.backgroundSecondary,
             border: null,
           ),
           SliverToBoxAdapter(
@@ -61,14 +61,13 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       onValueChanged: _onLibraryChanged,
                     ),
                   ),
-                  // TODO: change this spacer
                   Spacer(),
                   IconButton.filled(
                     icon: const Icon(CupertinoIcons.add),
                     iconSize: 20,
                     style: IconButton.styleFrom(
-                      backgroundColor: context.colorScheme.muted,
-                      foregroundColor: context.colorScheme.foreground,
+                      backgroundColor: context.colorScheme.backgroundSecondary,
+                      foregroundColor: context.colorScheme.foregroundPrimary,
                     ),
                     onPressed: () => {
                       // if (_selectedLibrary == 1) {

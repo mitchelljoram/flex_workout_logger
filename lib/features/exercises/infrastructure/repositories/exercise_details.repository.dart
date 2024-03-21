@@ -40,31 +40,46 @@ class ExerciseDetailsRepository implements IExerciseDetailsRepository {
     ExerciseDetailsMuscleGroups secondaryMuscleGroups,
     ExerciseDetailsBaseWeight baseWeight,
     ExerciseDetailsPersonalRecord personalRecord,
-  ) {
+  ) async {
     // TODO: implement createExercise
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Either<Failure, bool>> deleteExercise(String id) {
+  FutureOr<Either<Failure, bool>> deleteExercise(String id) async {
     // TODO: implement deleteExercise
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Either<Failure, int>> deleteMultipleExercises(List<String> ids) {
+  FutureOr<Either<Failure, int>> deleteMultipleExercises(List<String> ids) async {
     // TODO: implement deleteMultipleExercises
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Either<Failure, ExerciseDetailsEntity>> getExerciseById(String id) {
-    // TODO: implement getExerciseById
-    throw UnimplementedError();
+  FutureOr<Either<Failure, ExerciseDetailsEntity>> getExerciseById(String id) async {
+    try {
+      final objectId = ObjectId.fromHexString(id);
+
+      final res = realm.find<ExerciseDetails>(objectId);
+
+      if (res == null) {
+        return left(const Failure.empty());
+      }
+
+      return right(res.toEntity());
+    } catch (e) {
+      return left(
+        Failure.internalServerError(
+          message: e.toString(),
+        ),
+      );
+    }
   }
 
   @override
-  FutureOr<Either<Failure, List<ExerciseDetailsEntity>>> getExercises() {
+  FutureOr<Either<Failure, List<ExerciseDetailsEntity>>> getExercises() async {
     try {
       final res = realm.all<ExerciseDetails>();
 
@@ -93,7 +108,7 @@ class ExerciseDetailsRepository implements IExerciseDetailsRepository {
     ExerciseDetailsMuscleGroups? secondaryMuscleGroups,
     ExerciseDetailsBaseWeight? baseWeight,
     ExerciseDetailsPersonalRecord? personalRecord,
-  ) {
+  ) async {
     // TODO: implement updateExercise
     throw UnimplementedError();
   }

@@ -3,34 +3,58 @@ import 'package:flutter/material.dart';
 /// Abstract class for [AppColors]
 abstract class AppColors {
   /// Light Mode Surface Data
-  static const surfaceLight = _SurfaceColorsLight();
+  static const lightMode = _LightModeColors();
 
   /// Dark Mode Surface Data
-  static const surfaceDark = _SurfaceColorsDark();
+  static const darkMode = _DarkModeColors();
 }
 
 /// Surface Colors Light Mode
-class _SurfaceColorsLight {
-  const _SurfaceColorsLight();
+class _LightModeColors {
+  const _LightModeColors();
 
-  Color get foreground => const Color(0xFF000000);
-  Color get offForeground => const Color(0xFF0D0D0D);
-  Color get mutedForeground => const Color(0xFFA6A6A6);
-  Color get divider => const Color(0xFFD7D7D7);
-  Color get muted => const Color(0xFFEEEEEE);
-  Color get offBackground => const Color(0xFFFFFFFF);
-  Color get background => const Color(0xFFF6F6F6);
+  Color get backgroundPrimary => const Color(0xFFF9F9FB);
+  Color get backgroundSecondary => const Color(0xFFFFFFFF);
+  Color get backgroundTertiary => const Color(0xFFF9F9FB);
+
+  Color get foregroundPrimary => const Color(0xFF000000);
+  Color get foregroundSecondary => const Color(0xFF3C3C43).withOpacity(.6);
+  Color get foregroundTertiary => const Color(0xFF3C3C43).withOpacity(.3);
+  Color get foregroundQuaternary => const Color(0xFF3C3C43).withOpacity(.18);
+
+  Color get divider => const Color(0xFF3C3C43).withOpacity(.36);
+
+  Color get overlay => const Color(0xFF1C1C1E).withOpacity(.30);
+
+  Color get pink => const Color(0xFFFEB2BF);
+  Color get purple => const Color(0xFFD3BBFF);
+  Color get blue => const Color(0xFFABC7FF);
+  Color get green => const Color(0xFF9DD9B9);
+  Color get yellow => const Color(0xFFFFDF97);
+  Color get orange => const Color(0xFFFFB59F);
 }
 
 /// Surface Colors Dark Mode
-class _SurfaceColorsDark {
-  const _SurfaceColorsDark();
+class _DarkModeColors {
+  const _DarkModeColors();
 
-  Color get foreground => const Color(0xFFFFFFFF);
-  Color get offForeground => const Color(0xFFE0E0E0);
-  Color get mutedForeground => const Color(0xFFB0B0B0);
-  Color get divider => const Color(0xFF4E4E4E);
-  Color get muted => const Color(0xFF333333);
-  Color get offBackground => const Color(0xFF1F1F1F);
-  Color get background => const Color(0xFF141414);
+  Color get backgroundPrimary => const Color(0xFF1C1C1E);
+  Color get backgroundSecondary => const Color(0xFF2C2C2E);
+  Color get backgroundTertiary => const Color(0xFF3A3A3C);
+
+  Color get foregroundPrimary => const Color(0xFFFFFFFF);
+  Color get foregroundSecondary => const Color(0xFFEBEBF5).withOpacity(.6);
+  Color get foregroundTertiary => const Color(0xFFEBEBF5).withOpacity(.3);
+  Color get foregroundQuaternary => const Color(0xFFEBEBF5).withOpacity(.18);
+
+  Color get divider => const Color(0xFF545458).withOpacity(.65);
+
+  Color get overlay => const Color(0xFF1C1C1E).withOpacity(.75);
+
+  Color get pink => const Color(0xFFFE7FA2);
+  Color get purple => const Color(0xFFB28DF7);
+  Color get blue => const Color(0xFF679FFB);
+  Color get green => const Color(0xFF5DBA87);
+  Color get yellow => const Color(0xFFFFD15E);
+  Color get orange => const Color(0xFFFF8660);
 }
