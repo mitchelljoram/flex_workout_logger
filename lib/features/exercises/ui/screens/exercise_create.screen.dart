@@ -124,7 +124,7 @@ class ExerciseDetailsFlow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return FlowBuilder(
       state: ExerciseDetails(
-        icon: ExerciseDetailsIcon('exercise.100x100.png'),
+        icon: ExerciseDetailsIcon(''),
         baseExercise: ExerciseDetailsBaseExercise(null,null),
         name: ExerciseDetailsName(''),
         description: ExerciseDetailsDescription(''),
@@ -156,6 +156,24 @@ class _ExerciseDetailsCreateFormPage1State extends State<ExerciseDetailsCreateFo
   ExerciseDetailsName? _name;
   ExerciseDetailsDescription? _description;
 
+  @override
+  void initState() {
+    super.initState();
+
+    if (context.flow<ExerciseDetails>().state.icon.value.isRight()) {
+      _icon = context.flow<ExerciseDetails>().state.icon;
+    }
+    if (context.flow<ExerciseDetails>().state.baseExercise.value.isRight()) {
+      _baseExercise = context.flow<ExerciseDetails>().state.baseExercise;
+    }
+    if (context.flow<ExerciseDetails>().state.name.value.isRight()) {
+      _name = context.flow<ExerciseDetails>().state.name;
+    }
+    if (context.flow<ExerciseDetails>().state.description.value.isRight()) {
+      _description = context.flow<ExerciseDetails>().state.description;
+    }
+  }
+
   void handleFlow() {
     context.flow<ExerciseDetails>().update((exercise) {
       return exercise.copyWith(
@@ -169,7 +187,7 @@ class _ExerciseDetailsCreateFormPage1State extends State<ExerciseDetailsCreateFo
 
   int selectedVariation = 1;
 
-  void _onVariationChanged(int index) {
+  void onVariationChanged(int index) {
     setState(() {
       if (index == 1) {
         _baseExercise = ExerciseDetailsBaseExercise(null, null);
