@@ -1,9 +1,14 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
-import 'package:flex_workout_logger/features/exercises/controllers/exercises_view.controller.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/exercises_create.controller.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/exercises_list.controller.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_details.entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/base_exercise.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/description.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/icon.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/name.validation.dart';
+import 'package:flex_workout_logger/features/exercises/ui/widgets/variation_segment_controller.dart';
+import 'package:flex_workout_logger/ui/widgets/flexable_textfield.dart';
+import 'package:flex_workout_logger/ui/widgets/step_indicator.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,7 +30,7 @@ class ExerciseCreateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.colorScheme.backgroundPrimary,
+      backgroundColor: context.colorScheme.backgroundSecondary,
       appBar: CupertinoNavigationBar(
         padding: EdgeInsetsDirectional.zero,
         backgroundColor: context.colorScheme.backgroundSecondary,
@@ -45,30 +50,7 @@ class ExerciseCreateScreen extends StatelessWidget {
       ),
       body: Stack(
         children: <Widget>[
-          SizedBox.expand(
-            child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(
-                horizontal: AppLayout.defaultPadding,
-                vertical: AppLayout.extraLargePadding,
-              ),
-              child: ExerciseDetailsFlow(),
-            ),
-          ),
-          // Positioned(
-          //   top: 0,
-          //   left: 0,
-          //   right: 0,
-          //   child: Container(
-          //     padding: const EdgeInsets.only(
-          //       left: AppLayout.smallPadding,
-          //       right: AppLayout.smallPadding,
-          //       top: AppLayout.miniPadding,
-          //     ),
-          //     color: context.colorScheme.offBackground,
-          //     child: const StepIndicator(currentStep: 1, totalSteps: 3),
-          //   ),
-          // ),
+          ExerciseDetailsFlow(),
         ],
       ),
     );
@@ -120,8 +102,23 @@ class ExerciseDetails {
 }
 
 class ExerciseDetailsFlow extends ConsumerWidget {
+  static Route route() => MaterialPageRoute(builder: (_) => ExerciseDetailsFlow());
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<AsyncValue<ExerciseDetailsEntity?>>(exercisesCreateControllerProvider,
+        (previous, next) {
+      next.maybeWhen(
+        data: (data) {
+          if (data == null) return;
+
+          ref.read(exercisesListControllerProvider.notifier).addExercise(data);
+          context.pop();
+        },
+        orElse: () {},
+      );
+    });
+
     return FlowBuilder(
       state: ExerciseDetails(
         icon: ExerciseDetailsIcon(''),
@@ -129,7 +126,8 @@ class ExerciseDetailsFlow extends ConsumerWidget {
         name: ExerciseDetailsName(''),
         description: ExerciseDetailsDescription(''),
       ),
-      onGeneratePages: onGeneratePages
+      onGeneratePages: onGeneratePages,
+      // onComplete: ,
     );
   }
 }
@@ -143,12 +141,12 @@ List<Page> onGeneratePages(ExerciseDetails exercise, List<Page> pages) {
   ];
 }
 
-class ExerciseDetailsCreateFormPage1 extends StatefulWidget {
+class ExerciseDetailsCreateFormPage1 extends ConsumerStatefulWidget {
   @override
-  _ExerciseDetailsCreateFormPage1State createState() => _ExerciseDetailsCreateFormPage1State();
+  ConsumerState<ExerciseDetailsCreateFormPage1> createState() => _ExerciseDetailsCreateFormPage1State();
 }
 
-class _ExerciseDetailsCreateFormPage1State extends State<ExerciseDetailsCreateFormPage1> {
+class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetailsCreateFormPage1> {
   final _formKey = GlobalKey<FormState>();
 
   ExerciseDetailsIcon? _icon;
@@ -185,25 +183,97 @@ class _ExerciseDetailsCreateFormPage1State extends State<ExerciseDetailsCreateFo
     });
   }
 
-  int selectedVariation = 1;
+  int _selectedVariation = 1;
 
-  void onVariationChanged(int index) {
+  void _onVariationChanged(int index) {
     setState(() {
       if (index == 1) {
         _baseExercise = ExerciseDetailsBaseExercise(null, null);
       }
-      selectedVariation = index;
+      _selectedVariation = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final res = ref.watch(exercisesCreateControllerProvider);
+    final errorText = res.maybeWhen(
+      error: (error, stackTrace) => error.toString(),
+      orElse: () => null,
+    );
+
+    final isLoading = res.maybeWhen(
+      data: (_) => res.isRefreshing,
+      loading: () => true,
+      orElse: () => false,
+    );
+
     return Form(
       key: _formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
-        children: [],
-      )
+        children: [
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: const EdgeInsets.only(
+                left: AppLayout.smallPadding,
+                right: AppLayout.smallPadding,
+                top: AppLayout.miniPadding,
+              ),
+              color: context.colorScheme.backgroundSecondary,
+              child: const StepIndicator(currentStep: 1, totalSteps: 4),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppLayout.defaultPadding,
+              vertical: AppLayout.largePadding,
+            ),
+            child: Column(
+              children: [
+                Text(
+                  'Is this a completely new exercise or a variation on an existing one?',
+                  style: context.textTheme.headlineMedium,
+                ),
+                const SizedBox(height: AppLayout.smallPadding),
+                VariationSegementedController(
+                  selectedValue: _selectedVariation,
+                  onValueChanged: _onVariationChanged,
+                ),
+                const SizedBox(height: AppLayout.defaultPadding),
+                FlexableTextField(
+                  label: _selectedVariation == 1 ? 'Exercise Name' : 'Variation Name',
+                  hintText: _selectedVariation == 1
+                      ? 'Bench Press, Squat, etc.'
+                      : 'Paused, 3” Bands, Alternating, etc...',
+                  errorText: errorText,
+                  onChanged: (value) => _name = ExerciseDetailsName(value),
+                  validator: (value) => _name?.validate,
+                  controller: null,
+                  readOnly: isLoading,
+                  isRequired: true,
+                ),
+                const SizedBox(height: AppLayout.defaultPadding),
+                FlexableTextField(
+                  label: 'Description',
+                  hintText: _selectedVariation == 1
+                      ? 'Describe the exercise, including any additional setup that is required.'
+                      : 'Describe of the variation including the main differences between itself and its base exercise.',
+                  errorText: errorText,
+                  onChanged: (value) => _description = ExerciseDetailsDescription(value),
+                  validator: (value) => _description?.validate,
+                  controller: null,
+                  readOnly: isLoading,
+                  isTextArea: true,
+                ),
+              ],
+            )
+          ),
+        ],
+      ),
     );
   }
 }
