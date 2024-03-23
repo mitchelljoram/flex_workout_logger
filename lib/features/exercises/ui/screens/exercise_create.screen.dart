@@ -6,6 +6,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/description.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/icon.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/name.validation.dart';
+import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_base_exercise_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/variation_segment_controller.dart';
 import 'package:flex_workout_logger/ui/widgets/flexable_textfield.dart';
 import 'package:flex_workout_logger/ui/widgets/step_indicator.dart';
@@ -154,6 +155,9 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
   ExerciseDetailsName? _name;
   ExerciseDetailsDescription? _description;
 
+  final _nameController = TextEditingController();
+  final _descriptionController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -165,11 +169,22 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
       _baseExercise = context.flow<ExerciseDetails>().state.baseExercise;
     }
     if (context.flow<ExerciseDetails>().state.name.value.isRight()) {
-      _name = context.flow<ExerciseDetails>().state.name;
+      final n = context.flow<ExerciseDetails>().state.name.value.getOrElse((l) => '');
+      _nameController.text = n;
+      _name = ExerciseDetailsName(n);
     }
     if (context.flow<ExerciseDetails>().state.description.value.isRight()) {
-      _description = context.flow<ExerciseDetails>().state.description;
+      final d = context.flow<ExerciseDetails>().state.description.value.getOrElse((l) => '');
+      _descriptionController.text = d;
+      _description = ExerciseDetailsDescription(d);
     }
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
   }
 
   void handleFlow() {
@@ -197,6 +212,7 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
   @override
   Widget build(BuildContext context) {
     final res = ref.watch(exercisesCreateControllerProvider);
+
     final errorText = res.maybeWhen(
       error: (error, stackTrace) => error.toString(),
       orElse: () => null,
@@ -252,11 +268,30 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
                   errorText: errorText,
                   onChanged: (value) => _name = ExerciseDetailsName(value),
                   validator: (value) => _name?.validate,
-                  controller: null,
+                  controller: _nameController,
                   readOnly: isLoading,
                   isRequired: true,
                 ),
                 const SizedBox(height: AppLayout.defaultPadding),
+                if (_selectedVariation == 2)
+                  ChooseBaseExerciseController(
+                    validator: (value) => _baseExercise?.validate,
+                    onChanged: (value) {
+                      _baseExercise = ExerciseDetailsBaseExercise(null, value);
+                      
+                      if(_baseExercise!.value.isRight()) {
+                        _icon = _icon ?? ExerciseDetailsIcon(_baseExercise!.value.getOrElse((l) => null)!.icon);
+                      
+                        final n = _baseExercise!.value.getOrElse((l) => null)!.name;
+                        _nameController.text = _name?.value.getOrElse((l) => '') ?? '${n} Variation';
+                        _name = _name ?? ExerciseDetailsName('${n} Variation');
+
+                        final d = _baseExercise!.value.getOrElse((l) => null)!.description;
+                        _descriptionController.text = _description?.value.getOrElse((l) => '') ?? d;
+                        _description = _description ?? ExerciseDetailsDescription(d);
+                      }
+                    }
+                  ),
                 FlexableTextField(
                   label: 'Description',
                   hintText: _selectedVariation == 1
@@ -265,7 +300,7 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
                   errorText: errorText,
                   onChanged: (value) => _description = ExerciseDetailsDescription(value),
                   validator: (value) => _description?.validate,
-                  controller: null,
+                  controller: _descriptionController,
                   readOnly: isLoading,
                   isTextArea: true,
                 ),
