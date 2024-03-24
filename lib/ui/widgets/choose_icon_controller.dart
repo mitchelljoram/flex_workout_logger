@@ -131,7 +131,7 @@ class _ChooseIconControllerState extends State<ChooseIconController> {
                 backgroundColor: context.colorScheme.backgroundTertiary,
               ),
               icon: Icon( 
-                CupertinoIcons.paintbrush,
+                CupertinoIcons.paintbrush_fill,
                 color: _colors[_pickedColor],
                 size: 20,
               ),
