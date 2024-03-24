@@ -171,9 +171,13 @@ class ExerciseListTile extends StatelessWidget {
         ],
       ),
       onTap: onTap,
-      leading: ImageIcon(
-        AssetImage('assets/icons/${exercise.icon}'),
-        size: 27,
+      leading: Container(
+        height: 27,
+        width: 27,
+        child: Image(
+          image: AssetImage('assets/icons/${exercise.icon}'),
+          fit: BoxFit.scaleDown,
+        )
       ),
       trailing: (trailingIcon != null)
           ? Padding(

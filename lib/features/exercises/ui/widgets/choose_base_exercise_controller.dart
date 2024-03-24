@@ -27,6 +27,7 @@ class ChooseBaseExerciseController extends ConsumerWidget {
       hintText: 'Select a base exercise',
       labelText: 'Base Exercise',
       onChanged: onChanged,
+      isRequired: true,
       items: variationExercises.asData?.value
         .map(
           (e) => DropdownMenuItem(

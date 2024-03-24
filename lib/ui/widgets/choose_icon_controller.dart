@@ -1,10 +1,8 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
-import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/icon.validation.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class ChooseIconController extends StatefulWidget {
   final FormFieldValidator? validator;
@@ -104,11 +102,10 @@ class _ChooseIconControllerState extends State<ChooseIconController> {
                 alignment: Alignment.center,
                 child: _pickedIcon != '' ?
                   Container(
-                    height: 35,
-                    width: 35,
+                    height: 40,
+                    width: 40,
                     child: Image(
                       image: AssetImage('assets/icons/${_pickedIcon}'),
-                      color: null,
                       fit: BoxFit.scaleDown,
                     )
                   ) :
