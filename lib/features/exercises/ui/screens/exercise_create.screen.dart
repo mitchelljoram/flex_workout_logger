@@ -7,6 +7,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/icon.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/name.validation.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_base_exercise_controller.dart';
+import 'package:flex_workout_logger/ui/widgets/choose_icon_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/variation_segment_controller.dart';
 import 'package:flex_workout_logger/ui/widgets/flexable_textfield.dart';
 import 'package:flex_workout_logger/ui/widgets/step_indicator.dart';
@@ -258,6 +259,11 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
                 VariationSegementedController(
                   selectedValue: _selectedVariation,
                   onValueChanged: _onVariationChanged,
+                ),
+                const SizedBox(height: AppLayout.defaultPadding),
+                ChooseIconController(
+                  validator: (value) =>_icon?.validate,
+                  onChanged: (value) => {_icon = ExerciseDetailsIcon(value)},
                 ),
                 const SizedBox(height: AppLayout.defaultPadding),
                 FlexableTextField(

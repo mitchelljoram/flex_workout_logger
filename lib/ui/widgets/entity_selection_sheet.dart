@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 ///
-class SelectionSheet<T extends Selectable> extends FormField<T> {
+class EntitySelectionSheet<T extends Selectable> extends FormField<T> {
   ///
-  SelectionSheet({
+  EntitySelectionSheet({
     required List<DropdownMenuItem<T>> items,
     required ValueChanged<T> onChanged,
     bool canCreate = false,

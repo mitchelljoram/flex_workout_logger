@@ -85,7 +85,7 @@ void realmSeed(Realm realm) {
   late final initialExercisesDetails = initialExerciseNames.map(
     (e) => ExerciseDetails(
       ObjectId(),
-      'exercise.100x100.png',
+      'exercise.primary.100x100.png',
       e,
       '',
       1,
