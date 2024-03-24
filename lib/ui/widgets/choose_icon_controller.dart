@@ -103,10 +103,14 @@ class _ChooseIconControllerState extends State<ChooseIconController> {
               child: Align(
                 alignment: Alignment.center,
                 child: _pickedIcon != '' ?
-                  Image(
-                    image: AssetImage('assets/icons/${_pickedIcon}'),
-                    color: null,
-                    fit: BoxFit.scaleDown,
+                  Container(
+                    height: 35,
+                    width: 35,
+                    child: Image(
+                      image: AssetImage('assets/icons/${_pickedIcon}'),
+                      color: null,
+                      fit: BoxFit.scaleDown,
+                    )
                   ) :
                   Text(
                     'Icon',
@@ -179,7 +183,6 @@ Future<String?> _showColorBottomSheet<String>(
   return showModalBottomSheet(
     context: context,
     showDragHandle: true,
-    scrollControlDisabledMaxHeightRatio: 0.3,
     elevation: 0,
     constraints: BoxConstraints(
       minWidth: double.infinity,            
