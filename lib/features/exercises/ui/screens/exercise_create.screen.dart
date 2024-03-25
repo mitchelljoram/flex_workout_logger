@@ -1,9 +1,7 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_create.controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list.controller.dart';
-import 'package:flex_workout_logger/features/exercises/domain/entities/equipment.entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_details.entity.dart';
-import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern.entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/base_exercise.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/description.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/engagement.validation.dart';
@@ -116,7 +114,7 @@ class ExerciseDetails {
   }
 }
 
-ExerciseDetails newExercise = ExerciseDetails(
+ExerciseDetails newExercise = new ExerciseDetails(
   icon: ExerciseDetailsIcon(''),
   baseExercise: ExerciseDetailsBaseExercise(null,null),
   name: ExerciseDetailsName(''),
@@ -155,7 +153,10 @@ class ExerciseDetailsFlow extends ConsumerWidget {
 
 enum CreateExerciseStages {stage1, stage2, stage3, stage4}
 
-List<Page> onGeneratePages(CreateExerciseStages stage, List<Page> pages) {
+List<Page> onGeneratePages(
+  CreateExerciseStages stage, 
+  List<Page> pages,
+) {
   switch(stage) {
     case CreateExerciseStages.stage1: return [ExerciseDetailsCreateFormPage1.page()];
     case CreateExerciseStages.stage2: return [ExerciseDetailsCreateFormPage1.page(), ExerciseDetailsCreateFormPage2.page()];
@@ -183,37 +184,8 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  @override
-  void initState() {
-    if (newExercise.icon.value.isRight()) {
-      _icon = newExercise.icon;
-    }
-    if (newExercise.baseExercise.value.isRight()) {
-      _baseExercise = newExercise.baseExercise;
-    }
-    if (newExercise.name.value.isRight()) {
-      final n = newExercise.name.value.getOrElse((l) => '');
-      _nameController.text = n;
-      _name = ExerciseDetailsName(n);
-    }
-    if (newExercise.description.value.isRight()) {
-      final d = newExercise.description.value.getOrElse((l) => '');
-      _descriptionController.text = d;
-      _description = ExerciseDetailsDescription(d);
-    }
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _descriptionController.dispose();
-    super.dispose();
-  }
-
   void handleFlowNext() {
-    newExercise.copyWith(
+    newExercise = newExercise.copyWith(
       icon: _icon,
       baseExercise: _baseExercise,
       name: _name,
@@ -287,7 +259,7 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
                 const SizedBox(height: AppLayout.defaultPadding),
                 ChooseIconController(
                   onChanged: (value) => {_icon = ExerciseDetailsIcon(value)},
-                  initialIcon: _icon?.value.getOrElse((l) => ''),
+                  initialIcon: '',
                 ),
                 const SizedBox(height: AppLayout.defaultPadding),
                 FlexableTextField(
@@ -320,7 +292,8 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
                         _descriptionController.text = _description?.value.getOrElse((l) => '') ?? d;
                         _description = _description ?? ExerciseDetailsDescription(d);
                       }
-                    }
+                    },
+                    initialValue: null,
                   ),
                 FlexableTextField(
                   label: 'Description',
@@ -384,31 +357,8 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
   ExerciseDetailsEngagement? _engagement;
   ExerciseDetailsType? _type;
 
-  @override
-  void initState() {
-    if (newExercise.movementPattern.value.isRight()) {
-      _movementPattern = newExercise.movementPattern;
-    }
-    if (newExercise.equipment!.value.isRight()) {
-      _equipment = newExercise.equipment;
-    }
-    if (newExercise.engagement.value.isRight()) {
-      _engagement = newExercise.engagement;
-    }
-    if (newExercise.type.value.isRight()) {
-      _type = newExercise.type;
-    }
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   void handleFlowNext() {
-    newExercise.copyWith(
+    newExercise = newExercise.copyWith(
       movementPattern: _movementPattern,
       equipment: _equipment,
       engagement: _engagement,
@@ -419,7 +369,7 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
   }
 
   void handleFlowPrev() {
-    newExercise.copyWith(
+    newExercise = newExercise.copyWith(
       movementPattern: _movementPattern,
       equipment: _equipment,
       engagement: _engagement,
@@ -432,11 +382,6 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
   @override
   Widget build(BuildContext context) {
     final res = ref.watch(exercisesCreateControllerProvider);
-
-    final errorText = res.maybeWhen(
-      error: (error, stackTrace) => error.toString(),
-      orElse: () => null,
-    );
 
     final isLoading = res.maybeWhen(
       data: (_) => res.isRefreshing,
@@ -473,10 +418,12 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
                 ChooseMovementPatternController(
                   validator: (value) => _movementPattern?.validate, 
                   onChanged: (value) => _movementPattern = ExerciseDetailsMovementPattern(value),
+                  initialValue: null,
                 ),
                 ChooseEquipmentController(
                   validator: (value) => _equipment?.validate, 
                   onChanged: (value) => _equipment = ExerciseDetailsEquipment(value),
+                  initialValue: null,
                 ),
                 // TODO: engagement
                 // TODO: type

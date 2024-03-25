@@ -42,26 +42,26 @@ void realmSeed(Realm realm) {
   ];
 
   final initialEquipmentNames = <String>[
-    'Treadmill'
-    'Stationary Bike'
-    'Elliptical Trainer'
-    'Rowing Machine'
-    'Smith Machine'
-    'Barbell'
-    'Dumbbells'
-    'Kettlebells'
-    'Medicine Ball'
-    'Stability Ball'
-    'Resistance Bands'
-    'Cable Machine'
-    'Leg Press Machine'
-    'Lat Pulldown Machine'
-    'Pull-up Bar'
-    'Battle Ropes'
-    'Jump Rope'
-    'Bench Press'
-    'Fly Machine'
-    'Power Rack'
+    'Treadmill',
+    'Stationary Bike',
+    'Elliptical Trainer',
+    'Rowing Machine',
+    'Smith Machine',
+    'Barbell',
+    'Dumbbells',
+    'Kettlebells',
+    'Medicine Ball',
+    'Stability Ball',
+    'Resistance Bands',
+    'Cable Machine',
+    'Leg Press Machine',
+    'Lat Pulldown Machine',
+    'Pull-up Bar',
+    'Battle Ropes',
+    'Jump Rope',
+    'Bench Press',
+    'Fly Machine',
+    'Power Rack',
   ];
 
   final initialMuscleGroupNames = <String>[

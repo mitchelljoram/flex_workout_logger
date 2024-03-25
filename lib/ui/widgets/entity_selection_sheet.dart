@@ -172,7 +172,7 @@ Future<T?> _showBottomSheet<T>(
           padding: EdgeInsets.only(
             bottom: canCreate
                 ? (Platform.isAndroid ? 110 : 64)
-                : AppLayout.largePadding,
+                : AppLayout.extraLargePadding,
           ),
           itemCount: items.length,
           separatorBuilder: (context, index) => Divider(

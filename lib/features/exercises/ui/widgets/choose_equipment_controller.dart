@@ -10,10 +10,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class ChooseEquipmentController extends ConsumerWidget {
   final FormFieldValidator? validator;
   final void Function(EquipmentEntity) onChanged;
+  final EquipmentEntity? initialValue;
 
   const ChooseEquipmentController({
     required this.validator,
     required this.onChanged,
+    required this.initialValue,
     super.key,
   });
 
@@ -26,6 +28,7 @@ class ChooseEquipmentController extends ConsumerWidget {
       hintText: 'Select the equipment used',
       labelText: 'Equipment',
       onChanged: onChanged,
+      initialValue: initialValue,
       items: equipment.asData?.value
         .map(
           (e) => DropdownMenuItem(

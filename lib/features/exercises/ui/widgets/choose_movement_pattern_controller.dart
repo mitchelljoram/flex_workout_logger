@@ -10,10 +10,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class ChooseMovementPatternController extends ConsumerWidget {
   final FormFieldValidator? validator;
   final void Function(MovementPatternEntity) onChanged;
+  final MovementPatternEntity? initialValue;
 
   const ChooseMovementPatternController({
     required this.validator,
     required this.onChanged,
+    required this.initialValue,
     super.key,
   });
 
@@ -26,6 +28,7 @@ class ChooseMovementPatternController extends ConsumerWidget {
       hintText: 'Select a movement pattern',
       labelText: 'Movement Pattern',
       onChanged: onChanged,
+      initialValue: initialValue,
       isRequired: true,
       items: movementPatterns.asData?.value
         .map(

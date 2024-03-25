@@ -20,25 +20,25 @@ class MuscleGroupRepository implements IMuscleGroupRepository {
   FutureOr<Either<Failure, MuscleGroupEntity>> createMuscleGroup(
     MuscleGroupIcon icon,
     MuscleGroupName name,
-  ) {
+  ) async {
     /// TODO: implement createMuscleGroup
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Either<Failure, bool>> deleteMuscleGroup(String id) {
+  FutureOr<Either<Failure, bool>> deleteMuscleGroup(String id) async {
     /// TODO: implement deleteMuscleGroup
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Either<Failure, MuscleGroupEntity>> getMuscleGroupById(String id) {
+  FutureOr<Either<Failure, MuscleGroupEntity>> getMuscleGroupById(String id) async {
     /// TODO: implement getMuscleGroupById
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Either<Failure, List<MuscleGroupEntity>>> getMuscleGroups() {
+  FutureOr<Either<Failure, List<MuscleGroupEntity>>> getMuscleGroups() async {
     /// TODO: implement getMuscleGroups
     throw UnimplementedError();
   }
@@ -48,7 +48,7 @@ class MuscleGroupRepository implements IMuscleGroupRepository {
     String? id,
     MuscleGroupIcon? icon,
     MuscleGroupName? name,
-  ) {
+  ) async {
     /// TODO: implement updateMuscleGroup
     throw UnimplementedError();
   }
