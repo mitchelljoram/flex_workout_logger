@@ -20,6 +20,10 @@ class MuscleGroupIcon extends Validation<String> {
 }
 
 Either<Failure, String> _validate(String input) {
+  if(input.isEmpty) {
+    return right(input);
+  }
+  
   if (File('assets/icons/$input/').existsSync() == false) {
     return left(
       const Failure.unprocessableEntity(

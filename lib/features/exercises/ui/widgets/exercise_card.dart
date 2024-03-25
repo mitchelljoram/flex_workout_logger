@@ -1,3 +1,4 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_details.entity.dart';
 import 'package:flex_workout_logger/features/exercises/ui/screens/exercise_view.screen.dart';
@@ -174,10 +175,17 @@ class ExerciseListTile extends StatelessWidget {
       leading: Container(
         height: 27,
         width: 27,
-        child: Image(
-          image: AssetImage('assets/icons/${exercise.icon}'),
-          fit: BoxFit.scaleDown,
-        )
+        child: exercise.icon.isNotEmpty ?
+          Image(
+            image: AssetImage('assets/icons/${exercise.icon}'),
+            fit: BoxFit.scaleDown,
+          ) :
+          DottedBorder(
+            borderType: BorderType.Circle,
+            dashPattern: const [3, 5],
+            color: context.colorScheme.foregroundPrimary,
+            child: Container()
+          )
       ),
       trailing: (trailingIcon != null)
           ? Padding(

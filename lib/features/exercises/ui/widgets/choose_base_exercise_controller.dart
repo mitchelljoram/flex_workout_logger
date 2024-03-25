@@ -30,13 +30,13 @@ class ChooseBaseExerciseController extends ConsumerWidget {
       isRequired: true,
       items: variationExercises.asData?.value
         .map(
-          (e) => DropdownMenuItem(
-            value: e,
+          (be) => DropdownMenuItem(
+            value: be,
             child: ExerciseListTile(
-              exercise: e,
+              exercise: be,
               trailingIcon: CupertinoIcons.add_circled,
               onTap: () {
-                Navigator.of(context).pop(e);
+                Navigator.of(context).pop(be);
               },
             ),
           ),

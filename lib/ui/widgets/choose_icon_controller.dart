@@ -5,12 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ChooseIconController extends StatefulWidget {
-  final FormFieldValidator? validator;
   final void Function(String) onChanged;
   final String? initialIcon;
 
   const ChooseIconController({
-    required this.validator,
     required this.onChanged,
     this.initialIcon,
     super.key,
@@ -28,7 +26,7 @@ class _ChooseIconControllerState extends State<ChooseIconController> {
   @override
   void initState() {
     _pickedIcon = widget.initialIcon ?? '';
-    _pickedColor = _pickedIcon != '' ? _pickedIcon.split('.')[1] : 'primary';
+    _pickedColor = _pickedIcon.isNotEmpty ? _pickedIcon.split('.')[1] : 'primary';
     super.initState();
   }
 
@@ -71,7 +69,7 @@ class _ChooseIconControllerState extends State<ChooseIconController> {
       setState(() {
         _pickedColor = value;
 
-        final i = _pickedIcon != '' ? _pickedIcon.split('.') : null;
+        final i = _pickedIcon.isNotEmpty ? _pickedIcon.split('.') : null;
         if(i != null && i[1] != _pickedColor) {
           _pickedIcon = '${i[0]}.${_pickedColor}.100x100.png';
         }
@@ -88,6 +86,7 @@ class _ChooseIconControllerState extends State<ChooseIconController> {
         children: [
           Container(
             height: 150,
+            width: 150,
             decoration: const BoxDecoration(shape: BoxShape.circle),
             child: InkWell(
               onTap:() async {
@@ -100,7 +99,7 @@ class _ChooseIconControllerState extends State<ChooseIconController> {
               customBorder: const CircleBorder(),
               child: Align(
                 alignment: Alignment.center,
-                child: _pickedIcon != '' ?
+                child: _pickedIcon.isNotEmpty ?
                   Container(
                     height: 40,
                     width: 40,
@@ -118,7 +117,7 @@ class _ChooseIconControllerState extends State<ChooseIconController> {
           ),
           Positioned(
             top: 100,
-            left: 220,
+            left: 105,
             child: IconButton(
               onPressed: () async {
                 var res = await _showColorBottomSheet(context, _colors);

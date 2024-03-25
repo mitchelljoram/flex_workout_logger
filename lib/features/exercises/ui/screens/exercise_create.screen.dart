@@ -1,16 +1,25 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_create.controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list.controller.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/equipment.entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_details.entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern.entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/base_exercise.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/description.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/engagement.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/equipment.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/icon.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/movement_pattern.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/name.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/type.validation.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_base_exercise_controller.dart';
+import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_equipment_controller.dart';
+import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_movement_pattern_controller.dart';
 import 'package:flex_workout_logger/ui/widgets/choose_icon_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/variation_segment_controller.dart';
 import 'package:flex_workout_logger/ui/widgets/flexable_textfield.dart';
 import 'package:flex_workout_logger/ui/widgets/step_indicator.dart';
+import 'package:flex_workout_logger/utils/enums.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/cupertino.dart';
@@ -50,11 +59,7 @@ class ExerciseCreateScreen extends StatelessWidget {
           style: TextStyle(color: context.colorScheme.foregroundPrimary),
         ),
       ),
-      body: Stack(
-        children: <Widget>[
-          ExerciseDetailsFlow(),
-        ],
-      ),
+      body: ExerciseDetailsFlow()
     );
   }
 }
@@ -64,10 +69,10 @@ class ExerciseDetails {
   final ExerciseDetailsBaseExercise baseExercise;
   final ExerciseDetailsName name;
   final ExerciseDetailsDescription description;
-  // final ExerciseDetailsMovementPattern? movementPattern;
-  // final ExerciseDetailsEquipment? equipment;
-  // final ExerciseDetailsEngagement engagement;
-  // final ExerciseDetailsType type;
+  final ExerciseDetailsMovementPattern movementPattern;
+  final ExerciseDetailsEquipment? equipment;
+  final ExerciseDetailsEngagement engagement;
+  final ExerciseDetailsType type;
   // final ExerciseDetailsMuscleGroups primaryMuscleGroups;
   // final ExerciseDetailsMuscleGroups secondaryMuscleGroups;
   // final ExerciseDetailsBaseWeight? baseWeight;
@@ -78,10 +83,10 @@ class ExerciseDetails {
     required this.baseExercise,
     required this.name,
     required this.description,
-    // this.movementPattern,
-    // this.equipment,
-    // required this.engagement,
-    // required this.type,
+    required this.movementPattern,
+    this.equipment,
+    required this.engagement,
+    required this.type,
     // required this.primaryMuscleGroups,
     // required this.secondaryMuscleGroups,
     // this.baseWeight,
@@ -93,15 +98,34 @@ class ExerciseDetails {
     ExerciseDetailsBaseExercise? baseExercise,
     ExerciseDetailsName? name,
     ExerciseDetailsDescription? description,
+    ExerciseDetailsMovementPattern? movementPattern,
+    ExerciseDetailsEquipment? equipment,
+    ExerciseDetailsEngagement? engagement,
+    ExerciseDetailsType? type,
   }) {
     return ExerciseDetails(
       icon: icon ?? this.icon,
       baseExercise: baseExercise ?? this.baseExercise,
       name: name ?? this.name,
       description: description ?? this.description,
+      movementPattern: movementPattern ?? this.movementPattern,
+      equipment: equipment ?? this.equipment,
+      engagement: engagement ?? this.engagement,
+      type: type ?? this.type,
     );
   }
 }
+
+ExerciseDetails newExercise = ExerciseDetails(
+  icon: ExerciseDetailsIcon(''),
+  baseExercise: ExerciseDetailsBaseExercise(null,null),
+  name: ExerciseDetailsName(''),
+  description: ExerciseDetailsDescription(''),
+  movementPattern: ExerciseDetailsMovementPattern(null),
+  equipment: ExerciseDetailsEquipment(null),
+  engagement: ExerciseDetailsEngagement(Engagement.bilateral),
+  type: ExerciseDetailsType(ExerciseType.repitition)
+);
 
 class ExerciseDetailsFlow extends ConsumerWidget {
   static Route route() => MaterialPageRoute(builder: (_) => ExerciseDetailsFlow());
@@ -121,29 +145,29 @@ class ExerciseDetailsFlow extends ConsumerWidget {
       );
     });
 
-    return FlowBuilder(
-      state: ExerciseDetails(
-        icon: ExerciseDetailsIcon(''),
-        baseExercise: ExerciseDetailsBaseExercise(null,null),
-        name: ExerciseDetailsName(''),
-        description: ExerciseDetailsDescription(''),
-      ),
+    return FlowBuilder<CreateExerciseStages>(
+      state: CreateExerciseStages.stage1,
       onGeneratePages: onGeneratePages,
       // onComplete: ,
     );
   }
 }
 
-List<Page> onGeneratePages(ExerciseDetails exercise, List<Page> pages) {
-  return [
-    MaterialPage(child: ExerciseDetailsCreateFormPage1()),
-    // MaterialPage(child: ExerciseDetailsCreateFormPage2()),
-    // MaterialPage(child: ExerciseDetailsCreateFormPage3()),
-    // MaterialPage(child: ExerciseDetailsCreateFormPage4()),
-  ];
+enum CreateExerciseStages {stage1, stage2, stage3, stage4}
+
+List<Page> onGeneratePages(CreateExerciseStages stage, List<Page> pages) {
+  switch(stage) {
+    case CreateExerciseStages.stage1: return [ExerciseDetailsCreateFormPage1.page()];
+    case CreateExerciseStages.stage2: return [ExerciseDetailsCreateFormPage1.page(), ExerciseDetailsCreateFormPage2.page()];
+    // case CreateExerciseStages.stage3: return [ExerciseDetailsCreateFormPage1.page(), ExerciseDetailsCreateFormPage2.page(), ExerciseDetailsCreateFormPage3.page()];
+    // case CreateExerciseStages.stage4: return [ExerciseDetailsCreateFormPage1.page(), ExerciseDetailsCreateFormPage2.page(), ExerciseDetailsCreateFormPage3.page(), ExerciseDetailsCreateFormPage4.page()];
+    default: return [ExerciseDetailsCreateFormPage1.page()];
+  }
 }
 
 class ExerciseDetailsCreateFormPage1 extends ConsumerStatefulWidget {
+  static MaterialPage page() => MaterialPage(child: ExerciseDetailsCreateFormPage1());
+
   @override
   ConsumerState<ExerciseDetailsCreateFormPage1> createState() => _ExerciseDetailsCreateFormPage1State();
 }
@@ -161,24 +185,24 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
 
   @override
   void initState() {
-    super.initState();
-
-    if (context.flow<ExerciseDetails>().state.icon.value.isRight()) {
-      _icon = context.flow<ExerciseDetails>().state.icon;
+    if (newExercise.icon.value.isRight()) {
+      _icon = newExercise.icon;
     }
-    if (context.flow<ExerciseDetails>().state.baseExercise.value.isRight()) {
-      _baseExercise = context.flow<ExerciseDetails>().state.baseExercise;
+    if (newExercise.baseExercise.value.isRight()) {
+      _baseExercise = newExercise.baseExercise;
     }
-    if (context.flow<ExerciseDetails>().state.name.value.isRight()) {
-      final n = context.flow<ExerciseDetails>().state.name.value.getOrElse((l) => '');
+    if (newExercise.name.value.isRight()) {
+      final n = newExercise.name.value.getOrElse((l) => '');
       _nameController.text = n;
       _name = ExerciseDetailsName(n);
     }
-    if (context.flow<ExerciseDetails>().state.description.value.isRight()) {
-      final d = context.flow<ExerciseDetails>().state.description.value.getOrElse((l) => '');
+    if (newExercise.description.value.isRight()) {
+      final d = newExercise.description.value.getOrElse((l) => '');
       _descriptionController.text = d;
       _description = ExerciseDetailsDescription(d);
     }
+
+    super.initState();
   }
 
   @override
@@ -188,15 +212,15 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
     super.dispose();
   }
 
-  void handleFlow() {
-    context.flow<ExerciseDetails>().update((exercise) {
-      return exercise.copyWith(
-        icon: _icon,
-        baseExercise: _baseExercise,
-        name: _name,
-        description: _description,
-      );
-    });
+  void handleFlowNext() {
+    newExercise.copyWith(
+      icon: _icon,
+      baseExercise: _baseExercise,
+      name: _name,
+      description: _description,
+    );
+
+    context.flow<CreateExerciseStages>().update((next) => CreateExerciseStages.stage2);
   }
 
   int _selectedVariation = 1;
@@ -228,7 +252,7 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
     return Form(
       key: _formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      child: Column(
+      child: Stack(
         children: [
           Positioned(
             top: 0,
@@ -247,7 +271,7 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: AppLayout.defaultPadding,
-              vertical: AppLayout.largePadding,
+              vertical: AppLayout.extraLargePadding,
             ),
             child: Column(
               children: [
@@ -262,8 +286,8 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
                 ),
                 const SizedBox(height: AppLayout.defaultPadding),
                 ChooseIconController(
-                  validator: (value) =>_icon?.validate,
                   onChanged: (value) => {_icon = ExerciseDetailsIcon(value)},
+                  initialIcon: _icon?.value.getOrElse((l) => ''),
                 ),
                 const SizedBox(height: AppLayout.defaultPadding),
                 FlexableTextField(
@@ -310,11 +334,199 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
                   readOnly: isLoading,
                   isTextArea: true,
                 ),
+                Spacer(),
+                Row(
+                  children: [
+                    Spacer(),
+                    IconButton(
+                      onPressed: isLoading ?
+                        null :
+                        () {
+                          if (!_formKey.currentState!.validate()) return;
+
+                          if (_name!.value.isLeft()) return;
+
+                          handleFlowNext();
+                        },
+                      style: IconButton.styleFrom(
+                        backgroundColor: context.colorScheme.foregroundPrimary,
+                      ),
+                      icon: isLoading ?
+                        const CircularProgressIndicator() :
+                        Icon(
+                          CupertinoIcons.chevron_right,
+                          color: context.colorScheme.backgroundSecondary
+                        )
+                    ),
+                  ],
+                )
               ],
             )
           ),
         ],
       ),
+    );
+  }
+}
+
+class ExerciseDetailsCreateFormPage2 extends ConsumerStatefulWidget {
+  static MaterialPage page() => MaterialPage(child: ExerciseDetailsCreateFormPage2());
+
+  @override
+  ConsumerState<ExerciseDetailsCreateFormPage2> createState() => _ExerciseDetailsCreateFormPage2State();
+}
+
+class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetailsCreateFormPage2> {
+  final _formKey = GlobalKey<FormState>();
+
+  ExerciseDetailsMovementPattern? _movementPattern;
+  ExerciseDetailsEquipment? _equipment;
+  ExerciseDetailsEngagement? _engagement;
+  ExerciseDetailsType? _type;
+
+  @override
+  void initState() {
+    if (newExercise.movementPattern.value.isRight()) {
+      _movementPattern = newExercise.movementPattern;
+    }
+    if (newExercise.equipment!.value.isRight()) {
+      _equipment = newExercise.equipment;
+    }
+    if (newExercise.engagement.value.isRight()) {
+      _engagement = newExercise.engagement;
+    }
+    if (newExercise.type.value.isRight()) {
+      _type = newExercise.type;
+    }
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void handleFlowNext() {
+    newExercise.copyWith(
+      movementPattern: _movementPattern,
+      equipment: _equipment,
+      engagement: _engagement,
+      type: _type,
+    );
+
+    context.flow<CreateExerciseStages>().update((next) => CreateExerciseStages.stage3);
+  }
+
+  void handleFlowPrev() {
+    newExercise.copyWith(
+      movementPattern: _movementPattern,
+      equipment: _equipment,
+      engagement: _engagement,
+      type: _type,
+    );
+
+    context.flow<CreateExerciseStages>().update((prev) => CreateExerciseStages.stage1);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final res = ref.watch(exercisesCreateControllerProvider);
+
+    final errorText = res.maybeWhen(
+      error: (error, stackTrace) => error.toString(),
+      orElse: () => null,
+    );
+
+    final isLoading = res.maybeWhen(
+      data: (_) => res.isRefreshing,
+      loading: () => true,
+      orElse: () => false,
+    );
+
+    return Form(
+      key: _formKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      child: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: const EdgeInsets.only(
+                left: AppLayout.smallPadding,
+                right: AppLayout.smallPadding,
+                top: AppLayout.miniPadding,
+              ),
+              color: context.colorScheme.backgroundSecondary,
+              child: const StepIndicator(currentStep: 2, totalSteps: 4),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppLayout.defaultPadding,
+              vertical: AppLayout.extraLargePadding,
+            ),
+            child: Column(
+              children: [
+                ChooseMovementPatternController(
+                  validator: (value) => _movementPattern?.validate, 
+                  onChanged: (value) => _movementPattern = ExerciseDetailsMovementPattern(value),
+                ),
+                ChooseEquipmentController(
+                  validator: (value) => _equipment?.validate, 
+                  onChanged: (value) => _equipment = ExerciseDetailsEquipment(value),
+                ),
+                // TODO: engagement
+                // TODO: type
+                Spacer(),
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: isLoading ?
+                        null :
+                        () {
+                          handleFlowPrev();
+                        },
+                      style: IconButton.styleFrom(
+                        backgroundColor: context.colorScheme.foregroundPrimary,
+                      ),
+                      icon: isLoading ?
+                        const CircularProgressIndicator() :
+                        Icon(
+                          CupertinoIcons.chevron_left,
+                          color: context.colorScheme.backgroundSecondary
+                        )
+                    ),
+                    Spacer(),
+                    IconButton(
+                      onPressed: isLoading ?
+                        null :
+                        () {
+                          if (!_formKey.currentState!.validate()) return;
+
+                          if (_movementPattern!.value.isLeft()) return;
+
+                          handleFlowNext();
+                        },
+                      style: IconButton.styleFrom(
+                        backgroundColor: context.colorScheme.foregroundPrimary,
+                      ),
+                      icon: isLoading ?
+                        const CircularProgressIndicator() :
+                        Icon(
+                          CupertinoIcons.chevron_right,
+                          color: context.colorScheme.backgroundSecondary
+                        )
+                    ),
+                  ],
+                )
+              ]
+            )
+          ),
+        ],
+      )
     );
   }
 }

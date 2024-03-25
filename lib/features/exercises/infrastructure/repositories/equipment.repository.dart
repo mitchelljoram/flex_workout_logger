@@ -38,7 +38,7 @@ class EquipmentRepository implements IEquipmentRepository {
   }
 
   @override
-  FutureOr<Either<Failure, List<EquipmentEntity>>> getEquipments() {
+  FutureOr<Either<Failure, List<EquipmentEntity>>> getEquipment() {
     // TODO: implement getEquipments
     throw UnimplementedError();
   }
