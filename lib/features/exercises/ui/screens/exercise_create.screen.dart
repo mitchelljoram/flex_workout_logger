@@ -45,7 +45,20 @@ class ExerciseCreateScreen extends StatelessWidget {
         backgroundColor: context.colorScheme.backgroundSecondary,
         leading: IconButton(
           padding: EdgeInsets.zero,
-          onPressed: () => context.pop(),
+          onPressed: () {
+            ExerciseDetailsFlow.newExercise = new ExerciseDetails(
+              icon: ExerciseDetailsIcon(''),
+              baseExercise: ExerciseDetailsBaseExercise(null,null),
+              name: ExerciseDetailsName(''),
+              description: ExerciseDetailsDescription(''),
+              movementPattern: ExerciseDetailsMovementPattern(null),
+              equipment: ExerciseDetailsEquipment(null),
+              engagement: ExerciseDetailsEngagement(Engagement.bilateral),
+              type: ExerciseDetailsType(ExerciseType.repitition)
+            );
+
+            context.pop();
+          },
           icon: const Icon(
             CupertinoIcons.xmark,
           ),
@@ -114,19 +127,19 @@ class ExerciseDetails {
   }
 }
 
-ExerciseDetails newExercise = new ExerciseDetails(
-  icon: ExerciseDetailsIcon(''),
-  baseExercise: ExerciseDetailsBaseExercise(null,null),
-  name: ExerciseDetailsName(''),
-  description: ExerciseDetailsDescription(''),
-  movementPattern: ExerciseDetailsMovementPattern(null),
-  equipment: ExerciseDetailsEquipment(null),
-  engagement: ExerciseDetailsEngagement(Engagement.bilateral),
-  type: ExerciseDetailsType(ExerciseType.repitition)
-);
-
 class ExerciseDetailsFlow extends ConsumerWidget {
   static Route route() => MaterialPageRoute(builder: (_) => ExerciseDetailsFlow());
+
+  static ExerciseDetails newExercise = new ExerciseDetails(
+    icon: ExerciseDetailsIcon(''),
+    baseExercise: ExerciseDetailsBaseExercise(null,null),
+    name: ExerciseDetailsName(''),
+    description: ExerciseDetailsDescription(''),
+    movementPattern: ExerciseDetailsMovementPattern(null),
+    equipment: ExerciseDetailsEquipment(null),
+    engagement: ExerciseDetailsEngagement(Engagement.bilateral),
+    type: ExerciseDetailsType(ExerciseType.repitition)
+  );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -184,8 +197,33 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
 
+  @override
+  void initState() {
+    if (ExerciseDetailsFlow.newExercise.icon.value.isRight()) {
+      _icon = ExerciseDetailsFlow.newExercise.icon;
+    }
+    if (ExerciseDetailsFlow.newExercise.baseExercise.value.isRight()) {
+      _baseExercise = ExerciseDetailsFlow.newExercise.baseExercise;
+    }
+    if (ExerciseDetailsFlow.newExercise.name.value.isRight()) {
+      _nameController.text = ExerciseDetailsFlow.newExercise.name.value.getOrElse((l) => '');
+      _name = ExerciseDetailsFlow.newExercise.name;
+    }
+    if (ExerciseDetailsFlow.newExercise.description.value.isRight()) {
+      _descriptionController.text = ExerciseDetailsFlow.newExercise.description.value.getOrElse((l) => '');
+      _description = ExerciseDetailsFlow.newExercise.description;
+    }
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void handleFlowNext() {
-    newExercise = newExercise.copyWith(
+    ExerciseDetailsFlow.newExercise = ExerciseDetailsFlow.newExercise.copyWith(
       icon: _icon,
       baseExercise: _baseExercise,
       name: _name,
@@ -357,8 +395,31 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
   ExerciseDetailsEngagement? _engagement;
   ExerciseDetailsType? _type;
 
+  @override
+  void initState() {
+    if (ExerciseDetailsFlow.newExercise.movementPattern.value.isRight()) {
+      _movementPattern = ExerciseDetailsFlow.newExercise.movementPattern;
+    }
+    if (ExerciseDetailsFlow.newExercise.equipment!.value.isRight()) {
+      _equipment = ExerciseDetailsFlow.newExercise.equipment;
+    }
+    if (ExerciseDetailsFlow.newExercise.engagement.value.isRight()) {
+      _engagement = ExerciseDetailsFlow.newExercise.engagement;
+    }
+    if (ExerciseDetailsFlow.newExercise.type.value.isRight()) {
+      _type = ExerciseDetailsFlow.newExercise.type;
+    }
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void handleFlowNext() {
-    newExercise = newExercise.copyWith(
+    ExerciseDetailsFlow.newExercise = ExerciseDetailsFlow.newExercise.copyWith(
       movementPattern: _movementPattern,
       equipment: _equipment,
       engagement: _engagement,
@@ -369,7 +430,7 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
   }
 
   void handleFlowPrev() {
-    newExercise = newExercise.copyWith(
+    ExerciseDetailsFlow.newExercise = ExerciseDetailsFlow.newExercise.copyWith(
       movementPattern: _movementPattern,
       equipment: _equipment,
       engagement: _engagement,
@@ -418,12 +479,12 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
                 ChooseMovementPatternController(
                   validator: (value) => _movementPattern?.validate, 
                   onChanged: (value) => _movementPattern = ExerciseDetailsMovementPattern(value),
-                  initialValue: null,
+                  initialValue: _movementPattern?.value.getOrElse((l) => null),
                 ),
                 ChooseEquipmentController(
                   validator: (value) => _equipment?.validate, 
                   onChanged: (value) => _equipment = ExerciseDetailsEquipment(value),
-                  initialValue: null,
+                  initialValue: _equipment?.value.getOrElse((l) => null),
                 ),
                 // TODO: engagement
                 // TODO: type
