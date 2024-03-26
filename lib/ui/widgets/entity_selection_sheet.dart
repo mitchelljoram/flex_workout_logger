@@ -40,7 +40,9 @@ class EntitySelectionSheet<T extends Selectable> extends FormField<T> {
                   children: [
                     Text(
                       labelText ?? 'Select',
-                      style: state.context.textTheme.labelMedium,
+                      style: state.context.textTheme.labelMedium.copyWith(
+                        color: state.context.colorScheme.foregroundPrimary,
+                      ),
                     ),
                     const Spacer(),
                     if (isRequired)

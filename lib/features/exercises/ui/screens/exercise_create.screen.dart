@@ -13,6 +13,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_base_exercise_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_equipment_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_movement_pattern_controller.dart';
+import 'package:flex_workout_logger/features/exercises/ui/widgets/radio_list_controller.dart';
 import 'package:flex_workout_logger/ui/widgets/choose_icon_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/variation_segment_controller.dart';
 import 'package:flex_workout_logger/ui/widgets/flexable_textfield.dart';
@@ -45,20 +46,7 @@ class ExerciseCreateScreen extends StatelessWidget {
         backgroundColor: context.colorScheme.backgroundSecondary,
         leading: IconButton(
           padding: EdgeInsets.zero,
-          onPressed: () {
-            ExerciseDetailsFlow.newExercise = new ExerciseDetails(
-              icon: ExerciseDetailsIcon(''),
-              baseExercise: ExerciseDetailsBaseExercise(null,null),
-              name: ExerciseDetailsName(''),
-              description: ExerciseDetailsDescription(''),
-              movementPattern: ExerciseDetailsMovementPattern(null),
-              equipment: ExerciseDetailsEquipment(null),
-              engagement: ExerciseDetailsEngagement(Engagement.bilateral),
-              type: ExerciseDetailsType(ExerciseType.repitition)
-            );
-
-            context.pop();
-          },
+          onPressed: () => context.pop(),
           icon: const Icon(
             CupertinoIcons.xmark,
           ),
@@ -127,19 +115,19 @@ class ExerciseDetails {
   }
 }
 
+ExerciseDetails newExercise = ExerciseDetails(
+  icon: ExerciseDetailsIcon(''),
+  baseExercise: ExerciseDetailsBaseExercise(null, null),
+  name: ExerciseDetailsName(''),
+  description: ExerciseDetailsDescription(''),
+  movementPattern: ExerciseDetailsMovementPattern(null),
+  equipment: ExerciseDetailsEquipment(null),
+  engagement: ExerciseDetailsEngagement(Engagement.bilateral),
+  type: ExerciseDetailsType(ExerciseType.repitition),
+);
+
 class ExerciseDetailsFlow extends ConsumerWidget {
   static Route route() => MaterialPageRoute(builder: (_) => ExerciseDetailsFlow());
-
-  static ExerciseDetails newExercise = new ExerciseDetails(
-    icon: ExerciseDetailsIcon(''),
-    baseExercise: ExerciseDetailsBaseExercise(null,null),
-    name: ExerciseDetailsName(''),
-    description: ExerciseDetailsDescription(''),
-    movementPattern: ExerciseDetailsMovementPattern(null),
-    equipment: ExerciseDetailsEquipment(null),
-    engagement: ExerciseDetailsEngagement(Engagement.bilateral),
-    type: ExerciseDetailsType(ExerciseType.repitition)
-  );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -155,6 +143,17 @@ class ExerciseDetailsFlow extends ConsumerWidget {
         orElse: () {},
       );
     });
+
+    newExercise = new ExerciseDetails(
+      icon: ExerciseDetailsIcon(''),
+      baseExercise: ExerciseDetailsBaseExercise(null,null),
+      name: ExerciseDetailsName(''),
+      description: ExerciseDetailsDescription(''),
+      movementPattern: ExerciseDetailsMovementPattern(null),
+      equipment: ExerciseDetailsEquipment(null),
+      engagement: ExerciseDetailsEngagement(Engagement.bilateral),
+      type: ExerciseDetailsType(ExerciseType.repitition)
+    );
 
     return FlowBuilder<CreateExerciseStages>(
       state: CreateExerciseStages.stage1,
@@ -199,19 +198,19 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
 
   @override
   void initState() {
-    if (ExerciseDetailsFlow.newExercise.icon.value.isRight()) {
-      _icon = ExerciseDetailsFlow.newExercise.icon;
+    if (newExercise.icon.value.isRight()) {
+      _icon = newExercise.icon;
     }
-    if (ExerciseDetailsFlow.newExercise.baseExercise.value.isRight()) {
-      _baseExercise = ExerciseDetailsFlow.newExercise.baseExercise;
+    if (newExercise.baseExercise.value.isRight()) {
+      _baseExercise = newExercise.baseExercise;
     }
-    if (ExerciseDetailsFlow.newExercise.name.value.isRight()) {
-      _nameController.text = ExerciseDetailsFlow.newExercise.name.value.getOrElse((l) => '');
-      _name = ExerciseDetailsFlow.newExercise.name;
+    if (newExercise.name.value.isRight()) {
+      _nameController.text = newExercise.name.value.getOrElse((l) => '');
+      _name = newExercise.name;
     }
-    if (ExerciseDetailsFlow.newExercise.description.value.isRight()) {
-      _descriptionController.text = ExerciseDetailsFlow.newExercise.description.value.getOrElse((l) => '');
-      _description = ExerciseDetailsFlow.newExercise.description;
+    if (newExercise.description.value.isRight()) {
+      _descriptionController.text = newExercise.description.value.getOrElse((l) => '');
+      _description = newExercise.description;
     }
 
     super.initState();
@@ -223,7 +222,7 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
   }
 
   void handleFlowNext() {
-    ExerciseDetailsFlow.newExercise = ExerciseDetailsFlow.newExercise.copyWith(
+    newExercise = newExercise.copyWith(
       icon: _icon,
       baseExercise: _baseExercise,
       name: _name,
@@ -397,17 +396,17 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
 
   @override
   void initState() {
-    if (ExerciseDetailsFlow.newExercise.movementPattern.value.isRight()) {
-      _movementPattern = ExerciseDetailsFlow.newExercise.movementPattern;
+    if (newExercise.movementPattern.value.isRight()) {
+      _movementPattern = newExercise.movementPattern;
     }
-    if (ExerciseDetailsFlow.newExercise.equipment!.value.isRight()) {
-      _equipment = ExerciseDetailsFlow.newExercise.equipment;
+    if (newExercise.equipment!.value.isRight()) {
+      _equipment = newExercise.equipment;
     }
-    if (ExerciseDetailsFlow.newExercise.engagement.value.isRight()) {
-      _engagement = ExerciseDetailsFlow.newExercise.engagement;
+    if (newExercise.engagement.value.isRight()) {
+      _engagement = newExercise.engagement;
     }
-    if (ExerciseDetailsFlow.newExercise.type.value.isRight()) {
-      _type = ExerciseDetailsFlow.newExercise.type;
+    if (newExercise.type.value.isRight()) {
+      _type = newExercise.type;
     }
 
     super.initState();
@@ -419,7 +418,7 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
   }
 
   void handleFlowNext() {
-    ExerciseDetailsFlow.newExercise = ExerciseDetailsFlow.newExercise.copyWith(
+    newExercise = newExercise.copyWith(
       movementPattern: _movementPattern,
       equipment: _equipment,
       engagement: _engagement,
@@ -430,7 +429,7 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
   }
 
   void handleFlowPrev() {
-    ExerciseDetailsFlow.newExercise = ExerciseDetailsFlow.newExercise.copyWith(
+    newExercise = newExercise.copyWith(
       movementPattern: _movementPattern,
       equipment: _equipment,
       engagement: _engagement,
@@ -486,8 +485,23 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
                   onChanged: (value) => _equipment = ExerciseDetailsEquipment(value),
                   initialValue: _equipment?.value.getOrElse((l) => null),
                 ),
-                // TODO: engagement
-                // TODO: type
+                RadioListController<Engagement>(
+                  items: Engagement.values.toList(), 
+                  onSelected: (Enumeration<Enum>? value) => _engagement = ExerciseDetailsEngagement(value as Engagement), 
+                  selectedValue: _engagement?.value.getOrElse((l) => Engagement.bilateral), 
+                  labelText: 'Body Engagement',
+                  description: 'How the body engages with the lift during the movement.',
+                ),
+                const SizedBox(
+                  height: AppLayout.defaultPadding,
+                ),
+                RadioListController<ExerciseType>(
+                  items: ExerciseType.values.toList(), 
+                  onSelected: (Enumeration<Enum>? value) => _type = ExerciseDetailsType(value as ExerciseType),
+                  selectedValue: _type?.value.getOrElse((l) => ExerciseType.repitition), 
+                  labelText: 'Exercise Type',
+                  description: 'How are you going to record your exercise.',
+                ),
                 Spacer(),
                 Row(
                   children: [

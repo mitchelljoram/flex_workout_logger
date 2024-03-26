@@ -9,21 +9,21 @@ enum Engagement implements Enumeration<Engagement> {
   bilateral(
     name: 'Bilateral',
     description:
-        'Exercises where both sides of the body work together in unison, typically with a single resistance source. Ex: Squat',
+        'Exercises where both sides of the body work together For example a Squat or Bench Press.',
   ),
 
   /// Bilateral Seperate
   bilateralSeparate(
     name: 'Bilateral With Separate Weights',
     description:
-        'Exercise where both sides of the body also work together, but each side uses a separate weight. Ex: Dumbbell Bench Press',
+        'Exercise where both sides of the body work together, but each side uses a separate weight. Ex: Dumbbell Bench Press',
   ),
 
   /// Unilateral
   unilateral(
     name: 'Unilateral',
     description:
-        'Exercises focus on working one side of the body at a time, allowing each limb or side to work independently. Ex: Bulgarian Split Squat and Lunges',
+        'Exercises where you work one side of the body at a time. Ex: Bulgarian Split Squat or Lunges',
   );
 
   const Engagement({required this.name, this.description});
