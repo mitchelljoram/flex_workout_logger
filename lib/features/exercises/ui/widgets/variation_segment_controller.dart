@@ -21,7 +21,7 @@ class VariationSegementedController extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomSlidingSegmentedControl<int>(
-      initialValue: 1,
+      initialValue: selectedValue,
       padding: AppLayout.defaultPadding,
       height: 34,
       isStretch: true,

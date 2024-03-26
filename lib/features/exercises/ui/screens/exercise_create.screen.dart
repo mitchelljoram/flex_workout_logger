@@ -126,9 +126,29 @@ ExerciseDetails newExercise = ExerciseDetails(
   type: ExerciseDetailsType(ExerciseType.repitition),
 );
 
-class ExerciseDetailsFlow extends ConsumerWidget {
-  static Route route() => MaterialPageRoute(builder: (_) => ExerciseDetailsFlow());
+const int TOTAL_STEPS = 4;
 
+enum CreateExerciseStages {stage1, stage2, stage3, stage4}
+
+List<Page> onGeneratePages(
+  CreateExerciseStages stage, 
+  List<Page> pages,
+) {
+  switch(stage) {
+    case CreateExerciseStages.stage1: 
+      return [ExerciseDetailsCreateFormPage1.page()];
+    case CreateExerciseStages.stage2: 
+      return [ExerciseDetailsCreateFormPage2.page()];
+    case CreateExerciseStages.stage3: 
+    //  return [ExerciseDetailsCreateFormPage3.page()];
+    case CreateExerciseStages.stage4: 
+    //  return [ExerciseDetailsCreateFormPage4.page()];
+    default: 
+      return [ExerciseDetailsCreateFormPage1.page()];
+  }
+}
+
+class ExerciseDetailsFlow extends ConsumerWidget{
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen<AsyncValue<ExerciseDetailsEntity?>>(exercisesCreateControllerProvider,
@@ -163,21 +183,6 @@ class ExerciseDetailsFlow extends ConsumerWidget {
   }
 }
 
-enum CreateExerciseStages {stage1, stage2, stage3, stage4}
-
-List<Page> onGeneratePages(
-  CreateExerciseStages stage, 
-  List<Page> pages,
-) {
-  switch(stage) {
-    case CreateExerciseStages.stage1: return [ExerciseDetailsCreateFormPage1.page()];
-    case CreateExerciseStages.stage2: return [ExerciseDetailsCreateFormPage1.page(), ExerciseDetailsCreateFormPage2.page()];
-    // case CreateExerciseStages.stage3: return [ExerciseDetailsCreateFormPage1.page(), ExerciseDetailsCreateFormPage2.page(), ExerciseDetailsCreateFormPage3.page()];
-    // case CreateExerciseStages.stage4: return [ExerciseDetailsCreateFormPage1.page(), ExerciseDetailsCreateFormPage2.page(), ExerciseDetailsCreateFormPage3.page(), ExerciseDetailsCreateFormPage4.page()];
-    default: return [ExerciseDetailsCreateFormPage1.page()];
-  }
-}
-
 class ExerciseDetailsCreateFormPage1 extends ConsumerStatefulWidget {
   static MaterialPage page() => MaterialPage(child: ExerciseDetailsCreateFormPage1());
 
@@ -195,6 +200,7 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
 
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
+  late int _selectedVariation;
 
   @override
   void initState() {
@@ -202,6 +208,12 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
       _icon = newExercise.icon;
     }
     if (newExercise.baseExercise.value.isRight()) {
+      if (newExercise.baseExercise.value.getOrElse((l) => null) != null){
+        _selectedVariation = 2;
+      } else {
+        _selectedVariation = 1;
+      }
+
       _baseExercise = newExercise.baseExercise;
     }
     if (newExercise.name.value.isRight()) {
@@ -232,8 +244,6 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
     context.flow<CreateExerciseStages>().update((next) => CreateExerciseStages.stage2);
   }
 
-  int _selectedVariation = 1;
-
   void _onVariationChanged(int index) {
     setState(() {
       if (index == 1) {
@@ -263,20 +273,6 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Stack(
         children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              padding: const EdgeInsets.only(
-                left: AppLayout.smallPadding,
-                right: AppLayout.smallPadding,
-                top: AppLayout.miniPadding,
-              ),
-              color: context.colorScheme.backgroundSecondary,
-              child: const StepIndicator(currentStep: 1, totalSteps: 4),
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: AppLayout.defaultPadding,
@@ -296,7 +292,7 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
                 const SizedBox(height: AppLayout.defaultPadding),
                 ChooseIconController(
                   onChanged: (value) => {_icon = ExerciseDetailsIcon(value)},
-                  initialIcon: '',
+                  initialIcon: _icon?.value.getOrElse((l) => ''),
                 ),
                 const SizedBox(height: AppLayout.defaultPadding),
                 FlexableTextField(
@@ -330,7 +326,7 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
                         _description = _description ?? ExerciseDetailsDescription(d);
                       }
                     },
-                    initialValue: null,
+                    initialValue: _baseExercise?.value.getOrElse((l) => null),
                   ),
                 FlexableTextField(
                   label: 'Description',
@@ -373,8 +369,22 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
               ],
             )
           ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: const EdgeInsets.only(
+                left: AppLayout.smallPadding,
+                right: AppLayout.smallPadding,
+                top: AppLayout.miniPadding,
+              ),
+              color: context.colorScheme.backgroundSecondary,
+              child: const StepIndicator(currentStep: 1, totalSteps: TOTAL_STEPS),
+            )
+          ),
         ],
-      ),
+      )
     );
   }
 }
@@ -454,20 +464,6 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Stack(
         children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              padding: const EdgeInsets.only(
-                left: AppLayout.smallPadding,
-                right: AppLayout.smallPadding,
-                top: AppLayout.miniPadding,
-              ),
-              color: context.colorScheme.backgroundSecondary,
-              child: const StepIndicator(currentStep: 2, totalSteps: 4),
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: AppLayout.defaultPadding,
@@ -545,6 +541,20 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
                   ],
                 )
               ]
+            )
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: const EdgeInsets.only(
+                left: AppLayout.smallPadding,
+                right: AppLayout.smallPadding,
+                top: AppLayout.miniPadding,
+              ),
+              color: context.colorScheme.backgroundSecondary,
+              child: const StepIndicator(currentStep: 2, totalSteps: TOTAL_STEPS),
             )
           ),
         ],
