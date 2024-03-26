@@ -60,24 +60,24 @@ class _RadioListControllerState extends State<RadioListController> {
         const SizedBox(
           height: AppLayout.extraMiniPadding,
         ),
-        ...items.map((i) => InkWell(
-          onTap: () {
-            setState(() {
-              items.forEach((e) => e.isSelected = false);
-              i.isSelected = true;
-            });
+        ...items.map((i) => Column(
+          children: [
+            InkWell(
+              onTap: () {
+                setState(() {
+                  items.forEach((e) => e.isSelected = false);
+                  i.isSelected = true;
+                });
 
-            widget.onSelected(i.value);
-          },
-          child: Column(
-            children: [
-              RadioItem(i),
-              if (i != items[items.length - 1])
-                const Divider(
-                  indent: AppLayout.largePadding,
-                ),
-            ],
-          )
+                widget.onSelected(i.value);
+              },
+              child: RadioItem(i),
+            ),
+            if (i != items[items.length - 1])
+              const Divider(
+                indent: AppLayout.largePadding,
+              ),
+          ]
         ))
       ],
     );
@@ -98,8 +98,10 @@ class RadioItem extends StatelessWidget {
         ),
       ),
       subtitle: _item.value.description != null ?
-        Container(
-          width: 300,
+        Padding(
+          padding: EdgeInsets.only(
+            right: AppLayout.largePadding,
+          ),
           child: Text(
             _item.value.description!,
             maxLines: 3,
