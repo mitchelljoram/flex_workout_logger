@@ -3,12 +3,15 @@ import 'package:flex_workout_logger/features/exercises/controllers/exercises_cre
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list.controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_details.entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/base_exercise.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/base_weight.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/description.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/engagement.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/equipment.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/icon.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/movement_pattern.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/muscle_groups.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/name.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/personal_record.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/type.validation.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_base_exercise_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_equipment_controller.dart';
@@ -72,10 +75,10 @@ class ExerciseDetails {
   final ExerciseDetailsEquipment? equipment;
   final ExerciseDetailsEngagement engagement;
   final ExerciseDetailsType type;
-  // final ExerciseDetailsMuscleGroups primaryMuscleGroups;
-  // final ExerciseDetailsMuscleGroups secondaryMuscleGroups;
-  // final ExerciseDetailsBaseWeight? baseWeight;
-  // final ExerciseDetailsPersonalRecord? personalRecord;
+  final ExerciseDetailsMuscleGroups primaryMuscleGroups;
+  final ExerciseDetailsMuscleGroups secondaryMuscleGroups;
+  final ExerciseDetailsBaseWeight? baseWeight;
+  final ExerciseDetailsPersonalRecord? personalRecord;
 
   const ExerciseDetails({
     required this.icon,
@@ -83,13 +86,13 @@ class ExerciseDetails {
     required this.name,
     required this.description,
     required this.movementPattern,
-    this.equipment,
+    required this.equipment,
     required this.engagement,
     required this.type,
-    // required this.primaryMuscleGroups,
-    // required this.secondaryMuscleGroups,
-    // this.baseWeight,
-    // this.personalRecord,
+    required this.primaryMuscleGroups,
+    required this.secondaryMuscleGroups,
+    required this.baseWeight,
+    required this.personalRecord,
   });
 
   ExerciseDetails copyWith({
@@ -101,6 +104,10 @@ class ExerciseDetails {
     ExerciseDetailsEquipment? equipment,
     ExerciseDetailsEngagement? engagement,
     ExerciseDetailsType? type,
+    ExerciseDetailsMuscleGroups? primaryMuscleGroups,
+    ExerciseDetailsMuscleGroups? secondaryMuscleGroups,
+    ExerciseDetailsBaseWeight? baseWeight,
+    ExerciseDetailsPersonalRecord? personalRecord,
   }) {
     return ExerciseDetails(
       icon: icon ?? this.icon,
@@ -111,6 +118,10 @@ class ExerciseDetails {
       equipment: equipment ?? this.equipment,
       engagement: engagement ?? this.engagement,
       type: type ?? this.type,
+      primaryMuscleGroups: primaryMuscleGroups ?? this.primaryMuscleGroups,
+      secondaryMuscleGroups: secondaryMuscleGroups ?? this.secondaryMuscleGroups,
+      baseWeight: baseWeight ?? this.baseWeight,
+      personalRecord: personalRecord ?? this.personalRecord,
     );
   }
 }
@@ -124,6 +135,10 @@ ExerciseDetails newExercise = ExerciseDetails(
   equipment: ExerciseDetailsEquipment(null),
   engagement: ExerciseDetailsEngagement(Engagement.bilateral),
   type: ExerciseDetailsType(ExerciseType.repitition),
+  primaryMuscleGroups: ExerciseDetailsMuscleGroups([]),
+  secondaryMuscleGroups: ExerciseDetailsMuscleGroups([]),
+  baseWeight: ExerciseDetailsBaseWeight(null),
+  personalRecord: ExerciseDetailsPersonalRecord(null),
 );
 
 const int TOTAL_STEPS = 4;
@@ -140,9 +155,9 @@ List<Page> onGeneratePages(
     case CreateExerciseStages.stage2: 
       return [ExerciseDetailsCreateFormPage2.page()];
     case CreateExerciseStages.stage3: 
-    //  return [ExerciseDetailsCreateFormPage3.page()];
+      return [ExerciseDetailsCreateFormPage3.page()];
     case CreateExerciseStages.stage4: 
-    //  return [ExerciseDetailsCreateFormPage4.page()];
+      return [ExerciseDetailsCreateFormPage4.page()];
     default: 
       return [ExerciseDetailsCreateFormPage1.page()];
   }
@@ -172,7 +187,11 @@ class ExerciseDetailsFlow extends ConsumerWidget{
       movementPattern: ExerciseDetailsMovementPattern(null),
       equipment: ExerciseDetailsEquipment(null),
       engagement: ExerciseDetailsEngagement(Engagement.bilateral),
-      type: ExerciseDetailsType(ExerciseType.repitition)
+      type: ExerciseDetailsType(ExerciseType.repitition),
+      primaryMuscleGroups: ExerciseDetailsMuscleGroups([]),
+      secondaryMuscleGroups: ExerciseDetailsMuscleGroups([]),
+      baseWeight: ExerciseDetailsBaseWeight(null),
+      personalRecord: ExerciseDetailsPersonalRecord(null),
     );
 
     return FlowBuilder<CreateExerciseStages>(
@@ -183,6 +202,8 @@ class ExerciseDetailsFlow extends ConsumerWidget{
   }
 }
 
+
+/// Exercise Details Create Form Page 1 - Icon, base exercise, name, and description
 class ExerciseDetailsCreateFormPage1 extends ConsumerStatefulWidget {
   static MaterialPage page() => MaterialPage(child: ExerciseDetailsCreateFormPage1());
 
@@ -192,6 +213,7 @@ class ExerciseDetailsCreateFormPage1 extends ConsumerStatefulWidget {
 
 class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetailsCreateFormPage1> {
   final _formKey = GlobalKey<FormState>();
+  final int _currentStep = 1;
 
   ExerciseDetailsIcon? _icon;
   ExerciseDetailsBaseExercise? _baseExercise;
@@ -380,7 +402,7 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
                 top: AppLayout.miniPadding,
               ),
               color: context.colorScheme.backgroundSecondary,
-              child: const StepIndicator(currentStep: 1, totalSteps: TOTAL_STEPS),
+              child: StepIndicator(currentStep: _currentStep, totalSteps: TOTAL_STEPS),
             )
           ),
         ],
@@ -389,6 +411,8 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
   }
 }
 
+
+/// Exercise Details Create Form Page 2 - Movement pattern, equipment, engagement, and type
 class ExerciseDetailsCreateFormPage2 extends ConsumerStatefulWidget {
   static MaterialPage page() => MaterialPage(child: ExerciseDetailsCreateFormPage2());
 
@@ -398,6 +422,7 @@ class ExerciseDetailsCreateFormPage2 extends ConsumerStatefulWidget {
 
 class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetailsCreateFormPage2> {
   final _formKey = GlobalKey<FormState>();
+  final int _currentStep = 2;
 
   ExerciseDetailsMovementPattern? _movementPattern;
   ExerciseDetailsEquipment? _equipment;
@@ -427,17 +452,6 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
     super.dispose();
   }
 
-  void handleFlowNext() {
-    newExercise = newExercise.copyWith(
-      movementPattern: _movementPattern,
-      equipment: _equipment,
-      engagement: _engagement,
-      type: _type,
-    );
-
-    context.flow<CreateExerciseStages>().update((next) => CreateExerciseStages.stage3);
-  }
-
   void handleFlowPrev() {
     newExercise = newExercise.copyWith(
       movementPattern: _movementPattern,
@@ -447,6 +461,17 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
     );
 
     context.flow<CreateExerciseStages>().update((prev) => CreateExerciseStages.stage1);
+  }
+
+  void handleFlowNext() {
+    newExercise = newExercise.copyWith(
+      movementPattern: _movementPattern,
+      equipment: _equipment,
+      engagement: _engagement,
+      type: _type,
+    );
+
+    context.flow<CreateExerciseStages>().update((next) => CreateExerciseStages.stage3);
   }
 
   @override
@@ -554,10 +579,287 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
                 top: AppLayout.miniPadding,
               ),
               color: context.colorScheme.backgroundSecondary,
-              child: const StepIndicator(currentStep: 2, totalSteps: TOTAL_STEPS),
+              child: StepIndicator(currentStep: _currentStep, totalSteps: TOTAL_STEPS),
             )
           ),
         ],
+      )
+    );
+  }
+}
+
+
+/// Exercise Details Create Form Page 3 - Muscle groups
+class ExerciseDetailsCreateFormPage3 extends ConsumerStatefulWidget {
+  static MaterialPage page() => MaterialPage(child: ExerciseDetailsCreateFormPage3());
+
+  @override
+  ConsumerState<ExerciseDetailsCreateFormPage3> createState() => _ExerciseDetailsCreateFormPage3State();
+}
+
+class _ExerciseDetailsCreateFormPage3State extends ConsumerState<ExerciseDetailsCreateFormPage3> {
+  final _formKey = GlobalKey<FormState>();
+  final int _currentStep = 3;
+
+  ExerciseDetailsMuscleGroups? _primaryMuscleGroups;
+  ExerciseDetailsMuscleGroups? _secondaryMuscleGroups;
+
+  @override
+  void initState() {
+    if (newExercise.primaryMuscleGroups.value.isRight()) {
+      _primaryMuscleGroups = newExercise.primaryMuscleGroups;
+    }
+    if (newExercise.secondaryMuscleGroups.value.isRight()) {
+      _secondaryMuscleGroups = newExercise.secondaryMuscleGroups;
+    }
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void handleFlowPrev() {
+    newExercise = newExercise.copyWith(
+      primaryMuscleGroups: _primaryMuscleGroups,
+      secondaryMuscleGroups: _secondaryMuscleGroups,
+    );
+
+    context.flow<CreateExerciseStages>().update((prev) => CreateExerciseStages.stage2);
+  }
+
+  void handleFlowNext() {
+    newExercise = newExercise.copyWith(
+      primaryMuscleGroups: _primaryMuscleGroups,
+      secondaryMuscleGroups: _secondaryMuscleGroups,
+    );
+
+    context.flow<CreateExerciseStages>().update((next) => CreateExerciseStages.stage4);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final res = ref.watch(exercisesCreateControllerProvider);
+
+    final isLoading = res.maybeWhen(
+      data: (_) => res.isRefreshing,
+      loading: () => true,
+      orElse: () => false,
+    );
+
+    return Form(
+      key: _formKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppLayout.defaultPadding,
+              vertical: AppLayout.extraLargePadding,
+            ),
+            child: Column(
+              children: [
+                Spacer(),
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: isLoading ?
+                        null :
+                        () {
+                          handleFlowPrev();
+                        },
+                      style: IconButton.styleFrom(
+                        backgroundColor: context.colorScheme.foregroundPrimary,
+                      ),
+                      icon: isLoading ?
+                        const CircularProgressIndicator() :
+                        Icon(
+                          CupertinoIcons.chevron_left,
+                          color: context.colorScheme.backgroundSecondary
+                        )
+                    ),
+                    Spacer(),
+                    IconButton(
+                      onPressed: isLoading ?
+                        null :
+                        () {
+                          if (!_formKey.currentState!.validate()) return;
+
+                          handleFlowNext();
+                        },
+                      style: IconButton.styleFrom(
+                        backgroundColor: context.colorScheme.foregroundPrimary,
+                      ),
+                      icon: isLoading ?
+                        const CircularProgressIndicator() :
+                        Icon(
+                          CupertinoIcons.chevron_right,
+                          color: context.colorScheme.backgroundSecondary
+                        )
+                    ),
+                  ],
+                )
+              ]
+            )
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: const EdgeInsets.only(
+                left: AppLayout.smallPadding,
+                right: AppLayout.smallPadding,
+                top: AppLayout.miniPadding,
+              ),
+              color: context.colorScheme.backgroundSecondary,
+              child: StepIndicator(currentStep: _currentStep, totalSteps: TOTAL_STEPS),
+            )
+          ),
+        ]
+      )
+    );
+  }
+}
+
+
+/// Exercise Details Create Form Page 4 - Base weight, personal record
+class ExerciseDetailsCreateFormPage4 extends ConsumerStatefulWidget {
+  static MaterialPage page() => MaterialPage(child: ExerciseDetailsCreateFormPage4());
+
+  @override
+  ConsumerState<ExerciseDetailsCreateFormPage4> createState() => _ExerciseDetailsCreateFormPage4State();
+}
+
+class _ExerciseDetailsCreateFormPage4State extends ConsumerState<ExerciseDetailsCreateFormPage4> {
+  final _formKey = GlobalKey<FormState>();
+  final int _currentStep = 4;
+
+  ExerciseDetailsBaseWeight? _baseWeight;
+  ExerciseDetailsPersonalRecord? _personalRecord;
+
+  @override
+  void initState() {
+    if (newExercise.baseWeight!.value.isRight()) {
+      _baseWeight = newExercise.baseWeight;
+    }
+    if (newExercise.personalRecord!.value.isRight()) {
+      _personalRecord = newExercise.personalRecord;
+    }
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void handleFlowNext() {
+    newExercise = newExercise.copyWith(
+      baseWeight: _baseWeight,
+      personalRecord: _personalRecord,
+    );
+  }
+
+  void handleFlowPrev() {
+    newExercise = newExercise.copyWith(
+      baseWeight: _baseWeight,
+      personalRecord: _personalRecord,
+    );
+
+    context.flow<CreateExerciseStages>().update((prev) => CreateExerciseStages.stage3);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final res = ref.watch(exercisesCreateControllerProvider);
+
+    final isLoading = res.maybeWhen(
+      data: (_) => res.isRefreshing,
+      loading: () => true,
+      orElse: () => false,
+    );
+
+    return Form(
+      key: _formKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppLayout.defaultPadding,
+              vertical: AppLayout.extraLargePadding,
+            ),
+            child: Column(
+              children: [
+                Spacer(),
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: isLoading ?
+                        null :
+                        () {
+                          handleFlowPrev();
+                        },
+                      style: IconButton.styleFrom(
+                        backgroundColor: context.colorScheme.foregroundPrimary,
+                      ),
+                      icon: isLoading ?
+                        const CircularProgressIndicator() :
+                        Icon(
+                          CupertinoIcons.chevron_left,
+                          color: context.colorScheme.backgroundSecondary
+                        )
+                    ),
+                    Spacer(),
+                    TextButton(
+                      onPressed: isLoading ?
+                        null :
+                        () {
+                          if (!_formKey.currentState!.validate()) return;
+
+                          handleFlowNext();
+                        },
+                      style: IconButton.styleFrom(
+                        backgroundColor: context.colorScheme.foregroundPrimary,
+                      ),
+                      child: isLoading ?
+                        const CircularProgressIndicator() :
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppLayout.defaultPadding,
+                          ),
+                          child: Text(
+                            'Create',
+                            style: context.textTheme.bodyMedium.copyWith(
+                              color: context.colorScheme.backgroundSecondary,
+                            ),
+                          ),
+                        )
+                    ),
+                  ],
+                )
+              ]
+            )
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: const EdgeInsets.only(
+                left: AppLayout.smallPadding,
+                right: AppLayout.smallPadding,
+                top: AppLayout.miniPadding,
+              ),
+              color: context.colorScheme.backgroundSecondary,
+              child: StepIndicator(currentStep: _currentStep, totalSteps: TOTAL_STEPS),
+            )
+          ),
+        ]
       )
     );
   }
