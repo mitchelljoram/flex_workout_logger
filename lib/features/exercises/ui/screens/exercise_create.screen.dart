@@ -16,7 +16,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_base_exercise_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_equipment_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_movement_pattern_controller.dart';
-import 'package:flex_workout_logger/features/exercises/ui/widgets/radio_list_controller.dart';
+import 'package:flex_workout_logger/features/exercises/ui/widgets/flexable_radio_list.dart';
 import 'package:flex_workout_logger/ui/widgets/choose_icon_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/variation_segment_controller.dart';
 import 'package:flex_workout_logger/ui/widgets/flexable_textfield.dart';
@@ -506,7 +506,7 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
                   onChanged: (value) => _equipment = ExerciseDetailsEquipment(value),
                   initialValue: _equipment?.value.getOrElse((l) => null),
                 ),
-                RadioListController<Engagement>(
+                FlexableRadioList<Engagement>(
                   items: Engagement.values.toList(), 
                   onSelected: (Enumeration<Enum>? value) => _engagement = ExerciseDetailsEngagement(value as Engagement), 
                   selectedValue: _engagement?.value.getOrElse((l) => Engagement.bilateral), 
@@ -516,7 +516,7 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
                 const SizedBox(
                   height: AppLayout.defaultPadding,
                 ),
-                RadioListController<ExerciseType>(
+                FlexableRadioList<ExerciseType>(
                   items: ExerciseType.values.toList(), 
                   onSelected: (Enumeration<Enum>? value) => _type = ExerciseDetailsType(value as ExerciseType),
                   selectedValue: _type?.value.getOrElse((l) => ExerciseType.repitition), 
@@ -795,6 +795,167 @@ class _ExerciseDetailsCreateFormPage4State extends ConsumerState<ExerciseDetails
             ),
             child: Column(
               children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Base Weight',
+                              style: context.textTheme.labelMedium.copyWith(
+                                color: context.colorScheme.foregroundPrimary,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: AppLayout.extraMiniPadding,
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width - (AppLayout.defaultPadding * 6),
+                              child: Text(
+                                'Used for equipment with inherent weight not counted in load. For example, body weight in pull-ups, sled weight in leg press.',
+                                style: context.textTheme.labelSmall.copyWith(
+                                  color: context.colorScheme.foregroundSecondary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Spacer(),
+                        Column(
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.baseline,
+                              textBaseline: TextBaseline.alphabetic,
+                              children: [
+                                Text(
+                                  '185',
+                                  style: context.textTheme.bodyLarge.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: context.colorScheme.foregroundPrimary,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: AppLayout.extraMiniPadding,
+                                ),
+                                Text(
+                                  'lbs',
+                                  style: context.textTheme.labelMedium.copyWith(
+                                    color: context.colorScheme.foregroundSecondary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              'Assisted',
+                              style: context.textTheme.labelMedium.copyWith(
+                                fontWeight: FontWeight.w400,
+                                color: context.colorScheme.foregroundSecondary,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: AppLayout.smallPadding,
+                    ),
+                    TextButton(
+                      onPressed: isLoading ?
+                        null :
+                        () {
+                        },
+                      style: TextButton.styleFrom(
+                        backgroundColor: context.colorScheme.backgroundTertiary,
+                      ),
+                      child: isLoading ?
+                        const CircularProgressIndicator() :
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppLayout.extraMiniPadding,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                CupertinoIcons.add,
+                                size: 12,
+                                color: context.colorScheme.foregroundPrimary,
+                              ),
+                              const SizedBox(
+                                width: AppLayout.smallPadding,
+                              ),
+                              Text(
+                                'Setup Base Weight',
+                                style: context.textTheme.bodySmall.copyWith(
+                                  color: context.colorScheme.foregroundPrimary,
+                                ),
+                              ),
+                            ],
+                          )
+                        )
+                    ),
+                  ],
+                ),
+                if (newExercise.type.value.getOrElse((l) => ExerciseType.repitition) == ExerciseType.repitition)
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Divider(),
+                      Text(
+                        'Current Training Maxes',
+                        style: context.textTheme.labelMedium.copyWith(
+                          color: context.colorScheme.foregroundPrimary,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: AppLayout.extraMiniPadding,
+                      ),
+                      // TODO: 1 RM
+                      const SizedBox(
+                        height: AppLayout.smallPadding,
+                      ),
+                      // TODO: 10 RM
+                      const SizedBox(
+                        height: AppLayout.smallPadding,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width - (AppLayout.defaultPadding * 2),
+                        color: context.colorScheme.backgroundPrimary,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppLayout.defaultPadding,
+                            vertical: AppLayout.defaultPadding,
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                CupertinoIcons.info_circle,
+                              ),
+                              const SizedBox(
+                                width: AppLayout.defaultPadding,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  'Training maxes are optional and will only be used to calculate intensity as well as track progress.',
+                                  style: context.textTheme.bodySmall.copyWith(
+                                    color: context.colorScheme.foregroundSecondary,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 Spacer(),
                 Row(
                   children: [
@@ -823,7 +984,7 @@ class _ExerciseDetailsCreateFormPage4State extends ConsumerState<ExerciseDetails
 
                           handleFlowNext();
                         },
-                      style: IconButton.styleFrom(
+                      style: TextButton.styleFrom(
                         backgroundColor: context.colorScheme.foregroundPrimary,
                       ),
                       child: isLoading ?

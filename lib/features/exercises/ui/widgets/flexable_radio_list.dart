@@ -4,14 +4,14 @@ import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class RadioListController<T extends Enumeration<Enum>> extends StatefulWidget {
+class FlexableRadioList<T extends Enumeration<Enum>> extends StatefulWidget {
   final List<T> items;
   final ValueChanged<T?> onSelected;
   final T? selectedValue;
   final String labelText;
   final String? description;
 
-  const RadioListController({
+  const FlexableRadioList({
     required this.items,
     required this.onSelected,
     required this.selectedValue,
@@ -21,10 +21,10 @@ class RadioListController<T extends Enumeration<Enum>> extends StatefulWidget {
   });
 
   @override
-  State<RadioListController> createState() => _RadioListControllerState();
+  State<FlexableRadioList> createState() => _FlexableRadioListState();
 }
 
-class _RadioListControllerState extends State<RadioListController> {
+class _FlexableRadioListState extends State<FlexableRadioList> {
   List<RadioModel> items = [];
 
   @override
