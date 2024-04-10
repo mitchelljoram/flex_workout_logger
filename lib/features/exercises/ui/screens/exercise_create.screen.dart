@@ -995,7 +995,7 @@ class _ExerciseDetailsCreateFormPage4State extends ConsumerState<ExerciseDetails
                           ),
                           child: Text(
                             'Create',
-                            style: context.textTheme.bodyMedium.copyWith(
+                            style: context.textTheme.bodyLarge.copyWith(
                               color: context.colorScheme.backgroundSecondary,
                             ),
                           ),
