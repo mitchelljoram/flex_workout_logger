@@ -12,10 +12,6 @@ class PersonalRecordController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final _1RMController = TextEditingController();
-    final _10RMController = TextEditingController();
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,11 +31,7 @@ class PersonalRecordController extends StatelessWidget {
         ),
         WeightInput(
           label: '1 RM', 
-          items: WeightUnits.values.toList(), 
-          selectedValue: WeightUnits.pounds, 
-          controller: _1RMController, 
-          onChanged: (value) {}, 
-          validator: (value) {}, 
+          onChanged: (value, unit) {},
           hintText: '3 - 5', 
           readOnly: false
         ),
@@ -48,11 +40,7 @@ class PersonalRecordController extends StatelessWidget {
         ),
         WeightInput(
           label: '10 RM', 
-          items: WeightUnits.values.toList(), 
-          selectedValue: WeightUnits.pounds, 
-          controller: _1RMController, 
-          onChanged: (value) {}, 
-          validator: (value) {}, 
+          onChanged: (value, unit) {},
           hintText: '3 - 5', 
           readOnly: false
         ),

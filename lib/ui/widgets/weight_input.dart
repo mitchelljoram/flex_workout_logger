@@ -4,20 +4,13 @@ import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-/// Custom text field
-class WeightInput<T extends Enumeration<Enum>> extends StatelessWidget {
-  /// Constructor
+class WeightInput extends StatefulWidget {
   WeightInput({
     required this.label,
-    required this.items,
-    required this.selectedValue,
-    required this.controller,
-    required this.onChanged,
-    required this.validator,
     required this.hintText,
+    required this.onChanged,
     required this.readOnly,
     super.key,
-    this.isRequired,
     this.autoFocus,
   });
 
@@ -27,20 +20,8 @@ class WeightInput<T extends Enumeration<Enum>> extends StatelessWidget {
   /// Hint Text
   final String hintText;
 
-  final List<T> items;
-
-  final T? selectedValue;
-
   /// On Changed
-  final void Function(String) onChanged;
-
-  final ValueChanged<T?> onSelected = (value) {};
-
-  /// Validator
-  final String? Function(String?) validator;
-
-  /// Controller
-  final TextEditingController? controller;
+  final void Function(String, WeightUnits) onChanged;
 
   /// Read Only
   final bool readOnly;
@@ -48,26 +29,68 @@ class WeightInput<T extends Enumeration<Enum>> extends StatelessWidget {
   /// Auto Focus
   final bool? autoFocus;
 
-  /// Is Field Required
-  final bool? isRequired;
+  @override
+  State<WeightInput> createState() => _WeightInputState();
+}
+
+class _WeightInputState extends State<WeightInput> {
+  /// Weight Text Input
+  double _weight = 0.0;
+
+  /// Selected Weight Unit
+  WeightUnits _selectedUnit = WeightUnits.pounds;
+
+  /// Controller
+  final TextEditingController controller = new TextEditingController();
+
+  /// Validator
+  String? validator(String? value) {
+    if (value == null) return null;
+
+    double weight = double.parse(value);
+
+    if (_selectedUnit == WeightUnits.pounds) {
+      if (weight > 9999 || weight < -9999) {
+        return 'Weight must be between -9999 - 9999 lbs.';
+      }
+    } else {
+      if (weight > 4535.47 || weight < -4535.47) {
+        return 'Weight must be between -4535.47 - 4535.47 kgs.';
+      }
+    }
+
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
+    /// On Weight Text Input Change
+    void _onWeightChange(String? value) {
+      setState(() {
+        if (value == null) return;
+
+        _weight = double.parse(value);
+      });
+    }
+
+    /// On Weight Unit Change
+    void _onWeightUnitChange(WeightUnits unit) {
+      setState(() {
+        if (_selectedUnit != unit){
+          if (unit == WeightUnits.pounds){
+            _weight = _weight / 2.205;
+          } else {
+            _weight = _weight * 2.205;
+          }
+        }
+
+        _selectedUnit = unit;
+      });
+    }
+
     return Column(
       children: [
-        Row(
-          children: [
-            Text(label, style: context.textTheme.labelMedium),
-            const Spacer(),
-            if (isRequired != null && isRequired!)
-              Text(
-                'Required',
-                style: context.textTheme.labelSmall.copyWith(
-                  color: context.colorScheme.foregroundSecondary,
-                ),
-              ),
-          ],
-        ),
+        Text(widget.label, style: context.textTheme.labelMedium),
         const SizedBox(
           height: 4,
         ),
@@ -77,14 +100,15 @@ class WeightInput<T extends Enumeration<Enum>> extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.6,
               child: TextFormField(
                 controller: controller,
-                onChanged: onChanged,
+                onChanged: _onWeightChange,
                 validator: validator,
-                readOnly: readOnly,
-                autofocus: autoFocus ?? false,
+                keyboardType: TextInputType.number,
+                readOnly: widget.readOnly,
+                autofocus: widget.autoFocus ?? false,
                 maxLines: 1,
                 decoration: InputDecoration(
                   isCollapsed: true,
-                  hintText: hintText,
+                  hintText: widget.hintText,
                   hintMaxLines: 1,
                   hintStyle: context.textTheme.bodyMedium.copyWith(
                     color: context.colorScheme.foregroundSecondary,
@@ -109,21 +133,16 @@ class WeightInput<T extends Enumeration<Enum>> extends StatelessWidget {
             ),
             Spacer(),
             Container(
-              width: MediaQuery.of(context).size.width * 0.3,
+              width: MediaQuery.of(context).size.width * 0.25,
               child: TextButton(
                 onPressed: () async {
-                  // var res = await _showBottomSheet(
-                  //   state.context,
-                  //   items,
-                  //   selectedItem,
-                  //   canCreate: canCreate,
-                  // );
+                  var res = await _showWeightUnitBottomSheet(
+                    context,
+                  );
 
-                  // if (res == null) return;
+                  if (res == null) return;
 
-                  // onSelected(res as T);
-
-                  // state.didChange(res);
+                  _onWeightUnitChange(res);
                 },
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
@@ -144,7 +163,7 @@ class WeightInput<T extends Enumeration<Enum>> extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        items[0].name,
+                        _selectedUnit.name,
                         style: context.textTheme.bodyMedium.copyWith(
                           color: context.colorScheme.foregroundPrimary,
                         ),
@@ -164,4 +183,52 @@ class WeightInput<T extends Enumeration<Enum>> extends StatelessWidget {
       ],
     );
   }
+}
+
+Future<WeightUnits?> _showWeightUnitBottomSheet<String>(
+  BuildContext context,
+) {
+  List<WeightUnits> units = WeightUnits.values.toList();
+
+  return showModalBottomSheet(
+    context: context, 
+    showDragHandle: true,
+    elevation: 0,
+    constraints: BoxConstraints(
+      minWidth: double.infinity,           
+    ),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+    ),
+    builder: (context) => ListView.separated(
+      itemCount: units.length,
+      separatorBuilder: (context, index) => Divider(
+        color: context.colorScheme.divider,
+        height: 1,
+        indent: 64,
+      ),
+      itemBuilder: (context, index) {
+        final currentItem = units[index];
+
+        return CupertinoListTile(
+          title: Text(
+            currentItem.name,
+            overflow: TextOverflow.ellipsis,
+            style: context.textTheme.labelLarge.copyWith(
+              color: context.colorScheme.foregroundPrimary,
+            ),
+          ),
+          onTap: () {
+            Navigator.of(context).pop(currentItem);
+          },
+          padding: const EdgeInsets.fromLTRB(
+            20,
+            16,
+            14,
+            16,
+          ),
+        );
+      },
+    ),
+  );
 }
