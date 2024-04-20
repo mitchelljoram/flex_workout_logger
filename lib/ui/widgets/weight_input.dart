@@ -11,10 +11,10 @@ class WeightInput extends StatefulWidget {
     required this.hintText,
     required this.onChanged,
     required this.readOnly,
+    required this.initialUnit,
     super.key,
+    this.initialWeight,
     this.autoFocus,
-    this.initialKgs,
-    this.initialLbs,
   });
 
   /// Label
@@ -24,11 +24,11 @@ class WeightInput extends StatefulWidget {
   final String hintText;
 
   /// Initial Values
-  final double? initialKgs;
-  final double? initialLbs;
+  final double? initialWeight;
+  final WeightUnits initialUnit;
 
   /// On Changed
-  final void Function(List<double>) onChanged;
+  final void Function(double, WeightUnits) onChanged;
 
   /// Read Only
   final bool readOnly;
@@ -41,15 +41,14 @@ class WeightInput extends StatefulWidget {
 }
 
 class _WeightInputState extends State<WeightInput> {
-  /// Weight Text Input
-  List<double> _weight = [0.0, 0.0];
+  /// Weight Input
+  late double _weight;
 
   /// Selected Weight Unit
-  WeightUnits _selectedUnit = WeightUnits.pounds;
+  late WeightUnits _selectedUnit;
 
-  /// Controllers
-  final _controllerKgs = new TextEditingController();
-  final _controllerLbs = new TextEditingController();
+  /// Controller
+  final _controller = new TextEditingController();
 
   /// Validator
   String? validator(String? value) {
@@ -57,8 +56,16 @@ class _WeightInputState extends State<WeightInput> {
       return null;
     }
 
-    if(value == '.') {
-      return 'Must have number before the decimal.';
+    if (value == '.') {
+      value = '0.';
+      _controller.text = value;
+      return null;
+    }
+
+    if (value.contains('.',value.indexOf('.') + 1)) {
+      value = value.substring(0,value.length - 1);
+      _controller.text = value;
+      return null;
     }
 
     var v = double.parse(value);
@@ -69,7 +76,7 @@ class _WeightInputState extends State<WeightInput> {
       }
     } else {
       if (v > 4535.47 || v < -4535.47) {
-        return 'Must be between -4535.47 - 4535.47 kgs.';
+        return 'Must be between -4535.5 - 4535.5 kgs.';
       }
     }
 
@@ -78,16 +85,15 @@ class _WeightInputState extends State<WeightInput> {
 
   @override
   void initState() {
-    _weight = [widget.initialKgs ?? 0.0, widget.initialLbs ?? 0.0];
-    _controllerKgs.text = _weight[WeightUnits.kilograms.index].toString();
-    _controllerLbs.text = _weight[WeightUnits.pounds.index].toString();
+    _weight = widget.initialWeight ?? 0.0;
+    _selectedUnit = widget.initialUnit;
+    _controller.text = _weight.toString();
     super.initState();
   }
 
   @override
   dispose() {
-    _controllerKgs.dispose();
-    _controllerLbs.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -96,36 +102,31 @@ class _WeightInputState extends State<WeightInput> {
     /// On Weight Text Input Change
     void _onWeightChange(String? value) {
       setState(() {
-        if(value == null || value.isEmpty) {
-          _weight[WeightUnits.kilograms.index] = 0.0;
-          _weight[WeightUnits.pounds.index] = 0.0;
+        if(value == null || value!.isEmpty) {
+          _weight = 0.0;
 
-          _controllerKgs.text = '';
-          _controllerLbs.text = '';
+          _controller.text = '';
 
           return;
         }
 
-        if (_selectedUnit == WeightUnits.pounds){
-          _weight[WeightUnits.pounds.index] = double.parse(value);
-          _weight[WeightUnits.kilograms.index] = double.parse((_weight[WeightUnits.pounds.index] / 2.205).toStringAsFixed(1));
-          _controllerLbs.text = value;
-          _controllerKgs.text = _weight[WeightUnits.kilograms.index].toString();
-        } else {
-          _weight[WeightUnits.kilograms.index] = double.parse(value);
-          _weight[WeightUnits.pounds.index] = double.parse((_weight[WeightUnits.kilograms.index] * 2.205).toStringAsFixed(1));
-          _controllerLbs.text = _weight[WeightUnits.pounds.index].toString();
-          _controllerKgs.text = value;
+        if (value!.contains('.',value!.indexOf('.') + 1)) {
+          value = value!.substring(0,value!.length - 1);
         }
-      });
 
-      widget.onChanged(_weight);
+        _weight = double.parse(double.parse(value!).toStringAsFixed(1));
+        _controller.text = value!;
+
+        widget.onChanged(_weight, _selectedUnit);
+      });
     }
 
     /// On Weight Unit Change
     void _onWeightUnitChange(WeightUnits unit) {
       setState(() {
         _selectedUnit = unit;
+
+        widget.onChanged(_weight, _selectedUnit);
       });
     }
 
@@ -144,14 +145,14 @@ class _WeightInputState extends State<WeightInput> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: MediaQuery.of(context).size.width * 0.6,
+              width: MediaQuery.of(context).size.width * 0.625,
               child: TextFormField(
-                controller: _selectedUnit == WeightUnits.kilograms ? _controllerKgs : _controllerLbs,
+                controller:  _controller,
                 onChanged: _onWeightChange,
                 validator: validator,
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
                 ],
                 readOnly: widget.readOnly,
                 autofocus: widget.autoFocus ?? false,
@@ -244,6 +245,7 @@ Future<WeightUnits?> _showWeightUnitBottomSheet<String>(
     context: context, 
     showDragHandle: true,
     elevation: 0,
+    scrollControlDisabledMaxHeightRatio: 0.25,
     constraints: BoxConstraints(
       minWidth: double.infinity,           
     ),
@@ -271,6 +273,14 @@ Future<WeightUnits?> _showWeightUnitBottomSheet<String>(
           onTap: () {
             Navigator.of(context).pop(currentItem);
           },
+          leading: Container(
+            height: 27,
+            width: 27,
+            child: Image(
+              image: AssetImage('assets/icons/${currentItem.name}.100x100.png'),
+              fit: BoxFit.scaleDown,
+            )
+          ),
           padding: const EdgeInsets.fromLTRB(
             20,
             16,

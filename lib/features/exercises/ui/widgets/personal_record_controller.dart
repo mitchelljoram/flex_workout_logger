@@ -26,11 +26,21 @@ class PersonalRecordController extends StatelessWidget {
     double tenRepMaxKgs = 0.0;
     double tenRepMaxLbs = 0.0;
 
+    WeightUnits initial1RMUnit = WeightUnits.kilograms;
+    WeightUnits initial10RMUnit = WeightUnits.kilograms;
+
     if (initialValue != null) {
       oneRepMaxKgs = initialValue!.oneRepMaxEstimateKgs;
       oneRepMaxLbs = initialValue!.oneRepMaxEstimateLbs;
       tenRepMaxKgs = initialValue!.tenRepMaxEstimateKgs;
       tenRepMaxLbs = initialValue!.tenRepMaxEstimateLbs;
+
+      if (oneRepMaxLbs != 0) {
+        initial1RMUnit = WeightUnits.pounds;
+      }
+      if (tenRepMaxLbs != 0) {
+        initial10RMUnit = WeightUnits.pounds;
+      }
     }
 
     return Column(
@@ -52,12 +62,20 @@ class PersonalRecordController extends StatelessWidget {
         ),
         WeightInput(
           label: '1 RM', 
-          onChanged: (values) {
-            oneRepMaxKgs = values[WeightUnits.kilograms.index];
-            oneRepMaxLbs = values[WeightUnits.pounds.index];
+          onChanged: (value, unit) {
+            if (unit == WeightUnits.kilograms) {
+              oneRepMaxKgs = value;
+              oneRepMaxLbs = 0.0;
+              // oneRepMaxLbs = double.parse((value * 2.205).toStringAsFixed(1));
+            } else {
+              oneRepMaxLbs = value;
+              oneRepMaxKgs = 0.0;
+              // oneRepMaxKgs = double.parse((value / 2.205).toStringAsFixed(1));
+            }
 
             onChanged(
               PersonalRecordEntity(
+                type: ExerciseType.repitition,
                 oneRepMaxEstimateKgs: oneRepMaxKgs,
                 oneRepMaxEstimateLbs: oneRepMaxLbs,
                 tenRepMaxEstimateKgs: tenRepMaxKgs,
@@ -69,20 +87,28 @@ class PersonalRecordController extends StatelessWidget {
           },
           hintText: 'One Rep Max', 
           readOnly: false,
-          initialKgs: oneRepMaxKgs,
-          initialLbs: oneRepMaxLbs,
+          initialWeight: initial1RMUnit == WeightUnits.kilograms ? oneRepMaxKgs : oneRepMaxLbs,
+          initialUnit: initial1RMUnit,
         ),
         const SizedBox(
           height: AppLayout.defaultPadding,
         ),
         WeightInput(
           label: '10 RM', 
-          onChanged: (values) {
-            tenRepMaxKgs = values[WeightUnits.kilograms.index];
-            tenRepMaxLbs = values[WeightUnits.pounds.index];
+          onChanged: (value, unit) {
+            if (unit == WeightUnits.kilograms) {
+              tenRepMaxKgs = value;
+              tenRepMaxLbs = 0.0;
+              // tenRepMaxLbs = double.parse((value * 2.205).toStringAsFixed(1));
+            } else {
+              tenRepMaxLbs = value;
+              tenRepMaxKgs = 0.0;
+              // tenRepMaxKgs = double.parse((value / 2.205).toStringAsFixed(1));
+            }
 
             onChanged(
               PersonalRecordEntity(
+                type: ExerciseType.repitition,
                 oneRepMaxEstimateKgs: oneRepMaxKgs,
                 oneRepMaxEstimateLbs: oneRepMaxLbs,
                 tenRepMaxEstimateKgs: tenRepMaxKgs,
@@ -94,8 +120,8 @@ class PersonalRecordController extends StatelessWidget {
           },
           hintText: 'Ten Rep Max', 
           readOnly: false,
-          initialKgs: tenRepMaxKgs,
-          initialLbs: tenRepMaxLbs,
+          initialWeight: initial10RMUnit == WeightUnits.kilograms ? tenRepMaxKgs : tenRepMaxLbs,
+          initialUnit: initial10RMUnit,
         ),
         const SizedBox(
           height: AppLayout.defaultPadding,
