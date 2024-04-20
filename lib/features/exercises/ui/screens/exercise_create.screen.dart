@@ -342,12 +342,16 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
                         _icon = _icon ?? ExerciseDetailsIcon(_baseExercise!.value.getOrElse((l) => null)!.icon);
                       
                         final n = _baseExercise!.value.getOrElse((l) => null)!.name;
-                        _nameController.text = _name?.value.getOrElse((l) => '') ?? '${n} Variation';
-                        _name = _name ?? ExerciseDetailsName('${n} Variation');
+                        if(_name!.value.getOrElse((l) => '').isEmpty) {
+                          _nameController.text = '${n} Variation';
+                          _name = ExerciseDetailsName('${n} Variation');
+                        }
 
                         final d = _baseExercise!.value.getOrElse((l) => null)!.description;
-                        _descriptionController.text = _description?.value.getOrElse((l) => '') ?? d;
-                        _description = _description ?? ExerciseDetailsDescription(d);
+                        if(_description!.value.getOrElse((l) => '').isEmpty) {
+                          _descriptionController.text = d;
+                          _description = ExerciseDetailsDescription(d);
+                        }
                       }
                     },
                     initialValue: _baseExercise?.value.getOrElse((l) => null),
@@ -363,6 +367,7 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
                   controller: _descriptionController,
                   readOnly: isLoading,
                   isTextArea: true,
+                  maxLength: MAX_DESCRIPTION_LENGTH,
                 ),
                 Spacer(),
                 Row(
@@ -810,7 +815,10 @@ class _ExerciseDetailsCreateFormPage4State extends ConsumerState<ExerciseDetails
                   height: AppLayout.defaultPadding,
                 ),
                 if (newExercise.type.value.getOrElse((l) => ExerciseType.repitition) == ExerciseType.repitition)
-                  PersonalRecordController(),
+                  PersonalRecordController(
+                    initialValue: _personalRecord?.value.getOrElse((l) => null),
+                    onChanged: (value) => _personalRecord = ExerciseDetailsPersonalRecord(value),
+                  ),
                 Spacer(),
                 Row(
                   children: [

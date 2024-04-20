@@ -3,6 +3,7 @@ import 'package:flex_workout_logger/utils/enums.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class WeightInput extends StatefulWidget {
   WeightInput({
@@ -12,6 +13,8 @@ class WeightInput extends StatefulWidget {
     required this.readOnly,
     super.key,
     this.autoFocus,
+    this.initialKgs,
+    this.initialLbs,
   });
 
   /// Label
@@ -20,8 +23,12 @@ class WeightInput extends StatefulWidget {
   /// Hint Text
   final String hintText;
 
+  /// Initial Values
+  final double? initialKgs;
+  final double? initialLbs;
+
   /// On Changed
-  final void Function(String, WeightUnits) onChanged;
+  final void Function(List<double>) onChanged;
 
   /// Read Only
   final bool readOnly;
@@ -35,27 +42,34 @@ class WeightInput extends StatefulWidget {
 
 class _WeightInputState extends State<WeightInput> {
   /// Weight Text Input
-  double _weight = 0.0;
+  List<double> _weight = [0.0, 0.0];
 
   /// Selected Weight Unit
   WeightUnits _selectedUnit = WeightUnits.pounds;
 
-  /// Controller
-  final TextEditingController controller = new TextEditingController();
+  /// Controllers
+  final _controllerKgs = new TextEditingController();
+  final _controllerLbs = new TextEditingController();
 
   /// Validator
   String? validator(String? value) {
-    if (value == null) return null;
+    if (value == null || value.isEmpty) {
+      return null;
+    }
 
-    double weight = double.parse(value);
+    if(value == '.') {
+      return 'Must have number before the decimal.';
+    }
+
+    var v = double.parse(value);
 
     if (_selectedUnit == WeightUnits.pounds) {
-      if (weight > 9999 || weight < -9999) {
-        return 'Weight must be between -9999 - 9999 lbs.';
+      if (v > 9999 || v < -9999) {
+        return 'Must be between -9999 - 9999 lbs.';
       }
     } else {
-      if (weight > 4535.47 || weight < -4535.47) {
-        return 'Weight must be between -4535.47 - 4535.47 kgs.';
+      if (v > 4535.47 || v < -4535.47) {
+        return 'Must be between -4535.47 - 4535.47 kgs.';
       }
     }
 
@@ -63,46 +77,82 @@ class _WeightInputState extends State<WeightInput> {
   }
 
   @override
+  void initState() {
+    _weight = [widget.initialKgs ?? 0.0, widget.initialLbs ?? 0.0];
+    _controllerKgs.text = _weight[WeightUnits.kilograms.index].toString();
+    _controllerLbs.text = _weight[WeightUnits.pounds.index].toString();
+    super.initState();
+  }
+
+  @override
+  dispose() {
+    _controllerKgs.dispose();
+    _controllerLbs.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     /// On Weight Text Input Change
     void _onWeightChange(String? value) {
       setState(() {
-        if (value == null) return;
+        if(value == null || value.isEmpty) {
+          _weight[WeightUnits.kilograms.index] = 0.0;
+          _weight[WeightUnits.pounds.index] = 0.0;
 
-        _weight = double.parse(value);
+          _controllerKgs.text = '';
+          _controllerLbs.text = '';
+
+          return;
+        }
+
+        if (_selectedUnit == WeightUnits.pounds){
+          _weight[WeightUnits.pounds.index] = double.parse(value);
+          _weight[WeightUnits.kilograms.index] = double.parse((_weight[WeightUnits.pounds.index] / 2.205).toStringAsFixed(1));
+          _controllerLbs.text = value;
+          _controllerKgs.text = _weight[WeightUnits.kilograms.index].toString();
+        } else {
+          _weight[WeightUnits.kilograms.index] = double.parse(value);
+          _weight[WeightUnits.pounds.index] = double.parse((_weight[WeightUnits.kilograms.index] * 2.205).toStringAsFixed(1));
+          _controllerLbs.text = _weight[WeightUnits.pounds.index].toString();
+          _controllerKgs.text = value;
+        }
       });
+
+      widget.onChanged(_weight);
     }
 
     /// On Weight Unit Change
     void _onWeightUnitChange(WeightUnits unit) {
       setState(() {
-        if (_selectedUnit != unit){
-          if (unit == WeightUnits.pounds){
-            _weight = _weight / 2.205;
-          } else {
-            _weight = _weight * 2.205;
-          }
-        }
-
         _selectedUnit = unit;
       });
     }
 
     return Column(
       children: [
-        Text(widget.label, style: context.textTheme.labelMedium),
+        Row(
+          children: [
+            Text(widget.label, style: context.textTheme.labelMedium),
+            Spacer(),
+          ],
+        ),
         const SizedBox(
           height: 4,
         ),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: MediaQuery.of(context).size.width * 0.6,
               child: TextFormField(
-                controller: controller,
+                controller: _selectedUnit == WeightUnits.kilograms ? _controllerKgs : _controllerLbs,
                 onChanged: _onWeightChange,
                 validator: validator,
                 keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+                ],
                 readOnly: widget.readOnly,
                 autofocus: widget.autoFocus ?? false,
                 maxLines: 1,

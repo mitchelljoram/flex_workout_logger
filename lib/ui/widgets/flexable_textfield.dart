@@ -16,6 +16,7 @@ class FlexableTextField extends StatelessWidget {
     super.key,
     this.isRequired,
     this.isTextArea,
+    this.maxLength,
     this.autoFocus,
   });
 
@@ -36,6 +37,9 @@ class FlexableTextField extends StatelessWidget {
 
   /// Controller
   final TextEditingController? controller;
+
+  /// Max Length
+  final int? maxLength;
 
   /// Read Only
   final bool readOnly;
@@ -77,6 +81,7 @@ class FlexableTextField extends StatelessWidget {
           autofocus: autoFocus ?? false,
           maxLines: isTextArea != null && isTextArea! ? null : 1,
           minLines: isTextArea != null && isTextArea! ? 5 : 1,
+          maxLength: maxLength,
           decoration: InputDecoration(
             isCollapsed: true,
             hintText: hintText,
