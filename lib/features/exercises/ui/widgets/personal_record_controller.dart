@@ -64,13 +64,13 @@ class PersonalRecordController extends StatelessWidget {
           label: '1 RM', 
           onChanged: (value, unit) {
             if (unit == WeightUnits.kilograms) {
-              oneRepMaxKgs = value;
+              oneRepMaxKgs = double.parse(value.toStringAsFixed(2));
               oneRepMaxLbs = 0.0;
-              // oneRepMaxLbs = double.parse((value * 2.205).toStringAsFixed(1));
+              // oneRepMaxLbs = double.parse((value * 2.205).toStringAsFixed(2));
             } else {
-              oneRepMaxLbs = value;
+              oneRepMaxLbs = double.parse(value.toStringAsFixed(2));
               oneRepMaxKgs = 0.0;
-              // oneRepMaxKgs = double.parse((value / 2.205).toStringAsFixed(1));
+              // oneRepMaxKgs = double.parse((value / 2.205).toStringAsFixed(2));
             }
 
             onChanged(

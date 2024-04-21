@@ -5,6 +5,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+double MIN_WEIGHT_KGS = -4535.47;
+double MAX_WEIGHT_KGS = 4535.47;
+
+double MIN_WEIGHT_LBS = -9999;
+double MAX_WEIGHT_LBS = 9999;
+
 class WeightInput extends StatefulWidget {
   WeightInput({
     required this.label,
@@ -56,27 +62,27 @@ class _WeightInputState extends State<WeightInput> {
       return null;
     }
 
-    if (value == '.') {
+    if (value == '-') {
+      return null;
+    } else if (value == '.') {
       value = '0.';
       _controller.text = value;
       return null;
-    }
-
-    if (value.contains('.',value.indexOf('.') + 1)) {
-      value = value.substring(0,value.length - 1);
+    } else if (value == '-.') {
+      value = '-0.';
       _controller.text = value;
       return null;
     }
 
     var v = double.parse(value);
 
-    if (_selectedUnit == WeightUnits.pounds) {
-      if (v > 9999 || v < -9999) {
-        return 'Must be between -9999 - 9999 lbs.';
+    if (_selectedUnit == WeightUnits.kilograms) {
+      if (v < MIN_WEIGHT_KGS || v > MAX_WEIGHT_KGS) {
+        return 'Must be between ${MIN_WEIGHT_KGS} - ${MAX_WEIGHT_KGS} kgs.';
       }
     } else {
-      if (v > 4535.47 || v < -4535.47) {
-        return 'Must be between -4535.5 - 4535.5 kgs.';
+      if (v < MIN_WEIGHT_LBS || v > MAX_WEIGHT_LBS) {
+        return 'Must be between ${MIN_WEIGHT_LBS} - ${MAX_WEIGHT_LBS} lbs.';
       }
     }
 
@@ -87,7 +93,7 @@ class _WeightInputState extends State<WeightInput> {
   void initState() {
     _weight = widget.initialWeight ?? 0.0;
     _selectedUnit = widget.initialUnit;
-    _controller.text = _weight.toString();
+    _controller.text = _weight != 0.0 ? _weight.toString() : '';
     super.initState();
   }
 
@@ -105,17 +111,19 @@ class _WeightInputState extends State<WeightInput> {
         if(value == null || value!.isEmpty) {
           _weight = 0.0;
 
-          _controller.text = '';
-
+          widget.onChanged(_weight, _selectedUnit);
           return;
         }
 
-        if (value!.contains('.',value!.indexOf('.') + 1)) {
-          value = value!.substring(0,value!.length - 1);
+        if (value == '-') {
+          return;
+        } else if (value == '.') {
+          value = '0.';
+        } else if (value == '-.') {
+          value = '-0.';
         }
 
-        _weight = double.parse(double.parse(value!).toStringAsFixed(1));
-        _controller.text = value!;
+        _weight = double.parse(value!);
 
         widget.onChanged(_weight, _selectedUnit);
       });
@@ -150,9 +158,12 @@ class _WeightInputState extends State<WeightInput> {
                 controller:  _controller,
                 onChanged: _onWeightChange,
                 validator: validator,
-                keyboardType: TextInputType.number,
+                keyboardType: const TextInputType.numberWithOptions(
+                  signed: true,
+                  decimal: true,
+                ),
                 inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+                  FilteringTextInputFormatter.allow(RegExp(r'^\-?\d*\.?\d*$')),
                 ],
                 readOnly: widget.readOnly,
                 autofocus: widget.autoFocus ?? false,

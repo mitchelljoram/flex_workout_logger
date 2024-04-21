@@ -337,21 +337,15 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
                     validator: (value) => _baseExercise?.validate,
                     onChanged: (value) {
                       _baseExercise = ExerciseDetailsBaseExercise(null, value);
-                      
-                      if(_baseExercise!.value.isRight()) {
-                        _icon = _icon ?? ExerciseDetailsIcon(_baseExercise!.value.getOrElse((l) => null)!.icon);
-                      
-                        final n = _baseExercise!.value.getOrElse((l) => null)!.name;
-                        if(_name!.value.getOrElse((l) => '').isEmpty) {
-                          _nameController.text = '${n} Variation';
-                          _name = ExerciseDetailsName('${n} Variation');
-                        }
 
-                        final d = _baseExercise!.value.getOrElse((l) => null)!.description;
-                        if(_description!.value.getOrElse((l) => '').isEmpty) {
-                          _descriptionController.text = d;
-                          _description = ExerciseDetailsDescription(d);
-                        }
+                      if (_baseExercise!.value.isRight()) {
+                        newExercise = newExercise.copyWith(
+                          movementPattern: ExerciseDetailsMovementPattern(value.movementPattern),
+                          engagement: ExerciseDetailsEngagement(value.engagement),
+                          type: ExerciseDetailsType(value.type),
+                          primaryMuscleGroups: ExerciseDetailsMuscleGroups(value.primaryMuscleGroups),
+                          secondaryMuscleGroups: ExerciseDetailsMuscleGroups(value.secondaryMuscleGroups),
+                        );
                       }
                     },
                     initialValue: _baseExercise?.value.getOrElse((l) => null),
