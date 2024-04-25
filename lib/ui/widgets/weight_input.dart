@@ -4,6 +4,7 @@ import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 double MIN_WEIGHT_KGS = -4535.47;
 double MAX_WEIGHT_KGS = 4535.47;
@@ -198,13 +199,11 @@ class _WeightInputState extends State<WeightInput> {
               width: MediaQuery.of(context).size.width * 0.25,
               child: TextButton(
                 onPressed: () async {
-                  var res = await _showWeightUnitBottomSheet(
-                    context,
-                  );
-
-                  if (res == null) return;
-
-                  _onWeightUnitChange(res);
+                  if (_selectedUnit == WeightUnits.kilograms) {
+                    _onWeightUnitChange(WeightUnits.pounds);
+                  } else {
+                    _onWeightUnitChange(WeightUnits.kilograms);
+                  }
                 },
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
@@ -231,9 +230,13 @@ class _WeightInputState extends State<WeightInput> {
                         ),
                       ),
                       const Spacer(),
-                      Icon(
-                        CupertinoIcons.chevron_down,
-                        color: context.colorScheme.foregroundSecondary,
+                      Container(
+                        height: 25,
+                        width: 25,
+                        child: Image(
+                          image: AssetImage('assets/icons/${_selectedUnit.name}.100x100.png'),
+                          fit: BoxFit.scaleDown,
+                        ),
                       ),
                     ],
                   ),
