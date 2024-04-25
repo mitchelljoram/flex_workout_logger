@@ -1,7 +1,11 @@
+import 'dart:math';
+
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_create.controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list.controller.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/base_weight.entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_details.entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/personal_record.entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/base_exercise.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/base_weight.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/description.validation.dart';
@@ -23,6 +27,8 @@ import 'package:flex_workout_logger/ui/widgets/choose_icon_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/variation_segment_controller.dart';
 import 'package:flex_workout_logger/ui/widgets/flexable_textfield.dart';
 import 'package:flex_workout_logger/ui/widgets/step_indicator.dart';
+import 'package:flex_workout_logger/ui/widgets/weight_input.dart';
+import 'package:flex_workout_logger/utils/date_time_extensions.dart';
 import 'package:flex_workout_logger/utils/enums.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flow_builder/flow_builder.dart';
@@ -145,7 +151,7 @@ ExerciseDetails newExercise = ExerciseDetails(
 
 const int TOTAL_STEPS = 4;
 
-enum CreateExerciseStages {stage1, stage2, stage3, stage4}
+enum CreateExerciseStages {stage1, stage2, stage3, stage4, baseWeight}
 
 List<Page> onGeneratePages(
   CreateExerciseStages stage, 
@@ -160,6 +166,8 @@ List<Page> onGeneratePages(
       return [ExerciseDetailsCreateFormPage3.page()];
     case CreateExerciseStages.stage4: 
       return [ExerciseDetailsCreateFormPage4.page()];
+    case CreateExerciseStages.baseWeight:
+      return [ExerciseDetailsCreateFormBaseWeight.page()];
     default: 
       return [ExerciseDetailsCreateFormPage1.page()];
   }
@@ -192,8 +200,26 @@ class ExerciseDetailsFlow extends ConsumerWidget{
       type: ExerciseDetailsType(ExerciseType.repitition),
       primaryMuscleGroups: ExerciseDetailsMuscleGroups([]),
       secondaryMuscleGroups: ExerciseDetailsMuscleGroups([]),
-      baseWeight: ExerciseDetailsBaseWeight(null),
-      personalRecord: ExerciseDetailsPersonalRecord(null),
+      baseWeight: ExerciseDetailsBaseWeight(BaseWeightEntity(
+        weightKgs: 0.0,
+        weightLbs: 0.0,
+        assisted: false,
+        bodyWeight: false,
+        createdAt: DateTimeX.current,
+        updatedAt: DateTimeX.current
+      )),
+      personalRecord: ExerciseDetailsPersonalRecord(PersonalRecordEntity(
+        type: ExerciseType.repitition,
+        oneRepMaxEstimateKgs: 0.0,
+        oneRepMaxEstimateLbs: 0.0,
+        tenRepMaxEstimateKgs: 0.0,
+        tenRepMaxEstimateLbs: 0.0,
+        maxWeightKgs: 0.0,
+        maxWeightLbs: 0.0,
+        bestTime: 0,
+        createdAt: DateTimeX.current,
+        updatedAt: DateTimeX.current
+      )),
     );
 
     return FlowBuilder<CreateExerciseStages>(
@@ -763,6 +789,8 @@ class _ExerciseDetailsCreateFormPage4State extends ConsumerState<ExerciseDetails
       baseWeight: _baseWeight,
       personalRecord: _personalRecord,
     );
+
+    context.flow<CreateExerciseStages>().complete();
   }
 
   void handleFlowPrev() {
@@ -777,11 +805,6 @@ class _ExerciseDetailsCreateFormPage4State extends ConsumerState<ExerciseDetails
   @override
   Widget build(BuildContext context) {
     final res = ref.watch(exercisesCreateControllerProvider);
-
-    final errorText = res.maybeWhen(
-      error: (error, stackTrace) => error.toString(),
-      orElse: () => null,
-    );
 
     final isLoading = res.maybeWhen(
       data: (_) => res.isRefreshing,
@@ -803,7 +826,15 @@ class _ExerciseDetailsCreateFormPage4State extends ConsumerState<ExerciseDetails
               children: [
                 ChooseBaseWeightController(
                   initialValue: _baseWeight?.value.getOrElse((l) => null),
-                  onChanged: (value) => _baseWeight = ExerciseDetailsBaseWeight(value)
+                  onChanged: (value) => _baseWeight = ExerciseDetailsBaseWeight(value),
+                  handleFlowBaseWeight: () {
+                    newExercise = newExercise.copyWith(
+                      baseWeight: _baseWeight,
+                      personalRecord: _personalRecord,
+                    );
+
+                    context.flow<CreateExerciseStages>().update((next) => CreateExerciseStages.baseWeight);
+                  },
                 ),
                 const SizedBox(
                   height: AppLayout.defaultPadding,
@@ -877,6 +908,175 @@ class _ExerciseDetailsCreateFormPage4State extends ConsumerState<ExerciseDetails
               child: StepIndicator(currentStep: _currentStep, totalSteps: TOTAL_STEPS),
             )
           ),
+        ]
+      )
+    );
+  }
+}
+
+/// Exercise Details Create Form - Base weight
+class ExerciseDetailsCreateFormBaseWeight extends ConsumerStatefulWidget {
+  static MaterialPage page() => MaterialPage(child: ExerciseDetailsCreateFormBaseWeight());
+
+  @override
+  ConsumerState<ExerciseDetailsCreateFormBaseWeight> createState() => _ExerciseDetailsCreateFormBaseWeightState();
+}
+
+class _ExerciseDetailsCreateFormBaseWeightState extends ConsumerState<ExerciseDetailsCreateFormBaseWeight> {
+  ExerciseDetailsBaseWeight? _baseWeight;
+  double _weight = 0.0;
+  WeightUnits _initialUnit = WeightUnits.kilograms;
+  Assisted _assisted = Assisted.notAssisted;
+  BodyWeight _bodyWeight = BodyWeight.custom;
+
+  @override
+  void initState() {
+    if (newExercise.baseWeight!.value.isRight()) {
+      _baseWeight = newExercise.baseWeight;
+
+      if (_baseWeight!.value.getOrElse((l) => null)?.weightLbs != 0.0) {
+        _weight = _baseWeight!.value.getOrElse((l) => null)!.weightLbs;
+        _initialUnit = WeightUnits.pounds;
+      } else {
+        _weight = _baseWeight!.value.getOrElse((l) => null)!.weightKgs;
+      }
+
+      if (_baseWeight!.value.getOrElse((l) => null)!.assisted == true) {
+        _assisted = Assisted.assisted;
+      }
+
+      if (_baseWeight!.value.getOrElse((l) => null)!.bodyWeight == true) {
+        _bodyWeight = BodyWeight.useBodyweight;
+      }
+    }
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void handleFlowPrev() {
+    newExercise = newExercise.copyWith(
+      baseWeight: _baseWeight,
+    );
+
+    context.flow<CreateExerciseStages>().update((prev) => CreateExerciseStages.stage4);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final res = ref.watch(exercisesCreateControllerProvider);
+
+    final isLoading = res.maybeWhen(
+      data: (_) => res.isRefreshing,
+      loading: () => true,
+      orElse: () => false,
+    );
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppLayout.defaultPadding,
+        vertical: AppLayout.defaultPadding,
+      ),
+      child: Column(
+        children: [
+          Text(
+            'Base Weight Setup',
+            style: context.textTheme.labelLarge,
+          ),
+          SizedBox(
+            height: AppLayout.defaultPadding,
+          ),
+          WeightInput(
+            label: 'Weight', 
+            hintText: 'Set Weight', 
+            onChanged: (value, unit) {
+              BaseWeightEntity baseWeight = new BaseWeightEntity(
+                weightKgs: unit == WeightUnits.kilograms ? value : 0.0,
+                weightLbs: unit == WeightUnits.pounds ? value : 0.0,
+                assisted: _assisted == Assisted.assisted ? true : false, 
+                bodyWeight: _bodyWeight == BodyWeight.useBodyweight ? true : false,  
+                createdAt: DateTimeX.current, 
+                updatedAt: DateTimeX.current
+              );
+
+              _baseWeight = ExerciseDetailsBaseWeight(baseWeight);
+            }, 
+            readOnly: false, 
+            initialUnit: _initialUnit,
+            initialWeight: _weight,
+          ),
+          SizedBox(
+            height: AppLayout.defaultPadding,
+          ),
+          FlexableRadioList<Assisted>(
+            items: Assisted.values.toList(), 
+            onSelected: (Enumeration<Enum>? value) {
+              _assisted = value as Assisted;
+
+              BaseWeightEntity baseWeight = new BaseWeightEntity(
+                weightKgs: _baseWeight!.value.getOrElse((l) => null)!.weightKgs,
+                weightLbs: _baseWeight!.value.getOrElse((l) => null)!.weightLbs,
+                assisted: _assisted == Assisted.assisted ? true : false, 
+                bodyWeight: _bodyWeight == BodyWeight.useBodyweight ? true : false,  
+                createdAt: DateTimeX.current, 
+                updatedAt: DateTimeX.current
+              );
+
+              _baseWeight = ExerciseDetailsBaseWeight(baseWeight);
+            },
+            selectedValue: _assisted,
+            labelText: 'Assisted Exercise',
+            description: 'Assisted exercises logged weight will be subtracted from the base weight. Ex: Assisted Pull Ups'
+          ),
+          SizedBox(
+            height: AppLayout.defaultPadding,
+          ),
+          FlexableRadioList<BodyWeight>(
+            items: BodyWeight.values.toList(),
+            onSelected: (Enumeration<Enum>? value) {
+              _bodyWeight = value as BodyWeight;
+
+              BaseWeightEntity baseWeight = new BaseWeightEntity(
+                weightKgs: _baseWeight!.value.getOrElse((l) => null)!.weightKgs,
+                weightLbs: _baseWeight!.value.getOrElse((l) => null)!.weightLbs,
+                assisted: _assisted == Assisted.assisted ? true : false,
+                bodyWeight: _bodyWeight == BodyWeight.useBodyweight ? true : false,
+                createdAt: DateTimeX.current,
+                updatedAt: DateTimeX.current,
+              );
+
+              _baseWeight = ExerciseDetailsBaseWeight(baseWeight);
+            },
+            selectedValue: _bodyWeight,
+            labelText: 'Autofill Body Weight',
+            description: 'Select whether the weight should autofill to your most up to date bodyweight',
+          ),
+          Spacer(),
+          Row(
+            children: [
+              IconButton(
+                onPressed: isLoading ?
+                  null :
+                  () {
+                    handleFlowPrev();
+                  },
+                style: IconButton.styleFrom(
+                  backgroundColor: context.colorScheme.foregroundPrimary,
+                ),
+                icon: isLoading ?
+                  const CircularProgressIndicator() :
+                  Icon(
+                    CupertinoIcons.chevron_left,
+                    color: context.colorScheme.backgroundSecondary
+                  )
+              ),
+              Spacer(),
+            ],
+          )
         ]
       )
     );

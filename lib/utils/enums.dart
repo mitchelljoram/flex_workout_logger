@@ -96,3 +96,59 @@ enum WeightUnits implements Enumeration<WeightUnits> {
   @override
   set description(String? description) => description;
 }
+
+/// Assisted Exercise enum
+enum Assisted implements Enumeration<Assisted> {
+  /// Not Assisted
+  notAssisted(
+    name: 'Not Assisted',
+  ),
+
+  /// Assisted
+  assisted(
+    name: 'Assisted',
+  );
+
+  // ignore: unused_element
+  const Assisted({required this.name, this.description});
+
+  @override
+  final String name;
+
+  @override
+  final String? description;
+
+  @override
+  set name(String name) => name;
+
+  @override
+  set description(String? description) => description;
+}
+
+/// Body Weight enum
+enum BodyWeight implements Enumeration<BodyWeight> {
+  /// Custom
+  custom(
+    name: 'Custom',
+  ),
+
+  /// Use Bodyweight
+  useBodyweight(
+    name: 'Use Bodyweight',
+  );
+
+  // ignore: unused_element
+  const BodyWeight({required this.name, this.description});
+
+  @override
+  final String name;
+
+  @override
+  final String? description;
+
+  @override
+  set name(String name) => name;
+
+  @override
+  set description(String? description) => description;
+}

@@ -9,10 +9,12 @@ import 'package:flutter/material.dart';
 class ChooseBaseWeightController extends StatefulWidget {
   final BaseWeightEntity? initialValue;
   final void Function(BaseWeightEntity) onChanged;
+  final void Function() handleFlowBaseWeight;
 
   const ChooseBaseWeightController({
     this.initialValue,
     required this.onChanged,
+    required this.handleFlowBaseWeight,
     super.key,
   });
 
@@ -22,15 +24,17 @@ class ChooseBaseWeightController extends StatefulWidget {
 
 class _ChooseBaseWeightControllerState extends State<ChooseBaseWeightController> {
   BaseWeightEntity? _baseWeight;
-  WeightUnits _weightUnit = WeightUnits.pounds;
-  String _bottomText = '';
+  WeightUnits _weightUnit = WeightUnits.kilograms;
 
   @override
   void initState() {
     if (widget.initialValue != null) {
       _baseWeight = widget.initialValue;
-    }
-    else {
+
+      if (_baseWeight!.weightKgs == 0.0 && _baseWeight!.weightLbs != 0.0) {
+        _weightUnit = WeightUnits.pounds;
+      }
+    } else {
       _baseWeight = BaseWeightEntity(
         weightKgs: 0.0,
         weightLbs: 0.0,
@@ -50,68 +54,72 @@ class _ChooseBaseWeightControllerState extends State<ChooseBaseWeightController>
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          'Base Weight',
+          style: context.textTheme.labelMedium.copyWith(
+            color: context.colorScheme.foregroundPrimary,
+          ),
+        ),
+        Text(
+          'Used for equipment with inherent weight not counted in load. For example, body weight in pull-ups, sled weight in leg press.',
+          style: context.textTheme.labelSmall.copyWith(
+            color: context.colorScheme.foregroundSecondary,
+          ),
+        ),
+        const SizedBox(
+          height: AppLayout.defaultPadding,
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
               children: [
                 Text(
-                  'Base Weight',
-                  style: context.textTheme.labelMedium.copyWith(
+                  _baseWeight!.weightKgs != 0.0 ? _baseWeight!.weightKgs.toString() : _baseWeight!.weightLbs.toString(),
+                  style: context.textTheme.bodyLarge.copyWith(
+                    fontWeight: FontWeight.w500,
                     color: context.colorScheme.foregroundPrimary,
                   ),
                 ),
                 const SizedBox(
-                  height: AppLayout.extraMiniPadding,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width - (AppLayout.defaultPadding * 6),
-                  child: Text(
-                    'Used for equipment with inherent weight not counted in load. For example, body weight in pull-ups, sled weight in leg press.',
-                    style: context.textTheme.labelSmall.copyWith(
-                      color: context.colorScheme.foregroundSecondary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Spacer(),
-            Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Text(
-                      _baseWeight!.weightLbs.toString(),
-                      style: context.textTheme.bodyLarge.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: context.colorScheme.foregroundPrimary,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: AppLayout.extraMiniPadding,
-                    ),
-                    Text(
-                      _weightUnit.name,
-                      style: context.textTheme.labelMedium.copyWith(
-                        color: context.colorScheme.foregroundSecondary,
-                      ),
-                    ),
-                  ],
+                  width: AppLayout.extraMiniPadding,
                 ),
                 Text(
-                  _bottomText,
+                  _weightUnit.name,
                   style: context.textTheme.labelMedium.copyWith(
-                    fontWeight: FontWeight.w400,
                     color: context.colorScheme.foregroundSecondary,
                   ),
                 ),
               ],
-            )
+            ),
+            const SizedBox(
+              width: AppLayout.largePadding,
+            ),
+            if (_baseWeight!.assisted)
+              Row(
+                children: [
+                  Text(
+                    '• Assisted',
+                    style: context.textTheme.labelMedium.copyWith(
+                      color: context.colorScheme.foregroundSecondary,
+                    ),
+                  ),
+                  SizedBox(
+                    width: AppLayout.defaultPadding,
+                  ),
+                ],
+              ),
+            if (_baseWeight!.bodyWeight)
+              Text(
+                '• Bodyweight',
+                style: context.textTheme.labelMedium.copyWith(
+                  color: context.colorScheme.foregroundSecondary,
+                ),
+              ),
           ],
         ),
         const SizedBox(
@@ -123,12 +131,8 @@ class _ChooseBaseWeightControllerState extends State<ChooseBaseWeightController>
             borderRadius: BorderRadius.circular(999)
           ),
           child: InkWell(
-            onTap:() async {
-              // var res = await _showBaseWeightBottomSheet(context, _icons);
-
-              // if (res == null) return;
-
-              // _onChanged(res);
+            onTap:() {
+              widget.handleFlowBaseWeight();
             },
             borderRadius: BorderRadius.circular(25),
             child: Padding(
