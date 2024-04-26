@@ -83,8 +83,8 @@ class ExerciseDetails {
   final ExerciseDetailsType type;
   final ExerciseDetailsMuscleGroups primaryMuscleGroups;
   final ExerciseDetailsMuscleGroups secondaryMuscleGroups;
-  final ExerciseDetailsBaseWeight? baseWeight;
-  final ExerciseDetailsPersonalRecord? personalRecord;
+  final ExerciseDetailsBaseWeight baseWeight;
+  final ExerciseDetailsPersonalRecord personalRecord;
 
   const ExerciseDetails({
     required this.icon,
@@ -207,7 +207,6 @@ class ExerciseDetailsFlow extends ConsumerWidget{
         updatedAt: DateTimeX.current
       )),
       personalRecord: ExerciseDetailsPersonalRecord(PersonalRecordEntity(
-        type: ExerciseType.repitition,
         oneRepMaxEstimateKgs: 0.0,
         oneRepMaxEstimateLbs: 0.0,
         tenRepMaxEstimateKgs: 0.0,
@@ -223,7 +222,22 @@ class ExerciseDetailsFlow extends ConsumerWidget{
     return FlowBuilder<CreateExerciseStages>(
       state: CreateExerciseStages.stage1,
       onGeneratePages: onGeneratePages,
-      // onComplete: ,
+      onComplete: (CreateExerciseStages stage) {
+        ref.read(exercisesCreateControllerProvider.notifier).handle(
+          newExercise.icon,
+          newExercise.baseExercise,
+          newExercise.name,
+          newExercise.description,
+          newExercise.movementPattern,
+          newExercise.equipment,
+          newExercise.engagement,
+          newExercise.type,
+          newExercise.primaryMuscleGroups,
+          newExercise.secondaryMuscleGroups,
+          newExercise.baseWeight,
+          newExercise.personalRecord
+        );
+      },
     );
   }
 }

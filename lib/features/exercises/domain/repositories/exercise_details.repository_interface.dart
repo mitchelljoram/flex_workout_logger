@@ -29,14 +29,14 @@ abstract class IExerciseDetailsRepository {
     ExerciseDetailsBaseExercise? baseExercise,
     ExerciseDetailsName name,
     ExerciseDetailsDescription? description,
-    // ExerciseDetailsMovementPattern? movementPattern,
-    // ExerciseDetailsEquipment? equipment,
-    // ExerciseDetailsEngagement engagement,
-    // ExerciseDetailsType type,
-    // ExerciseDetailsMuscleGroups primaryMuscleGroups,
-    // ExerciseDetailsMuscleGroups secondaryMuscleGroups,
-    // ExerciseDetailsBaseWeight baseWeight,
-    // ExerciseDetailsPersonalRecord personalRecord,
+    ExerciseDetailsMovementPattern? movementPattern,
+    ExerciseDetailsEquipment? equipment,
+    ExerciseDetailsEngagement engagement,
+    ExerciseDetailsType type,
+    ExerciseDetailsMuscleGroups primaryMuscleGroups,
+    ExerciseDetailsMuscleGroups secondaryMuscleGroups,
+    ExerciseDetailsBaseWeight baseWeight,
+    ExerciseDetailsPersonalRecord personalRecord,
   );
 
   /// Update Exercise

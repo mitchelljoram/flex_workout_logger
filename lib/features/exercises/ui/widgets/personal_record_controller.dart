@@ -75,7 +75,6 @@ class PersonalRecordController extends StatelessWidget {
 
             onChanged(
               PersonalRecordEntity(
-                type: ExerciseType.repitition,
                 oneRepMaxEstimateKgs: oneRepMaxKgs,
                 oneRepMaxEstimateLbs: oneRepMaxLbs,
                 tenRepMaxEstimateKgs: tenRepMaxKgs,
@@ -99,16 +98,13 @@ class PersonalRecordController extends StatelessWidget {
             if (unit == WeightUnits.kilograms) {
               tenRepMaxKgs = value;
               tenRepMaxLbs = 0.0;
-              // tenRepMaxLbs = double.parse((value * 2.205).toStringAsFixed(1));
             } else {
               tenRepMaxLbs = value;
               tenRepMaxKgs = 0.0;
-              // tenRepMaxKgs = double.parse((value / 2.205).toStringAsFixed(1));
             }
 
             onChanged(
               PersonalRecordEntity(
-                type: ExerciseType.repitition,
                 oneRepMaxEstimateKgs: oneRepMaxKgs,
                 oneRepMaxEstimateLbs: oneRepMaxLbs,
                 tenRepMaxEstimateKgs: tenRepMaxKgs,

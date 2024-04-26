@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flex_workout_logger/realm/schema.dart';
 import 'package:flex_workout_logger/utils/date_time_extensions.dart';
 import 'package:realm/realm.dart';
@@ -82,27 +84,14 @@ void realmSeed(Realm realm) {
     'Groin',
   ];
 
-  late final initialExercisesDetails = initialExerciseNames.map(
-    (e) => ExerciseDetails(
-      ObjectId(),
-      'exercise.primary.100x100.png',
-      e,
-      '',
-      1,
-      0,
-      DateTimeX.current.toUtc(),
-      DateTimeX.current.toUtc(),
-    ),
-  );
-
   late final initialMovementPatterns = initialMovementPatternNames.map(
     (e) => MovementPattern(
       ObjectId(),
       'movement.100x100.png',
       e,
       '',
-      DateTimeX.current.toUtc(),
-      DateTimeX.current.toUtc(),
+      DateTimeX.current,
+      DateTimeX.current,
     ),
   );
 
@@ -111,8 +100,8 @@ void realmSeed(Realm realm) {
       ObjectId(), 
       'equipment.100x100.png', 
       e, 
-      DateTimeX.current.toUtc(),
-      DateTimeX.current.toUtc(),
+      DateTimeX.current,
+      DateTimeX.current,
     ),
   );
 
@@ -121,14 +110,40 @@ void realmSeed(Realm realm) {
       ObjectId(),
       'muscle.100x100.png',
       e,
-      DateTimeX.current.toUtc(),
-      DateTimeX.current.toUtc(),
+      DateTimeX.current,
+      DateTimeX.current,
     ),
   );
 
   realm
-    ..addAll(initialExercisesDetails)
     ..addAll(initialMovementPatterns)
     ..addAll(initialEquipment)
     ..addAll(initialMuscleGroups);
+
+  RealmResults<MovementPattern> movementPatterns = realm.all<MovementPattern>();
+  RealmResults<Equipment> equipment = realm.all<Equipment>();
+  Random r = new Random();
+
+  late final initialExercisesDetails = initialExerciseNames.map(
+    (e) => ExerciseDetails(
+      ObjectId(),
+      'exercise.primary.100x100.png',
+      e,
+      '',
+      1,
+      0,
+      DateTimeX.current,
+      DateTimeX.current,
+      baseExercise: null,
+      movementPattern: movementPatterns[r.nextInt(movementPatterns.length)],
+      equipment: equipment[r.nextInt(equipment.length)],
+      baseWeight: BaseWeight(100, 202.5, false, false, DateTimeX.current, DateTimeX.current),
+      personalRecord: PersonalRecord(100, 202.5, 100, 202.5, 100, 202.5, 0, DateTimeX.current, DateTimeX.current),
+      primaryMuscleGroups: const [],
+      secondaryMuscleGroups: const [],
+    ),
+  );
+
+  realm
+    ..addAll(initialExercisesDetails);
 }

@@ -44,25 +44,26 @@ class ExerciseDetailsView extends StatelessWidget {
               //       ),
               //     ],
               //   ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Chest Press',
-                    style: context.textTheme.bodyLarge.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: context.colorScheme.foregroundPrimary,
+              if (exercise.baseExercise != null)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      exercise.baseExercise!.name,
+                      style: context.textTheme.bodyLarge.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: context.colorScheme.foregroundPrimary,
+                      ),
                     ),
-                  ),
-                  Text(
-                    'Variation',
-                    style: context.textTheme.labelMedium.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: context.colorScheme.foregroundSecondary,
+                    Text(
+                      'Variation',
+                      style: context.textTheme.labelMedium.copyWith(
+                        fontWeight: FontWeight.w400,
+                        color: context.colorScheme.foregroundSecondary,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
               const Spacer(),
               Column(
                 children: [
@@ -71,7 +72,7 @@ class ExerciseDetailsView extends StatelessWidget {
                     textBaseline: TextBaseline.alphabetic,
                     children: [
                       Text(
-                        '223.4',
+                        exercise.personalRecord!.maxWeightKgs.toString(),
                         style: context.textTheme.bodyLarge.copyWith(
                           fontWeight: FontWeight.w500,
                           color: context.colorScheme.foregroundPrimary,
@@ -81,7 +82,7 @@ class ExerciseDetailsView extends StatelessWidget {
                         width: AppLayout.extraMiniPadding,
                       ),
                       Text(
-                        'lbs',
+                        'kgs',
                         style: context.textTheme.labelMedium.copyWith(
                           color: context.colorScheme.foregroundSecondary,
                         ),
@@ -107,7 +108,7 @@ class ExerciseDetailsView extends StatelessWidget {
                     textBaseline: TextBaseline.alphabetic,
                     children: [
                       Text(
-                        '205',
+                        exercise.personalRecord!.maxWeightKgs.toString(),
                         style: context.textTheme.bodyLarge.copyWith(
                           fontWeight: FontWeight.w500,
                           color: context.colorScheme.foregroundPrimary,
@@ -117,7 +118,7 @@ class ExerciseDetailsView extends StatelessWidget {
                         width: AppLayout.extraMiniPadding,
                       ),
                       Text(
-                        'lbs',
+                        'kgs',
                         style: context.textTheme.labelMedium.copyWith(
                           color: context.colorScheme.foregroundSecondary,
                         ),
@@ -243,11 +244,16 @@ class ExerciseDetailsView extends StatelessWidget {
                   spacing: AppLayout.miniPadding,
                   runSpacing: AppLayout.miniPadding,
                   children: [
-                    if (exercise.movementPattern != null)
+                    _bubble(
+                      context,
+                      exercise.movementPattern!.icon,
+                      exercise.movementPattern!.name,
+                    ),
+                    if (exercise.equipment != null)
                       _bubble(
                         context,
-                        exercise.movementPattern!.icon,
-                        exercise.movementPattern!.name,
+                        exercise.equipment!.icon,
+                        exercise.equipment!.name,
                       ),
                     _bubble(
                       context, 

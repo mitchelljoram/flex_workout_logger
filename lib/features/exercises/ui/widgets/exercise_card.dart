@@ -182,7 +182,7 @@ class ExerciseListTile extends StatelessWidget {
           ) :
           DottedBorder(
             borderType: BorderType.Circle,
-            dashPattern: const [3, 5],
+            dashPattern: const [2, 4],
             color: context.colorScheme.foregroundPrimary,
             child: Container()
           )
