@@ -104,7 +104,7 @@ class _ChooseIconControllerState extends State<ChooseIconController> {
                     height: 40,
                     width: 40,
                     child: Image(
-                      image: AssetImage('assets/icons/${_pickedIcon}'),
+                      image: AssetImage('assets/icons/exercises/${_pickedIcon}'),
                       fit: BoxFit.scaleDown,
                     )
                   ) :

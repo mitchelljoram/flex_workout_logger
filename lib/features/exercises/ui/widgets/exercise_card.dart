@@ -177,7 +177,7 @@ class ExerciseListTile extends StatelessWidget {
         width: 27,
         child: exercise.icon.isNotEmpty ?
           Image(
-            image: AssetImage('assets/icons/${exercise.icon}'),
+            image: AssetImage('assets/icons/exercises/${exercise.icon}'),
             fit: BoxFit.scaleDown,
           ) :
           DottedBorder(

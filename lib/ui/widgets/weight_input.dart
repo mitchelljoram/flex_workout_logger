@@ -234,7 +234,7 @@ class _WeightInputState extends State<WeightInput> {
                         height: 25,
                         width: 25,
                         child: Image(
-                          image: AssetImage('assets/icons/${_selectedUnit.name}.100x100.png'),
+                          image: AssetImage('assets/icons/weight_units/${_selectedUnit.name}.100x100.png'),
                           fit: BoxFit.scaleDown,
                         ),
                       ),

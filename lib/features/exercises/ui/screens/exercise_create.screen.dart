@@ -19,6 +19,7 @@ import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_base_ex
 import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_base_weight_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_equipment_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_movement_pattern_controller.dart';
+import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_muscle_groups_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/flexable_radio_list.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/personal_record_controller.dart';
 import 'package:flex_workout_logger/ui/widgets/choose_icon_controller.dart';
@@ -642,6 +643,7 @@ class _ExerciseDetailsCreateFormPage3State extends ConsumerState<ExerciseDetails
 
   ExerciseDetailsMuscleGroups? _primaryMuscleGroups;
   ExerciseDetailsMuscleGroups? _secondaryMuscleGroups;
+  ExerciseDetailsMovementPattern? _movementPattern;
 
   @override
   void initState() {
@@ -650,6 +652,9 @@ class _ExerciseDetailsCreateFormPage3State extends ConsumerState<ExerciseDetails
     }
     if (newExercise.secondaryMuscleGroups.value.isRight()) {
       _secondaryMuscleGroups = newExercise.secondaryMuscleGroups;
+    }
+    if (newExercise.movementPattern.value.isRight()) {
+      _movementPattern = newExercise.movementPattern;
     }
 
     super.initState();
@@ -700,6 +705,15 @@ class _ExerciseDetailsCreateFormPage3State extends ConsumerState<ExerciseDetails
             ),
             child: Column(
               children: [
+                ChooseMuscleGroupsController(
+                  onChanged: (primary, secondary) {
+                    _primaryMuscleGroups = ExerciseDetailsMuscleGroups(primary);
+                    _secondaryMuscleGroups = ExerciseDetailsMuscleGroups(secondary);
+                  }, 
+                  initialPrimaryMuscleGroups: _primaryMuscleGroups!.value.getOrElse((l) => []), 
+                  initialSeconadryMuscleGroups: _secondaryMuscleGroups!.value.getOrElse((l) => []),
+                  movementPattern: _movementPattern?.value.getOrElse((l) => null),
+                ),
                 Spacer(),
                 Row(
                   children: [
