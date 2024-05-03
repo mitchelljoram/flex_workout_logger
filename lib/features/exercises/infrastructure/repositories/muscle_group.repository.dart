@@ -4,6 +4,7 @@ import 'package:flex_workout_logger/features/exercises/domain/entities/muscle_gr
 import 'package:flex_workout_logger/features/exercises/domain/repositories/muscle_group.repository_interface.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/muscle_group/icon.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/muscle_group/name.validation.dart';
+import 'package:flex_workout_logger/realm/schema.dart';
 import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:fpdart/src/either.dart';
 import 'package:realm/realm.dart';
@@ -39,8 +40,17 @@ class MuscleGroupRepository implements IMuscleGroupRepository {
 
   @override
   FutureOr<Either<Failure, List<MuscleGroupEntity>>> getMuscleGroups() async {
-    /// TODO: implement getMuscleGroups
-    throw UnimplementedError();
+    try {
+      final res = realm.all<MuscleGroup>();
+
+      return right(res.map((e) => e.toEntity()).toList());
+    } catch (e) {
+      return left(
+        Failure.internalServerError(
+          message: e.toString(),
+        ),
+      );
+    }
   }
 
   @override

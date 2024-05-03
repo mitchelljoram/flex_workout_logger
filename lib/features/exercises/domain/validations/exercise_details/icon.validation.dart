@@ -24,7 +24,7 @@ Either<Failure, String> _validate(String input) {
     return right(input);
   }
 
-  if (File('assets/icons/$input').exists() == false) {
+  if (File('assets/icons/exercises/$input').exists() == false) {
     return left(
       const Failure.unprocessableEntity(
         message: 'The icon must exist.',

@@ -67,28 +67,29 @@ void realmSeed(Realm realm) {
   ];
 
   final initialMuscleGroupNames = <String>[
-    'Quads',
-    'Glutes',
-    'Hamstrings',
-    'Erectors',
-    'Lats',
+    'Abdominals',
+    'Upper Abdominals',
+    'Lower Abdominals',
+    'Abductors',
+    'Adductors',
     'Biceps',
-    'Shoulders',
-    'Triceps',
-    'Retractors',
-    'Chest',
-    'Calves',
-    'Abs',
     'Forearms',
-    'Neck',
-    'Groin',
+    'Pectorals',
+    'Upper Pectorals',
+    'Lower Pectorals',
+    'Obliques',
+    'Quadriceps',
+    'Sartorius',
+    'Shins',
+    'Shoulders',
+    'Trapezius',
   ];
 
   late final initialMovementPatterns = initialMovementPatternNames.map(
-    (e) => MovementPattern(
+    (mp) => MovementPattern(
       ObjectId(),
       'movement.100x100.png',
-      e,
+      mp,
       '',
       DateTimeX.current,
       DateTimeX.current,
@@ -106,10 +107,10 @@ void realmSeed(Realm realm) {
   );
 
   late final initialMuscleGroups = initialMuscleGroupNames.map(
-    (e) => MuscleGroup(
+    (mg) => MuscleGroup(
       ObjectId(),
-      'muscle.100x100.png',
-      e,
+      '${mg}.svg',
+      mg,
       DateTimeX.current,
       DateTimeX.current,
     ),
@@ -125,10 +126,10 @@ void realmSeed(Realm realm) {
   Random r = new Random();
 
   late final initialExercisesDetails = initialExerciseNames.map(
-    (e) => ExerciseDetails(
+    (ed) => ExerciseDetails(
       ObjectId(),
       'exercise.primary.100x100.png',
-      e,
+      ed,
       '',
       1,
       0,
