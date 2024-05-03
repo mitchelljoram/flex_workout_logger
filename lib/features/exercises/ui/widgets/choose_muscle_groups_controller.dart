@@ -95,6 +95,7 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
                 children: [
                   SvgPicture.asset(
                     'assets/muscle_groups/front.svg',
+                    colorFilter: ColorFilter.mode(context.colorScheme.foregroundQuaternary, BlendMode.srcIn),
                     height: 240,
                   ),
                   ..._primaryMuscleGroups.map((pmg) =>
@@ -107,7 +108,7 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
                   ..._seconadryMuscleGroups.map((smg) =>
                     SvgPicture.asset(
                       'assets/muscle_groups/front/${smg.icon}',
-                      colorFilter: ColorFilter.mode(context.colorScheme.pink, BlendMode.srcIn),
+                      colorFilter: ColorFilter.mode(context.colorScheme.pink.withOpacity(0.3), BlendMode.srcIn),
                       height: 240,
                     )
                   ),
@@ -118,6 +119,7 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
                 children: [
                   SvgPicture.asset(
                     'assets/muscle_groups/back.svg',
+                    colorFilter: ColorFilter.mode(context.colorScheme.foregroundQuaternary, BlendMode.srcIn),
                     height: 240,
                   ),
                   ..._primaryMuscleGroups.map((pmg) =>
@@ -130,7 +132,7 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
                   ..._seconadryMuscleGroups.map((smg) =>
                     SvgPicture.asset(
                       'assets/muscle_groups/back/${smg.icon}',
-                      colorFilter: ColorFilter.mode(context.colorScheme.pink, BlendMode.srcIn),
+                      colorFilter: ColorFilter.mode(context.colorScheme.pink.withOpacity(0.3), BlendMode.srcIn),
                       height: 240,
                     )
                   ),
@@ -163,14 +165,14 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
                       children: [
                         Container(
                           width: 24,
-                          height: 32,
+                          height: 24,
                           child: SvgPicture.asset(
-                            'assets/icons/muscle_groups/${pmg.icon}',
-                            fit: BoxFit.fill
+                            'assets/icons/muscle_groups/primary/${pmg.icon}',
+                            fit: BoxFit.contain
                           ),
                         ),
                         SizedBox(
-                          width: AppLayout.smallPadding,
+                          width: AppLayout.miniPadding,
                         ),
                         Text(
                           pmg.name,
@@ -179,6 +181,9 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
                           ),
                         ),
                       ],
+                    ),
+                    SizedBox(
+                      height: AppLayout.smallPadding,
                     ),
                     Row(
                       children: [
@@ -225,7 +230,7 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
                                 const Icon(
                                   CupertinoIcons.minus_circle,
                                   size: 16,
-                                  color: Color.fromRGBO(255, 0, 0, 0.5),
+                                  color: Color.fromRGBO(242, 184, 181, 1),
                                 ),
                                 SizedBox(
                                   width: AppLayout.extraMiniPadding,
@@ -325,14 +330,14 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
                       children: [
                         Container(
                           width: 24,
-                          height: 32,
+                          height: 24,
                           child: SvgPicture.asset(
-                            'assets/icons/muscle_groups/${smg.icon}',
-                            fit: BoxFit.fill
+                            'assets/icons/muscle_groups/secondary/${smg.icon}',
+                            fit: BoxFit.contain
                           ),
                         ),
                         SizedBox(
-                          width: AppLayout.smallPadding,
+                          width: AppLayout.miniPadding,
                         ),
                         Text(
                           smg.name,
@@ -341,6 +346,9 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
                           ),
                         ),
                       ],
+                    ),
+                    SizedBox(
+                      height: AppLayout.smallPadding,
                     ),
                     Row(
                       children: [
@@ -387,7 +395,7 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
                                 const Icon(
                                   CupertinoIcons.minus_circle,
                                   size: 16,
-                                  color: Color.fromRGBO(255, 0, 0, 0.5),
+                                  color: Color.fromRGBO(242, 184, 181, 1),
                                 ),
                                 SizedBox(
                                   width: AppLayout.extraMiniPadding,
@@ -507,23 +515,24 @@ Future<List<MuscleGroupEntity>> _showPrimaryBottomSheet(
                   ),
                   child: Row(
                     children: [
-                      SizedBox(
-                        width: AppLayout.miniPadding,
-                      ),
                       // Selected items
                       ..._primary.map(
                         (p) => Row(
                           children: [
                             Container(
                               decoration: BoxDecoration(
-                                color: context.colorScheme.foregroundQuaternary,
+                                color: context.colorScheme.foregroundPrimary,
                                 shape: BoxShape.circle,
                               ),
                               padding:
                                   const EdgeInsets.all(AppLayout.smallPadding),
-                              child: SvgPicture.asset(
-                                'assets/icons/muscle_groups/${p.name}.svg',
-                                width: 16,
+                              child: Container(
+                                width: 24,
+                                height: 24,
+                                child: SvgPicture.asset(
+                                  'assets/icons/muscle_groups/primary/${p.icon}',
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                             SizedBox( 
@@ -614,9 +623,13 @@ Future<List<MuscleGroupEntity>> _showPrimaryBottomSheet(
                             _primary.add(currentItem);
                           });
                         },
-                        leading: SvgPicture.asset(
-                          'assets/icons/muscle_groups/${currentItem.name}.svg',
+                        leading: Container(
                           width: 24,
+                          height: 24,
+                          child: SvgPicture.asset(
+                            'assets/icons/muscle_groups/primary/${currentItem.icon}',
+                            fit: BoxFit.contain,
+                          ),
                         ),
                         trailing: _primary.contains(currentItem) || _secondary.contains(currentItem)
                           ? const Padding(
@@ -707,14 +720,18 @@ Future<List<MuscleGroupEntity>> _showSecondaryBottomSheet(
                           children: [
                             Container(
                               decoration: BoxDecoration(
-                                color: context.colorScheme.foregroundQuaternary,
+                                color: context.colorScheme.foregroundPrimary,
                                 shape: BoxShape.circle,
                               ),
                               padding:
                                   const EdgeInsets.all(AppLayout.smallPadding),
-                              child: SvgPicture.asset(
-                                'assets/icons/muscle_groups/${s.name}.svg',
-                                width: 16,
+                              child: Container(
+                                width: 24,
+                                height: 24,
+                                child: SvgPicture.asset(
+                                  'assets/icons/muscle_groups/secondary/${s.icon}',
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                             SizedBox( 
@@ -805,9 +822,13 @@ Future<List<MuscleGroupEntity>> _showSecondaryBottomSheet(
                             _secondary.add(currentItem);
                           });
                         },
-                        leading: SvgPicture.asset(
-                          'assets/icons/muscle_groups/${currentItem.name}.svg',
-                          width: 16,
+                        leading: Container(
+                          width: 24,
+                          height: 24,
+                          child: SvgPicture.asset(
+                            'assets/icons/muscle_groups/secondary/${currentItem.icon}',
+                            fit: BoxFit.contain,
+                          ),
                         ),
                         trailing: _primary.contains(currentItem) || _secondary.contains(currentItem)
                           ? const Padding(

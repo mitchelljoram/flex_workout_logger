@@ -48,6 +48,8 @@ flutter:
     - assets/icons/
     - assets/icons/exercises/
     - assets/icons/muscle_groups/
+    - assets/icons/muscle_groups/primary/
+    - assets/icons/muscle_groups/secondary/
     - assets/icons/weight_units/
     - assets/images/
     - assets/muscle_groups/

@@ -163,7 +163,7 @@ Future<String?> _showIconBottomSheet<String>(
             Navigator.of(context).pop(i);
           },
           icon: ImageIcon(
-            AssetImage('assets/icons/${i}'),
+            AssetImage('assets/icons/exercises/${i}'),
             size: 27,
           ),
         )

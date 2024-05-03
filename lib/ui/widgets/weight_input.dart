@@ -223,19 +223,19 @@ class _WeightInputState extends State<WeightInput> {
                   ),
                   child: Row(
                     children: [
-                      Text(
-                        _selectedUnit.name,
-                        style: context.textTheme.bodyMedium.copyWith(
-                          color: context.colorScheme.foregroundPrimary,
-                        ),
-                      ),
-                      const Spacer(),
                       Container(
                         height: 25,
                         width: 25,
                         child: Image(
                           image: AssetImage('assets/icons/weight_units/${_selectedUnit.name}.100x100.png'),
                           fit: BoxFit.scaleDown,
+                        ),
+                      ),
+                      const Spacer(),
+                      Text(
+                        _selectedUnit.name,
+                        style: context.textTheme.bodyMedium.copyWith(
+                          color: context.colorScheme.foregroundPrimary,
                         ),
                       ),
                     ],

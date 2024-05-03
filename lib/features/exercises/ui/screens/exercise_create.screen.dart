@@ -79,7 +79,7 @@ class ExerciseDetails {
   final ExerciseDetailsName name;
   final ExerciseDetailsDescription description;
   final ExerciseDetailsMovementPattern movementPattern;
-  final ExerciseDetailsEquipment? equipment;
+  final ExerciseDetailsEquipment equipment;
   final ExerciseDetailsEngagement engagement;
   final ExerciseDetailsType type;
   final ExerciseDetailsMuscleGroups primaryMuscleGroups;
@@ -331,105 +331,127 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
       orElse: () => false,
     );
 
-    return Form(
-      key: _formKey,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      child: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppLayout.defaultPadding,
-              vertical: AppLayout.extraLargePadding,
-            ),
-            child: Column(
-              children: [
-                Text(
-                  'Is this a completely new exercise or a variation on an existing one?',
-                  style: context.textTheme.headlineMedium,
-                ),
-                const SizedBox(height: AppLayout.smallPadding),
-                VariationSegementedController(
-                  selectedValue: _selectedVariation,
-                  onValueChanged: _onVariationChanged,
-                ),
-                const SizedBox(height: AppLayout.defaultPadding),
-                ChooseIconController(
-                  onChanged: (value) => {_icon = ExerciseDetailsIcon(value)},
-                  initialIcon: _icon?.value.getOrElse((l) => ''),
-                ),
-                const SizedBox(height: AppLayout.defaultPadding),
-                FlexableTextField(
-                  label: _selectedVariation == 1 ? 'Exercise Name' : 'Variation Name',
-                  hintText: _selectedVariation == 1
-                      ? 'Bench Press, Squat, etc.'
-                      : 'Paused, 3” Bands, Alternating, etc...',
-                  errorText: errorText,
-                  onChanged: (value) => _name = ExerciseDetailsName(value),
-                  validator: (value) => _name?.validate,
-                  controller: _nameController,
-                  readOnly: isLoading,
-                  isRequired: true,
-                ),
-                const SizedBox(height: AppLayout.defaultPadding),
-                if (_selectedVariation == 2)
-                  ChooseBaseExerciseController(
-                    validator: (value) => _baseExercise?.validate,
-                    onChanged: (value) {
-                      _baseExercise = ExerciseDetailsBaseExercise(null, value);
+    return Scaffold(
+      backgroundColor: context.colorScheme.backgroundSecondary,
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.only(
+          left: AppLayout.defaultPadding,
+          right: AppLayout.defaultPadding,
+          bottom: AppLayout.extraLargePadding
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Spacer(),
+            IconButton(
+              onPressed: isLoading ?
+                null :
+                () {
+                  if (!_formKey.currentState!.validate()) return;
 
-                      if (_baseExercise!.value.isRight()) {
-                        newExercise = newExercise.copyWith(
-                          movementPattern: ExerciseDetailsMovementPattern(value.movementPattern),
-                          engagement: ExerciseDetailsEngagement(value.engagement),
-                          type: ExerciseDetailsType(value.type),
-                          primaryMuscleGroups: ExerciseDetailsMuscleGroups(value.primaryMuscleGroups),
-                          secondaryMuscleGroups: ExerciseDetailsMuscleGroups(value.secondaryMuscleGroups),
-                        );
-                      }
-                    },
-                    initialValue: _baseExercise?.value.getOrElse((l) => null),
-                  ),
-                FlexableTextField(
-                  label: 'Description',
-                  hintText: _selectedVariation == 1
-                      ? 'Describe the exercise, including any additional setup that is required.'
-                      : 'Describe of the variation including the main differences between itself and its base exercise.',
-                  errorText: errorText,
-                  onChanged: (value) => _description = ExerciseDetailsDescription(value),
-                  validator: (value) => _description?.validate,
-                  controller: _descriptionController,
-                  readOnly: isLoading,
-                  isTextArea: true,
-                  maxLength: MAX_DESCRIPTION_LENGTH,
-                ),
-                Spacer(),
-                Row(
-                  children: [
-                    Spacer(),
-                    IconButton(
-                      onPressed: isLoading ?
-                        null :
-                        () {
-                          if (!_formKey.currentState!.validate()) return;
-
-                          if (_name!.value.isLeft()) return;
-
-                          handleFlowNext();
-                        },
-                      style: IconButton.styleFrom(
-                        backgroundColor: context.colorScheme.foregroundPrimary,
-                      ),
-                      icon: isLoading ?
-                        const CircularProgressIndicator() :
-                        Icon(
-                          CupertinoIcons.chevron_right,
-                          color: context.colorScheme.backgroundSecondary
-                        )
-                    ),
-                  ],
+                  handleFlowNext();
+                },
+              style: IconButton.styleFrom(
+                backgroundColor: context.colorScheme.foregroundPrimary,
+              ),
+              icon: isLoading ?
+                const CircularProgressIndicator() :
+                Icon(
+                  CupertinoIcons.chevron_right,
+                  color: context.colorScheme.backgroundSecondary
                 )
+            ),
+          ],
+        ),
+      ),
+      body: Stack(
+        children: <Widget>[
+          SizedBox.expand(
+            child: CustomScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              slivers: [
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Form(
+                        key: _formKey,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppLayout.defaultPadding,
+                            vertical: AppLayout.extraLargePadding,
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                'Is this a completely new exercise or a variation on an existing one?',
+                                style: context.textTheme.headlineMedium,
+                              ),
+                              const SizedBox(height: AppLayout.smallPadding),
+                              VariationSegementedController(
+                                selectedValue: _selectedVariation,
+                                onValueChanged: _onVariationChanged,
+                              ),
+                              const SizedBox(height: AppLayout.defaultPadding),
+                              ChooseIconController(
+                                onChanged: (value) => {_icon = ExerciseDetailsIcon(value)},
+                                initialIcon: _icon?.value.getOrElse((l) => ''),
+                              ),
+                              const SizedBox(height: AppLayout.defaultPadding),
+                              FlexableTextField(
+                                label: _selectedVariation == 1 ? 'Exercise Name' : 'Variation Name',
+                                hintText: _selectedVariation == 1
+                                    ? 'Bench Press, Squat, etc.'
+                                    : 'Paused, 3” Bands, Alternating, etc...',
+                                errorText: errorText,
+                                onChanged: (value) => _name = ExerciseDetailsName(value),
+                                validator: (value) => _name?.validate,
+                                controller: _nameController,
+                                readOnly: isLoading,
+                                isRequired: true,
+                              ),
+                              const SizedBox(height: AppLayout.defaultPadding),
+                              if (_selectedVariation == 2)
+                                ChooseBaseExerciseController(
+                                  validator: (value) => _baseExercise?.validate,
+                                  onChanged: (value) {
+                                    _baseExercise = ExerciseDetailsBaseExercise(null, value);
+
+                                    if (_baseExercise!.value.isRight()) {
+                                      newExercise = newExercise.copyWith(
+                                        movementPattern: ExerciseDetailsMovementPattern(value.movementPattern),
+                                        engagement: ExerciseDetailsEngagement(value.engagement),
+                                        type: ExerciseDetailsType(value.type),
+                                        primaryMuscleGroups: ExerciseDetailsMuscleGroups(value.primaryMuscleGroups),
+                                        secondaryMuscleGroups: ExerciseDetailsMuscleGroups(value.secondaryMuscleGroups),
+                                      );
+                                    }
+                                  },
+                                  initialValue: _baseExercise?.value.getOrElse((l) => null),
+                                ),
+                              FlexableTextField(
+                                label: 'Description',
+                                hintText: _selectedVariation == 1
+                                    ? 'Describe the exercise, including any additional setup that is required.'
+                                    : 'Describe of the variation including the main differences between itself and its base exercise.',
+                                errorText: errorText,
+                                onChanged: (value) => _description = ExerciseDetailsDescription(value),
+                                validator: (value) => _description?.validate,
+                                controller: _descriptionController,
+                                readOnly: isLoading,
+                                isTextArea: true,
+                                maxLength: MAX_DESCRIPTION_LENGTH,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
-            )
+            ),
           ),
           Positioned(
             top: 0,
@@ -446,7 +468,7 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
             )
           ),
         ],
-      )
+      ),
     );
   }
 }
@@ -474,7 +496,7 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
     if (newExercise.movementPattern.value.isRight()) {
       _movementPattern = newExercise.movementPattern;
     }
-    if (newExercise.equipment!.value.isRight()) {
+    if (newExercise.equipment.value.isRight()) {
       _equipment = newExercise.equipment;
     }
     if (newExercise.engagement.value.isRight()) {
@@ -524,89 +546,111 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
       orElse: () => false,
     );
 
-    return Form(
-      key: _formKey,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      child: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppLayout.defaultPadding,
-              vertical: AppLayout.extraLargePadding,
-            ),
-            child: Column(
-              children: [
-                ChooseMovementPatternController(
-                  validator: (value) => _movementPattern?.validate, 
-                  onChanged: (value) => _movementPattern = ExerciseDetailsMovementPattern(value),
-                  initialValue: _movementPattern?.value.getOrElse((l) => null),
-                ),
-                ChooseEquipmentController(
-                  validator: (value) => _equipment?.validate, 
-                  onChanged: (value) => _equipment = ExerciseDetailsEquipment(value),
-                  initialValue: _equipment?.value.getOrElse((l) => null),
-                ),
-                FlexableRadioList<Engagement>(
-                  items: Engagement.values.toList(), 
-                  onSelected: (Enumeration<Enum>? value) => _engagement = ExerciseDetailsEngagement(value as Engagement), 
-                  selectedValue: _engagement?.value.getOrElse((l) => Engagement.bilateral), 
-                  labelText: 'Body Engagement',
-                  description: 'How the body engages with the lift during the movement.',
-                ),
-                const SizedBox(
-                  height: AppLayout.defaultPadding,
-                ),
-                FlexableRadioList<ExerciseType>(
-                  items: ExerciseType.values.toList(), 
-                  onSelected: (Enumeration<Enum>? value) => _type = ExerciseDetailsType(value as ExerciseType),
-                  selectedValue: _type?.value.getOrElse((l) => ExerciseType.repitition), 
-                  labelText: 'Exercise Type',
-                  description: 'How are you going to record your exercise.',
-                ),
-                Spacer(),
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: isLoading ?
-                        null :
-                        () {
-                          handleFlowPrev();
-                        },
-                      style: IconButton.styleFrom(
-                        backgroundColor: context.colorScheme.foregroundPrimary,
-                      ),
-                      icon: isLoading ?
-                        const CircularProgressIndicator() :
-                        Icon(
-                          CupertinoIcons.chevron_left,
-                          color: context.colorScheme.backgroundSecondary
-                        )
-                    ),
-                    Spacer(),
-                    IconButton(
-                      onPressed: isLoading ?
-                        null :
-                        () {
-                          if (!_formKey.currentState!.validate()) return;
-
-                          if (_movementPattern!.value.isLeft()) return;
-
-                          handleFlowNext();
-                        },
-                      style: IconButton.styleFrom(
-                        backgroundColor: context.colorScheme.foregroundPrimary,
-                      ),
-                      icon: isLoading ?
-                        const CircularProgressIndicator() :
-                        Icon(
-                          CupertinoIcons.chevron_right,
-                          color: context.colorScheme.backgroundSecondary
-                        )
-                    ),
-                  ],
+    return Scaffold(
+      backgroundColor: context.colorScheme.backgroundSecondary,
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.only(
+          left: AppLayout.defaultPadding,
+          right: AppLayout.defaultPadding,
+          bottom: AppLayout.extraLargePadding
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            IconButton(
+              onPressed: isLoading ?
+                null :
+                () {
+                  handleFlowPrev();
+                },
+              style: IconButton.styleFrom(
+                backgroundColor: context.colorScheme.foregroundPrimary,
+              ),
+              icon: isLoading ?
+                const CircularProgressIndicator() :
+                Icon(
+                  CupertinoIcons.chevron_left,
+                  color: context.colorScheme.backgroundSecondary
                 )
-              ]
-            )
+            ),
+            Spacer(),
+            IconButton(
+              onPressed: isLoading ?
+                null :
+                () {
+                  if (!_formKey.currentState!.validate()) return;
+
+                  handleFlowNext();
+                },
+              style: IconButton.styleFrom(
+                backgroundColor: context.colorScheme.foregroundPrimary,
+              ),
+              icon: isLoading ?
+                const CircularProgressIndicator() :
+                Icon(
+                  CupertinoIcons.chevron_right,
+                  color: context.colorScheme.backgroundSecondary
+                )
+            ),
+          ],
+        ),
+      ),
+      body: Stack(
+        children: <Widget>[
+          SizedBox.expand(
+            child: CustomScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              slivers: [
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Form(
+                        key: _formKey,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppLayout.defaultPadding,
+                            vertical: AppLayout.extraLargePadding,
+                          ),
+                          child: Column(
+                            children: [
+                              ChooseMovementPatternController(
+                                validator: (value) => _movementPattern?.validate, 
+                                onChanged: (value) => _movementPattern = ExerciseDetailsMovementPattern(value),
+                                initialValue: _movementPattern?.value.getOrElse((l) => null),
+                              ),
+                              ChooseEquipmentController(
+                                validator: (value) => _equipment?.validate, 
+                                onChanged: (value) => _equipment = ExerciseDetailsEquipment(value),
+                                initialValue: _equipment?.value.getOrElse((l) => null),
+                              ),
+                              FlexableRadioList<Engagement>(
+                                items: Engagement.values.toList(), 
+                                onSelected: (Enumeration<Enum>? value) => _engagement = ExerciseDetailsEngagement(value as Engagement), 
+                                selectedValue: _engagement?.value.getOrElse((l) => Engagement.bilateral), 
+                                labelText: 'Body Engagement',
+                                description: 'How the body engages with the lift during the movement.',
+                              ),
+                              const SizedBox(
+                                height: AppLayout.defaultPadding,
+                              ),
+                              FlexableRadioList<ExerciseType>(
+                                items: ExerciseType.values.toList(), 
+                                onSelected: (Enumeration<Enum>? value) => _type = ExerciseDetailsType(value as ExerciseType),
+                                selectedValue: _type?.value.getOrElse((l) => ExerciseType.repitition), 
+                                labelText: 'Exercise Type',
+                                description: 'How are you going to record your exercise.',
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
           Positioned(
             top: 0,
@@ -623,7 +667,7 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
             )
           ),
         ],
-      )
+      ),
     );
   }
 }
@@ -693,19 +737,69 @@ class _ExerciseDetailsCreateFormPage3State extends ConsumerState<ExerciseDetails
       orElse: () => false,
     );
 
-    return Form(
-      key: _formKey,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      child: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppLayout.defaultPadding,
-              vertical: AppLayout.extraLargePadding,
+    return Scaffold(
+      backgroundColor: context.colorScheme.backgroundSecondary,
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.only(
+          left: AppLayout.defaultPadding,
+          right: AppLayout.defaultPadding,
+          bottom: AppLayout.extraLargePadding
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            IconButton(
+              onPressed: isLoading ?
+                null :
+                () {
+                  handleFlowPrev();
+                },
+              style: IconButton.styleFrom(
+                backgroundColor: context.colorScheme.foregroundPrimary,
+              ),
+              icon: isLoading ?
+                const CircularProgressIndicator() :
+                Icon(
+                  CupertinoIcons.chevron_left,
+                  color: context.colorScheme.backgroundSecondary
+                )
             ),
-            child: Column(
-              children: [
-                ChooseMuscleGroupsController(
+            Spacer(),
+            IconButton(
+              onPressed: isLoading ?
+                null :
+                () {
+                  if (!_formKey.currentState!.validate()) return;
+
+                  handleFlowNext();
+                },
+              style: IconButton.styleFrom(
+                backgroundColor: context.colorScheme.foregroundPrimary,
+              ),
+              icon: isLoading ?
+                const CircularProgressIndicator() :
+                Icon(
+                  CupertinoIcons.chevron_right,
+                  color: context.colorScheme.backgroundSecondary
+                )
+            ),
+          ],
+        ),
+      ),
+      body: Stack(
+        children: <Widget>[
+          SizedBox.expand(
+            child: SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppLayout.defaultPadding,
+                vertical: AppLayout.extraLargePadding,
+              ),
+              child: Form(
+                key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: ChooseMuscleGroupsController(
                   onChanged: (primary, secondary) {
                     _primaryMuscleGroups = ExerciseDetailsMuscleGroups(primary);
                     _secondaryMuscleGroups = ExerciseDetailsMuscleGroups(secondary);
@@ -714,48 +808,8 @@ class _ExerciseDetailsCreateFormPage3State extends ConsumerState<ExerciseDetails
                   initialSeconadryMuscleGroups: _secondaryMuscleGroups!.value.getOrElse((l) => []),
                   movementPattern: _movementPattern?.value.getOrElse((l) => null),
                 ),
-                Spacer(),
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: isLoading ?
-                        null :
-                        () {
-                          handleFlowPrev();
-                        },
-                      style: IconButton.styleFrom(
-                        backgroundColor: context.colorScheme.foregroundPrimary,
-                      ),
-                      icon: isLoading ?
-                        const CircularProgressIndicator() :
-                        Icon(
-                          CupertinoIcons.chevron_left,
-                          color: context.colorScheme.backgroundSecondary
-                        )
-                    ),
-                    Spacer(),
-                    IconButton(
-                      onPressed: isLoading ?
-                        null :
-                        () {
-                          if (!_formKey.currentState!.validate()) return;
-
-                          handleFlowNext();
-                        },
-                      style: IconButton.styleFrom(
-                        backgroundColor: context.colorScheme.foregroundPrimary,
-                      ),
-                      icon: isLoading ?
-                        const CircularProgressIndicator() :
-                        Icon(
-                          CupertinoIcons.chevron_right,
-                          color: context.colorScheme.backgroundSecondary
-                        )
-                    ),
-                  ],
-                )
-              ]
-            )
+              ),
+            ),
           ),
           Positioned(
             top: 0,
@@ -771,8 +825,8 @@ class _ExerciseDetailsCreateFormPage3State extends ConsumerState<ExerciseDetails
               child: StepIndicator(currentStep: _currentStep, totalSteps: TOTAL_STEPS),
             )
           ),
-        ]
-      )
+        ],
+      ),
     );
   }
 }
@@ -795,10 +849,10 @@ class _ExerciseDetailsCreateFormPage4State extends ConsumerState<ExerciseDetails
 
   @override
   void initState() {
-    if (newExercise.baseWeight!.value.isRight()) {
+    if (newExercise.baseWeight.value.isRight()) {
       _baseWeight = newExercise.baseWeight;
     }
-    if (newExercise.personalRecord!.value.isRight()) {
+    if (newExercise.personalRecord.value.isRight()) {
       _personalRecord = newExercise.personalRecord;
     }
 
@@ -838,87 +892,111 @@ class _ExerciseDetailsCreateFormPage4State extends ConsumerState<ExerciseDetails
       orElse: () => false,
     );
 
-    return Form(
-      key: _formKey,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      child: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppLayout.defaultPadding,
-              vertical: AppLayout.extraLargePadding,
-            ),
-            child: Column(
-              children: [
-                ChooseBaseWeightController(
-                  initialValue: _baseWeight?.value.getOrElse((l) => null),
-                  onChanged: (value) => _baseWeight = ExerciseDetailsBaseWeight(value),
-                  handleFlowBaseWeight: () {
-                    newExercise = newExercise.copyWith(
-                      baseWeight: _baseWeight,
-                      personalRecord: _personalRecord,
-                    );
-
-                    context.flow<CreateExerciseStages>().update((next) => CreateExerciseStages.baseWeight);
-                  },
-                ),
-                const SizedBox(
-                  height: AppLayout.defaultPadding,
-                ),
-                if (newExercise.type.value.getOrElse((l) => ExerciseType.repitition) == ExerciseType.repitition)
-                  PersonalRecordController(
-                    initialValue: _personalRecord?.value.getOrElse((l) => null),
-                    onChanged: (value) => _personalRecord = ExerciseDetailsPersonalRecord(value),
-                  ),
-                Spacer(),
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: isLoading ?
-                        null :
-                        () {
-                          handleFlowPrev();
-                        },
-                      style: IconButton.styleFrom(
-                        backgroundColor: context.colorScheme.foregroundPrimary,
-                      ),
-                      icon: isLoading ?
-                        const CircularProgressIndicator() :
-                        Icon(
-                          CupertinoIcons.chevron_left,
-                          color: context.colorScheme.backgroundSecondary
-                        )
-                    ),
-                    Spacer(),
-                    TextButton(
-                      onPressed: isLoading ?
-                        null :
-                        () {
-                          if (!_formKey.currentState!.validate()) return;
-
-                          handleFlowNext();
-                        },
-                      style: TextButton.styleFrom(
-                        backgroundColor: context.colorScheme.foregroundPrimary,
-                      ),
-                      child: isLoading ?
-                        const CircularProgressIndicator() :
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppLayout.defaultPadding,
-                          ),
-                          child: Text(
-                            'Create',
-                            style: context.textTheme.bodyLarge.copyWith(
-                              color: context.colorScheme.backgroundSecondary,
-                            ),
-                          ),
-                        )
-                    ),
-                  ],
+    return Scaffold(
+      backgroundColor: context.colorScheme.backgroundSecondary,
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.only(
+          left: AppLayout.defaultPadding,
+          right: AppLayout.defaultPadding,
+          bottom: AppLayout.extraLargePadding
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            IconButton(
+              onPressed: isLoading ?
+                null :
+                () {
+                  handleFlowPrev();
+                },
+              style: IconButton.styleFrom(
+                backgroundColor: context.colorScheme.foregroundPrimary,
+              ),
+              icon: isLoading ?
+                const CircularProgressIndicator() :
+                Icon(
+                  CupertinoIcons.chevron_left,
+                  color: context.colorScheme.backgroundSecondary
                 )
-              ]
-            )
+            ),
+            Spacer(),
+            TextButton(
+              onPressed: isLoading ?
+                null :
+                () {
+                  if (!_formKey.currentState!.validate()) return;
+
+                  handleFlowNext();
+                },
+              style: TextButton.styleFrom(
+                backgroundColor: context.colorScheme.foregroundPrimary,
+              ),
+              child: isLoading ?
+                const CircularProgressIndicator() :
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppLayout.defaultPadding,
+                  ),
+                  child: Text(
+                    'Create',
+                    style: context.textTheme.bodyLarge.copyWith(
+                      color: context.colorScheme.backgroundSecondary,
+                    ),
+                  ),
+                )
+            ),
+          ],
+        ),
+      ),
+      body: Stack(
+        children: <Widget>[
+          SizedBox.expand(
+            child: CustomScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              slivers: [
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Form(
+                        key: _formKey,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppLayout.defaultPadding,
+                            vertical: AppLayout.extraLargePadding,
+                          ),
+                          child: Column(
+                            children: [
+                              ChooseBaseWeightController(
+                                initialValue: _baseWeight?.value.getOrElse((l) => null),
+                                onChanged: (value) => _baseWeight = ExerciseDetailsBaseWeight(value),
+                                handleFlowBaseWeight: () {
+                                  newExercise = newExercise.copyWith(
+                                    baseWeight: _baseWeight,
+                                    personalRecord: _personalRecord,
+                                  );
+
+                                  context.flow<CreateExerciseStages>().update((next) => CreateExerciseStages.baseWeight);
+                                },
+                              ),
+                              const SizedBox(
+                                height: AppLayout.defaultPadding,
+                              ),
+                              if (newExercise.type.value.getOrElse((l) => ExerciseType.repitition) == ExerciseType.repitition)
+                                PersonalRecordController(
+                                  initialValue: _personalRecord?.value.getOrElse((l) => null),
+                                  onChanged: (value) => _personalRecord = ExerciseDetailsPersonalRecord(value),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
           Positioned(
             top: 0,
@@ -934,8 +1012,8 @@ class _ExerciseDetailsCreateFormPage4State extends ConsumerState<ExerciseDetails
               child: StepIndicator(currentStep: _currentStep, totalSteps: TOTAL_STEPS),
             )
           ),
-        ]
-      )
+        ],
+      ),
     );
   }
 }
@@ -957,10 +1035,10 @@ class _ExerciseDetailsCreateFormBaseWeightState extends ConsumerState<ExerciseDe
 
   @override
   void initState() {
-    if (newExercise.baseWeight!.value.isRight()) {
+    if (newExercise.baseWeight.value.isRight()) {
       _baseWeight = newExercise.baseWeight;
 
-      if (_baseWeight!.value.getOrElse((l) => null)?.weightLbs != 0.0) {
+      if (_baseWeight!.value.getOrElse((l) => null)!.weightLbs != 0.0) {
         _weight = _baseWeight!.value.getOrElse((l) => null)!.weightLbs;
         _initialUnit = WeightUnits.pounds;
       } else {
@@ -1002,109 +1080,135 @@ class _ExerciseDetailsCreateFormBaseWeightState extends ConsumerState<ExerciseDe
       orElse: () => false,
     );
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppLayout.defaultPadding,
-        vertical: AppLayout.defaultPadding,
-      ),
-      child: Column(
-        children: [
-          Text(
-            'Base Weight Setup',
-            style: context.textTheme.labelLarge,
-          ),
-          SizedBox(
-            height: AppLayout.defaultPadding,
-          ),
-          WeightInput(
-            label: 'Weight', 
-            hintText: 'Set Weight', 
-            onChanged: (value, unit) {
-              BaseWeightEntity baseWeight = new BaseWeightEntity(
-                weightKgs: unit == WeightUnits.kilograms ? value : 0.0,
-                weightLbs: unit == WeightUnits.pounds ? value : 0.0,
-                assisted: _assisted == Assisted.assisted ? true : false, 
-                bodyWeight: _bodyWeight == BodyWeight.useBodyweight ? true : false,  
-                createdAt: DateTimeX.current, 
-                updatedAt: DateTimeX.current
-              );
-
-              _baseWeight = ExerciseDetailsBaseWeight(baseWeight);
-            }, 
-            readOnly: false, 
-            initialUnit: _initialUnit,
-            initialWeight: _weight,
-          ),
-          SizedBox(
-            height: AppLayout.defaultPadding,
-          ),
-          FlexableRadioList<Assisted>(
-            items: Assisted.values.toList(), 
-            onSelected: (Enumeration<Enum>? value) {
-              _assisted = value as Assisted;
-
-              BaseWeightEntity baseWeight = new BaseWeightEntity(
-                weightKgs: _baseWeight!.value.getOrElse((l) => null)!.weightKgs,
-                weightLbs: _baseWeight!.value.getOrElse((l) => null)!.weightLbs,
-                assisted: _assisted == Assisted.assisted ? true : false, 
-                bodyWeight: _bodyWeight == BodyWeight.useBodyweight ? true : false,  
-                createdAt: DateTimeX.current, 
-                updatedAt: DateTimeX.current
-              );
-
-              _baseWeight = ExerciseDetailsBaseWeight(baseWeight);
-            },
-            selectedValue: _assisted,
-            labelText: 'Assisted Exercise',
-            description: 'Assisted exercises logged weight will be subtracted from the base weight. Ex: Assisted Pull Ups'
-          ),
-          SizedBox(
-            height: AppLayout.defaultPadding,
-          ),
-          FlexableRadioList<BodyWeight>(
-            items: BodyWeight.values.toList(),
-            onSelected: (Enumeration<Enum>? value) {
-              _bodyWeight = value as BodyWeight;
-
-              BaseWeightEntity baseWeight = new BaseWeightEntity(
-                weightKgs: _baseWeight!.value.getOrElse((l) => null)!.weightKgs,
-                weightLbs: _baseWeight!.value.getOrElse((l) => null)!.weightLbs,
-                assisted: _assisted == Assisted.assisted ? true : false,
-                bodyWeight: _bodyWeight == BodyWeight.useBodyweight ? true : false,
-                createdAt: DateTimeX.current,
-                updatedAt: DateTimeX.current,
-              );
-
-              _baseWeight = ExerciseDetailsBaseWeight(baseWeight);
-            },
-            selectedValue: _bodyWeight,
-            labelText: 'Autofill Body Weight',
-            description: 'Select whether the weight should autofill to your most up to date bodyweight',
-          ),
-          Spacer(),
-          Row(
-            children: [
-              IconButton(
-                onPressed: isLoading ?
-                  null :
-                  () {
-                    handleFlowPrev();
-                  },
-                style: IconButton.styleFrom(
-                  backgroundColor: context.colorScheme.foregroundPrimary,
-                ),
-                icon: isLoading ?
-                  const CircularProgressIndicator() :
-                  Icon(
-                    CupertinoIcons.chevron_left,
-                    color: context.colorScheme.backgroundSecondary
-                  )
+    return Scaffold(
+      backgroundColor: context.colorScheme.backgroundSecondary,
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.only(
+          left: AppLayout.defaultPadding,
+          right: AppLayout.defaultPadding,
+          bottom: AppLayout.extraLargePadding
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            IconButton(
+              onPressed: isLoading ?
+                null :
+                () {
+                  handleFlowPrev();
+                },
+              style: IconButton.styleFrom(
+                backgroundColor: context.colorScheme.foregroundPrimary,
               ),
-              Spacer(),
-            ],
-          )
-        ]
-      )
+              icon: isLoading ?
+                const CircularProgressIndicator() :
+                Icon(
+                  CupertinoIcons.chevron_left,
+                  color: context.colorScheme.backgroundSecondary
+                )
+            ),
+            Spacer(),
+          ],
+        ),
+      ),
+      body: SizedBox.expand(
+        child: CustomScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  Padding( 
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppLayout.defaultPadding,
+                      vertical: AppLayout.defaultPadding,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Base Weight Setup',
+                          style: context.textTheme.labelLarge,
+                        ),
+                        SizedBox(
+                          height: AppLayout.defaultPadding,
+                        ),
+                        WeightInput(
+                          label: 'Weight', 
+                          hintText: 'Set Weight', 
+                          onChanged: (value, unit) {
+                            BaseWeightEntity baseWeight = new BaseWeightEntity(
+                              weightKgs: unit == WeightUnits.kilograms ? value : 0.0,
+                              weightLbs: unit == WeightUnits.pounds ? value : 0.0,
+                              assisted: _assisted == Assisted.assisted ? true : false, 
+                              bodyWeight: _bodyWeight == BodyWeight.useBodyweight ? true : false,  
+                              createdAt: DateTimeX.current, 
+                              updatedAt: DateTimeX.current
+                            );
+
+                            _baseWeight = ExerciseDetailsBaseWeight(baseWeight);
+                          }, 
+                          readOnly: false, 
+                          initialUnit: _initialUnit,
+                          initialWeight: _weight,
+                        ),
+                        SizedBox(
+                          height: AppLayout.defaultPadding,
+                        ),
+                        FlexableRadioList<Assisted>(
+                          items: Assisted.values.toList(), 
+                          onSelected: (Enumeration<Enum>? value) {
+                            _assisted = value as Assisted;
+
+                            BaseWeightEntity baseWeight = new BaseWeightEntity(
+                              weightKgs: _baseWeight!.value.getOrElse((l) => null)!.weightKgs,
+                              weightLbs: _baseWeight!.value.getOrElse((l) => null)!.weightLbs,
+                              assisted: _assisted == Assisted.assisted ? true : false, 
+                              bodyWeight: _bodyWeight == BodyWeight.useBodyweight ? true : false,  
+                              createdAt: DateTimeX.current, 
+                              updatedAt: DateTimeX.current
+                            );
+
+                            _baseWeight = ExerciseDetailsBaseWeight(baseWeight);
+                          },
+                          selectedValue: _assisted,
+                          labelText: 'Assisted Exercise',
+                          description: 'Assisted exercises logged weight will be subtracted from the base weight. Ex: Assisted Pull Ups'
+                        ),
+                        SizedBox(
+                          height: AppLayout.defaultPadding,
+                        ),
+                        FlexableRadioList<BodyWeight>(
+                          items: BodyWeight.values.toList(),
+                          onSelected: (Enumeration<Enum>? value) {
+                            _bodyWeight = value as BodyWeight;
+
+                            BaseWeightEntity baseWeight = new BaseWeightEntity(
+                              weightKgs: _baseWeight!.value.getOrElse((l) => null)!.weightKgs,
+                              weightLbs: _baseWeight!.value.getOrElse((l) => null)!.weightLbs,
+                              assisted: _assisted == Assisted.assisted ? true : false,
+                              bodyWeight: _bodyWeight == BodyWeight.useBodyweight ? true : false,
+                              createdAt: DateTimeX.current,
+                              updatedAt: DateTimeX.current,
+                            );
+
+                            _baseWeight = ExerciseDetailsBaseWeight(baseWeight);
+                          },
+                          selectedValue: _bodyWeight,
+                          labelText: 'Autofill Body Weight',
+                          description: 'Select whether the weight should autofill to your most up to date bodyweight',
+                        ),
+                      ]
+                    )
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
