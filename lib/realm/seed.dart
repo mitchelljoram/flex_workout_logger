@@ -73,7 +73,12 @@ void realmSeed(Realm realm) {
     'Abductors',
     'Adductors',
     'Biceps',
+    'Calves',
     'Forearms',
+    'Glutes',
+    'Hamstrings',
+    'Infraspinatus',
+    'Laterals',
     'Pectorals',
     'Upper Pectorals',
     'Lower Pectorals',
@@ -83,6 +88,7 @@ void realmSeed(Realm realm) {
     'Shins',
     'Shoulders',
     'Trapezius',
+    'Triceps',
   ];
 
   late final initialMovementPatterns = initialMovementPatternNames.map(
