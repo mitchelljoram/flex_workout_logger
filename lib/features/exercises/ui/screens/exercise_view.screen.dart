@@ -1,4 +1,3 @@
-import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_view.controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/exercise_details_view.dart';
 import 'package:flex_workout_logger/ui/widgets/app_error.dart';
@@ -74,11 +73,6 @@ class ExerciseViewScreen extends ConsumerWidget {
               ),
             ),
           ),
-          // TODO: Overview
-            // TODO: Muscle groups targeted
-            // TODO: History
-          // TODO: Insights and analytics
-          // TODO: Variants and similar exercises
         ],
       ),
     );

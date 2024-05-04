@@ -369,7 +369,7 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
         children: <Widget>[
           SizedBox.expand(
             child: CustomScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
+              scrollBehavior: const CupertinoScrollBehavior(),
               slivers: [
                 SliverList(
                   delegate: SliverChildListDelegate(
@@ -423,8 +423,8 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
                                         movementPattern: ExerciseDetailsMovementPattern(value.movementPattern),
                                         engagement: ExerciseDetailsEngagement(value.engagement),
                                         type: ExerciseDetailsType(value.type),
-                                        primaryMuscleGroups: ExerciseDetailsMuscleGroups(value.primaryMuscleGroups),
-                                        secondaryMuscleGroups: ExerciseDetailsMuscleGroups(value.secondaryMuscleGroups),
+                                        // primaryMuscleGroups: ExerciseDetailsMuscleGroups(value.primaryMuscleGroups),
+                                        // secondaryMuscleGroups: ExerciseDetailsMuscleGroups(value.secondaryMuscleGroups),
                                       );
                                     }
                                   },
@@ -600,7 +600,7 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
         children: <Widget>[
           SizedBox.expand(
             child: CustomScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
+              scrollBehavior: const CupertinoScrollBehavior(),
               slivers: [
                 SliverList(
                   delegate: SliverChildListDelegate(
@@ -790,25 +790,35 @@ class _ExerciseDetailsCreateFormPage3State extends ConsumerState<ExerciseDetails
       body: Stack(
         children: <Widget>[
           SizedBox.expand(
-            child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(
-                horizontal: AppLayout.defaultPadding,
-                vertical: AppLayout.extraLargePadding,
-              ),
-              child: Form(
-                key: _formKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                child: ChooseMuscleGroupsController(
-                  onChanged: (primary, secondary) {
-                    _primaryMuscleGroups = ExerciseDetailsMuscleGroups(primary);
-                    _secondaryMuscleGroups = ExerciseDetailsMuscleGroups(secondary);
-                  }, 
-                  initialPrimaryMuscleGroups: _primaryMuscleGroups!.value.getOrElse((l) => []), 
-                  initialSeconadryMuscleGroups: _secondaryMuscleGroups!.value.getOrElse((l) => []),
-                  movementPattern: _movementPattern?.value.getOrElse((l) => null),
-                ),
-              ),
+            child: CustomScrollView(
+              scrollBehavior: const CupertinoScrollBehavior(),
+              slivers: [
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Form(
+                        key: _formKey,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppLayout.defaultPadding,
+                            vertical: AppLayout.extraLargePadding,
+                          ),
+                          child: ChooseMuscleGroupsController(
+                            onChanged: (primary, secondary) {
+                              _primaryMuscleGroups = ExerciseDetailsMuscleGroups(primary);
+                              _secondaryMuscleGroups = ExerciseDetailsMuscleGroups(secondary);
+                            }, 
+                            initialPrimaryMuscleGroups: _primaryMuscleGroups!.value.getOrElse((l) => []), 
+                            initialSeconadryMuscleGroups: _secondaryMuscleGroups!.value.getOrElse((l) => []),
+                            movementPattern: _movementPattern?.value.getOrElse((l) => null),
+                          ),
+                        ),
+                      ),
+                    ]
+                  )
+                )
+              ]
             ),
           ),
           Positioned(
@@ -953,7 +963,7 @@ class _ExerciseDetailsCreateFormPage4State extends ConsumerState<ExerciseDetails
         children: <Widget>[
           SizedBox.expand(
             child: CustomScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
+              scrollBehavior: const CupertinoScrollBehavior(),
               slivers: [
                 SliverList(
                   delegate: SliverChildListDelegate(

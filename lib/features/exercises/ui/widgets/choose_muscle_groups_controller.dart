@@ -32,13 +32,13 @@ class ChooseMuscleGroupsController extends ConsumerStatefulWidget {
 class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroupsController> {
 
   List<MuscleGroupEntity> _primaryMuscleGroups = [];
-  List<MuscleGroupEntity> _seconadryMuscleGroups = [];
+  List<MuscleGroupEntity> _secondaryMuscleGroups = [];
   MovementPatternEntity? _movementPattern;
 
   @override
   void initState() {
     _primaryMuscleGroups = widget.initialPrimaryMuscleGroups;
-    _seconadryMuscleGroups = widget.initialSeconadryMuscleGroups;
+    _secondaryMuscleGroups = widget.initialSeconadryMuscleGroups;
     _movementPattern = widget.movementPattern;
     super.initState();
   }
@@ -52,7 +52,7 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
     setState(() {
       if (index == 2) {
         _primaryMuscleGroups = _movementPattern!.primaryMuscleGroups;
-        _seconadryMuscleGroups = _movementPattern!.secondaryMuscleGroups;
+        _secondaryMuscleGroups = _movementPattern!.secondaryMuscleGroups;
       }
     });
   }
@@ -65,7 +65,7 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
 
   void _onSecondaryChanged(List<MuscleGroupEntity> newSecondaryMuscleGroups) {
     setState(() {
-      _seconadryMuscleGroups = newSecondaryMuscleGroups;
+      _secondaryMuscleGroups = newSecondaryMuscleGroups;
     });
   }
 
@@ -105,7 +105,7 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
                       height: 240,
                     )
                   ),
-                  ..._seconadryMuscleGroups.map((smg) =>
+                  ..._secondaryMuscleGroups.map((smg) =>
                     SvgPicture.asset(
                       'assets/muscle_groups/front/${smg.icon}',
                       colorFilter: ColorFilter.mode(context.colorScheme.pink.withOpacity(0.3), BlendMode.srcIn),
@@ -129,7 +129,7 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
                       height: 240,
                     )
                   ),
-                  ..._seconadryMuscleGroups.map((smg) =>
+                  ..._secondaryMuscleGroups.map((smg) =>
                     SvgPicture.asset(
                       'assets/muscle_groups/back/${smg.icon}',
                       colorFilter: ColorFilter.mode(context.colorScheme.pink.withOpacity(0.3), BlendMode.srcIn),
@@ -267,7 +267,7 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
                       context, 
                       muscleGroups.value!,
                       _primaryMuscleGroups,
-                      _seconadryMuscleGroups
+                      _secondaryMuscleGroups
                     );
 
                     _onPrimaryChanged(res);
@@ -318,7 +318,7 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
               SizedBox(
                 height: AppLayout.smallPadding,
               ),
-              ..._seconadryMuscleGroups.map((smg) =>
+              ..._secondaryMuscleGroups.map((smg) =>
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -384,7 +384,7 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
                         Container(
                           child: InkWell(
                             onTap: () {
-                              final newSecondaryMuscleGroups = _seconadryMuscleGroups;
+                              final newSecondaryMuscleGroups = _secondaryMuscleGroups;
                               newSecondaryMuscleGroups.remove(smg);
 
                               _onSecondaryChanged(newSecondaryMuscleGroups);
@@ -432,7 +432,7 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
                       context, 
                       muscleGroups.value!,
                       _primaryMuscleGroups,
-                      _seconadryMuscleGroups
+                      _secondaryMuscleGroups
                     );
 
                     _onSecondaryChanged(res);
