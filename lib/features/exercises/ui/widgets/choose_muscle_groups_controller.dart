@@ -711,9 +711,6 @@ Future<List<MuscleGroupEntity>> _showSecondaryBottomSheet(
                   ),
                   child: Row(
                     children: [
-                      SizedBox(
-                        width: AppLayout.miniPadding,
-                      ),
                       // Selected items
                       ..._secondary.map(
                         (s) => Row(

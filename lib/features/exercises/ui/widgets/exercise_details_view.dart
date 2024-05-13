@@ -1,14 +1,17 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/exercises_delete.controller.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/exercises_list.controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_details.entity.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/muscle_groups_targeted.dart';
 import 'package:flex_workout_logger/ui/widgets/icon_text_button.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 /// The detail view of an exercise
-class ExerciseDetailsView extends StatelessWidget {
+class ExerciseDetailsView extends ConsumerWidget {
   ///
   const ExerciseDetailsView({required this.exercise, super.key});
 
@@ -16,7 +19,7 @@ class ExerciseDetailsView extends StatelessWidget {
   final ExerciseDetailsEntity exercise;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +60,7 @@ class ExerciseDetailsView extends StatelessWidget {
                         textBaseline: TextBaseline.alphabetic,
                         children: [
                           Text(
-                            exercise.personalRecord!.maxWeightKgs.toString(),
+                            exercise.personalRecord!.oneRepMaxEstimateKgs.toString(),
                             style: context.textTheme.bodyLarge.copyWith(
                               fontWeight: FontWeight.w500,
                               color: context.colorScheme.foregroundPrimary,
@@ -155,41 +158,62 @@ class ExerciseDetailsView extends StatelessWidget {
                     icon: CupertinoIcons.trash,
                     text: 'Delete',
                     onPressed: () => {
-                      // showDialog<void>(
-                      //   context: context,
-                      //   builder: (BuildContext context) {
-                      //     return AlertDialog(
-                      //       title: const Text('Are you sure about that?'),
-                      //       content: const Text('This will delete the exercise'),
-                      //       actions: [
-                      //         TextButton(
-                      //           onPressed: () {
-                      //             Navigator.of(context).pop();
-                      //           },
-                      //           child: const Text('Cancel'),
-                      //         ),
-                      //         TextButton(
-                      //           onPressed: () {
-                      //             ref
-                      //                 .read(
-                      //                   exercisesDeleteControllerProvider(exercise.id)
-                      //                       .notifier,
-                      //                 )
-                      //                 .handle();
+                      showDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title:Text(
+                              'Are you sure about that?',
+                              style: context.textTheme.headlineLarge.copyWith(
+                                color: context.colorScheme.foregroundPrimary
+                              ),
+                            ),
+                            backgroundColor: context.colorScheme.backgroundPrimary,
+                            content: Text(
+                              'This will delete the exercise',
+                              style: context.textTheme.labelLarge.copyWith(
+                                color: context.colorScheme.foregroundPrimary
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  'Cancel',
+                                  style: context.textTheme.labelLarge.copyWith(
+                                    color: context.colorScheme.foregroundPrimary
+                                  ),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  ref
+                                    .read(
+                                      exercisesDeleteControllerProvider(exercise.id)
+                                          .notifier,
+                                    )
+                                    .handle();
 
-                      //             ref
-                      //                 .read(exercisesListControllerProvider.notifier)
-                      //                 .deleteExercise(exercise);
+                                  ref
+                                    .read(exercisesListControllerProvider.notifier)
+                                    .deleteExercise(exercise);
 
-                      //             Navigator.of(context).pop(); // Pop the dialog
-                      //             context.pop(); // Pop the screen
-                      //           },
-                      //           child: const Text('Confirm'),
-                      //         ),
-                      //       ],
-                      //     );
-                      //   },
-                      // ),
+                                  Navigator.of(context).pop();
+                                  context.pop();
+                                },
+                                child: Text(
+                                  'Confirm',
+                                  style: context.textTheme.labelLarge.copyWith(
+                                    color: Color.fromRGBO(242, 184, 181, 1),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
                     },
                   ),
                 ],
