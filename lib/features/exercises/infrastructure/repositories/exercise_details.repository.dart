@@ -146,8 +146,27 @@ class ExerciseDetailsRepository implements IExerciseDetailsRepository {
 
   @override
   FutureOr<Either<Failure, bool>> deleteExercise(String id) async {
-    // TODO: implement deleteExercise
-    throw UnimplementedError();
+    try {
+      final objectId = ObjectId.fromHexString(id);
+
+      final res = realm.find<ExerciseDetails>(objectId);
+
+      if (res == null) {
+        return left(const Failure.empty());
+      }
+
+      realm.write(() {
+        realm.delete(res);
+      });
+
+      return right(true);
+    } catch (e) {
+      return left(
+        Failure.internalServerError(
+          message: e.toString(),
+        )
+      );
+    }
   }
 
   @override

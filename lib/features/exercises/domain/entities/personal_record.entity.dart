@@ -1,4 +1,3 @@
-import 'package:flex_workout_logger/utils/enums.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'personal_record.entity.freezed.dart';
