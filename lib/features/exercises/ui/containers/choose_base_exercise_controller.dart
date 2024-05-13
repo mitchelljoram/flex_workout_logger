@@ -1,6 +1,6 @@
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list.controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_details.entity.dart';
-import 'package:flex_workout_logger/features/exercises/ui/widgets/exercise_card.dart';
+import 'package:flex_workout_logger/features/exercises/ui/containers/exercise_card.dart';
 import 'package:flex_workout_logger/ui/widgets/entity_selection_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +37,6 @@ class ChooseBaseExerciseController extends ConsumerWidget {
             value: be,
             child: ExerciseListTile(
               exercise: be,
-              trailingIcon: CupertinoIcons.add_circled,
               onTap: () {
                 Navigator.of(context).pop(be);
               },

@@ -1,6 +1,6 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list.controller.dart';
-import 'package:flex_workout_logger/features/exercises/ui/widgets/exercise_card.dart';
+import 'package:flex_workout_logger/features/exercises/ui/containers/exercise_card.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flex_workout_logger/ui/widgets/app_error.dart';
 import 'package:flutter/material.dart';

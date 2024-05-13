@@ -15,11 +15,11 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/name.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/personal_record.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/type.validation.dart';
-import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_base_exercise_controller.dart';
+import 'package:flex_workout_logger/features/exercises/ui/containers/choose_base_exercise_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_base_weight_controller.dart';
-import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_equipment_controller.dart';
-import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_movement_pattern_controller.dart';
-import 'package:flex_workout_logger/features/exercises/ui/widgets/choose_muscle_groups_controller.dart';
+import 'package:flex_workout_logger/features/exercises/ui/containers/choose_equipment_controller.dart';
+import 'package:flex_workout_logger/features/exercises/ui/containers/choose_movement_pattern_controller.dart';
+import 'package:flex_workout_logger/features/exercises/ui/containers/choose_muscle_groups_controller.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/flexable_radio_list.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/personal_record_controller.dart';
 import 'package:flex_workout_logger/ui/widgets/choose_icon_controller.dart';

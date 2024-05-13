@@ -170,24 +170,32 @@ Future<T?> _showBottomSheet<T>(
     ),
     builder: (context) => Stack(
       children: [
-        ListView.separated(
-          padding: EdgeInsets.only(
-            bottom: canCreate
-                ? (Platform.isAndroid ? 110 : 64)
-                : AppLayout.extraLargePadding,
-          ),
-          itemCount: items.length,
-          separatorBuilder: (context, index) => Divider(
-            color: context.colorScheme.divider,
-            height: 1,
-            indent: 64,
-          ),
-          itemBuilder: (context, index) {
-            final currentItem = items[index];
+        items.isEmpty ?
+          Text(
+            'No items found',
+            style: context.textTheme.bodyLarge.copyWith(
+              fontWeight: FontWeight.w500,
+              color: context.colorScheme.foregroundSecondary,
+            ),
+          ) :
+          ListView.separated(
+            padding: EdgeInsets.only(
+              bottom: canCreate
+                  ? (Platform.isAndroid ? 110 : 64)
+                  : AppLayout.extraLargePadding,
+            ),
+            itemCount: items.length,
+            separatorBuilder: (context, index) => Divider(
+              color: context.colorScheme.divider,
+              height: 1,
+              indent: 64,
+            ),
+            itemBuilder: (context, index) {
+              final currentItem = items[index];
 
-            return currentItem.child;
-          },
-        ),
+              return currentItem.child;
+            },
+          ),
         Positioned(
           bottom: MediaQuery.of(context).viewInsets.bottom,
           left: 0,
