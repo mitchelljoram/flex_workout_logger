@@ -6,6 +6,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/moveme
 import 'package:flex_workout_logger/features/exercises/domain/validations/movement_pattern/icon.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/movement_pattern/muscle_groups.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/movement_pattern/name.validation.dart';
+import 'package:flex_workout_logger/realm/schema.dart';
 import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:fpdart/src/either.dart';
 import 'package:realm/realm.dart';
@@ -25,27 +26,36 @@ class MovementPatternRepository implements IMovementPatternRepository {
     MovementPatternDescription description,
     MovementPatternMuscleGroups primaryMuscleGroups,
     MovementPatternMuscleGroups secondaryMuscleGroups,
-  ) {
+  ) async {
     // TODO: implement createMovementPattern
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Either<Failure, bool>> deleteMovementPattern(String id) {
+  FutureOr<Either<Failure, bool>> deleteMovementPattern(String id) async {
     // TODO: implement deleteMovementPattern
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Either<Failure, MovementPatternEntity>> getMovementPatternById(String id) {
+  FutureOr<Either<Failure, MovementPatternEntity>> getMovementPatternById(String id) async {
     // TODO: implement getMovementPatternById
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Either<Failure, List<MovementPatternEntity>>> getMovementPatterns() {
-    // TODO: implement getMovementPatterns
-    throw UnimplementedError();
+  FutureOr<Either<Failure, List<MovementPatternEntity>>> getMovementPatterns() async {
+    try {
+      final res = realm.all<MovementPattern>();
+
+      return right(res.map((e) => e.toEntity()).toList());
+    } catch (e) {
+      return left(
+        Failure.internalServerError(
+          message: e.toString(),
+        ),
+      );
+    }
   }
 
   @override
@@ -56,7 +66,7 @@ class MovementPatternRepository implements IMovementPatternRepository {
     MovementPatternDescription? description,
     MovementPatternMuscleGroups? primaryMuscleGroups,
     MovementPatternMuscleGroups? secondaryMuscleGroups,
-  ) {
+  ) async {
     // TODO: implement updateMovementPattern
     throw UnimplementedError();
   }

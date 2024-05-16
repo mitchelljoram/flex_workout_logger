@@ -1,4 +1,3 @@
-import 'package:flex_workout_logger/utils/enums.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'personal_record.entity.freezed.dart';
@@ -8,7 +7,6 @@ part 'personal_record.entity.freezed.dart';
 class PersonalRecordEntity with _$PersonalRecordEntity {
   /// [PersonalRecordEntity] factory constructor
   const factory PersonalRecordEntity({
-    ExerciseType? type,
     @Default(0.0) double oneRepMaxEstimateKgs,
     @Default(0.0) double oneRepMaxEstimateLbs,
     @Default(0.0) double tenRepMaxEstimateKgs,

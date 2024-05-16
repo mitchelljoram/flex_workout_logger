@@ -28,7 +28,7 @@ abstract class IExerciseDetailsRepository {
     ExerciseDetailsIcon icon,
     ExerciseDetailsBaseExercise? baseExercise,
     ExerciseDetailsName name,
-    ExerciseDetailsDescription description,
+    ExerciseDetailsDescription? description,
     ExerciseDetailsMovementPattern? movementPattern,
     ExerciseDetailsEquipment? equipment,
     ExerciseDetailsEngagement engagement,

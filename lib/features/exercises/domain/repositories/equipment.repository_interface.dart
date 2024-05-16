@@ -9,7 +9,7 @@ import 'package:fpdart/fpdart.dart';
 /// Equipment Repository Interface
 abstract class IEquipmentRepository {
   /// Get Equipment list
-  FutureOr<Either<Failure, List<EquipmentEntity>>> getEquipments();
+  FutureOr<Either<Failure, List<EquipmentEntity>>> getEquipment();
 
   /// Get Equipment by id
   FutureOr<Either<Failure, EquipmentEntity>> getEquipmentById(

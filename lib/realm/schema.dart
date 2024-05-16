@@ -193,11 +193,6 @@ extension ConvertBaseWeight on _BaseWeight {
 
 @RealmModel(ObjectType.embeddedObject)
 class _PersonalRecord {
-  @MapTo('type')
-  late int typeAsInt;
-  ExerciseType get type => ExerciseType.values[typeAsInt];
-  set type(ExerciseType value) => typeAsInt = value.index;
-
   late double oneRepMaxEstimateKgs;
   late double oneRepMaxEstimateLbs;
   late double tenRepMaxEstimateKgs;
@@ -216,7 +211,6 @@ extension ConvertPersonalRecord on _PersonalRecord {
   /// Convert [_PersonalRecord] to [PersonalRecordEntity]
   PersonalRecordEntity toEntity() {
     return PersonalRecordEntity(
-      type: type,
       oneRepMaxEstimateKgs: oneRepMaxEstimateKgs,
       oneRepMaxEstimateLbs: oneRepMaxEstimateLbs,
       tenRepMaxEstimateKgs: tenRepMaxEstimateKgs,

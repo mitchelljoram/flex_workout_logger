@@ -20,7 +20,11 @@ class ExerciseDetailsIcon extends Validation<String> {
 }
 
 Either<Failure, String> _validate(String input) {
-  if (File('assets/icons/$input/').existsSync() == false) {
+  if(input.isEmpty) {
+    return right(input);
+  }
+
+  if (File('assets/icons/exercises/$input').exists() == false) {
     return left(
       const Failure.unprocessableEntity(
         message: 'The icon must exist.',

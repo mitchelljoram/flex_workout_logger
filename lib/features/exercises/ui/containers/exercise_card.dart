@@ -1,14 +1,18 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/exercises_delete.controller.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/exercises_list.controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_details.entity.dart';
 import 'package:flex_workout_logger/features/exercises/ui/screens/exercise_view.screen.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 
 /// A selectable card with [Exercise Title]
-class ExercisesCard extends StatelessWidget {
+class ExercisesCard extends ConsumerWidget {
   ///
   const ExercisesCard({required this.exercise, super.key});
 
@@ -16,7 +20,7 @@ class ExercisesCard extends StatelessWidget {
   final ExerciseDetailsEntity exercise;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Slidable(
       groupTag: '0',
       endActionPane: ActionPane(
@@ -46,40 +50,61 @@ class ExercisesCard extends StatelessWidget {
           ),
           CustomSlidableAction(
             onPressed: (BuildContext context) => {
-              // showDialog<void>(
-              //   context: context,
-              //   builder: (BuildContext context) {
-              //     return AlertDialog(
-              //       title: const Text('Are you sure about that?'),
-              //       content: const Text('This will delete the exercise'),
-              //       actions: [
-              //         TextButton(
-              //           onPressed: () {
-              //             Navigator.of(context).pop();
-              //           },
-              //           child: const Text('Cancel'),
-              //         ),
-              //         TextButton(
-              //           onPressed: () {
-              //             ref
-              //                 .read(
-              //                   exercisesDeleteControllerProvider(exercise.id)
-              //                       .notifier,
-              //                 )
-              //                 .handle();
+              showDialog<void>(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title:Text(
+                      'Are you sure about that?',
+                      style: context.textTheme.headlineLarge.copyWith(
+                        color: context.colorScheme.foregroundPrimary
+                      ),
+                    ),
+                    backgroundColor: context.colorScheme.backgroundPrimary,
+                    content: Text(
+                      'This will delete the exercise',
+                      style: context.textTheme.labelLarge.copyWith(
+                        color: context.colorScheme.foregroundPrimary
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Cancel',
+                          style: context.textTheme.labelLarge.copyWith(
+                            color: context.colorScheme.foregroundPrimary
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          ref
+                            .read(
+                              exercisesDeleteControllerProvider(exercise.id)
+                                  .notifier,
+                            )
+                            .handle();
 
-              //             ref
-              //                 .read(exercisesListControllerProvider.notifier)
-              //                 .deleteExercise(exercise);
+                          ref
+                            .read(exercisesListControllerProvider.notifier)
+                            .deleteExercise(exercise);
 
-              //             Navigator.of(context).pop();
-              //           },
-              //           child: const Text('Confirm'),
-              //         ),
-              //       ],
-              //     );
-              //   },
-              // ),
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Confirm',
+                          style: context.textTheme.labelLarge.copyWith(
+                            color: Color.fromRGBO(242, 184, 181, 1),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
             },
             backgroundColor: context.colorScheme.foregroundPrimary,
             foregroundColor: context.colorScheme.backgroundPrimary,
@@ -171,9 +196,20 @@ class ExerciseListTile extends StatelessWidget {
         ],
       ),
       onTap: onTap,
-      leading: ImageIcon(
-        AssetImage('assets/icons/${exercise.icon}'),
-        size: 27,
+      leading: Container(
+        height: 27,
+        width: 27,
+        child: exercise.icon.isNotEmpty ?
+          Image(
+            image: AssetImage('assets/icons/exercises/${exercise.icon}'),
+            fit: BoxFit.scaleDown,
+          ) :
+          DottedBorder(
+            borderType: BorderType.Circle,
+            dashPattern: const [2, 4],
+            color: context.colorScheme.foregroundPrimary,
+            child: Container()
+          )
       ),
       trailing: (trailingIcon != null)
           ? Padding(

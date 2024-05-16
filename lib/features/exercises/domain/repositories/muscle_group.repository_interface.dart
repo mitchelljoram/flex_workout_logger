@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:flex_workout_logger/features/exercises/domain/entities/muscle_group.entity.dart';
-import 'package:flex_workout_logger/features/exercises/domain/validations/muscle_group/icon.validation.dart';
-import 'package:flex_workout_logger/features/exercises/domain/validations/muscle_group/name.validation.dart';
 import 'package:flex_workout_logger/utils/failure.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -15,20 +13,4 @@ abstract class IMuscleGroupRepository {
   FutureOr<Either<Failure, MuscleGroupEntity>> getMuscleGroupById(
     String id,
   );
-
-  /// Create MuscleGroup
-  FutureOr<Either<Failure, MuscleGroupEntity>> createMuscleGroup(
-    MuscleGroupIcon icon,
-    MuscleGroupName name,
-  );
-
-  /// Update MuscleGroup
-  FutureOr<Either<Failure, MuscleGroupEntity>> updateMuscleGroup(
-    String? id,
-    MuscleGroupIcon? icon,
-    MuscleGroupName? name,
-  );
-
-  /// Delete MuscleGroup by id
-  FutureOr<Either<Failure, bool>> deleteMuscleGroup(String id);
 }
