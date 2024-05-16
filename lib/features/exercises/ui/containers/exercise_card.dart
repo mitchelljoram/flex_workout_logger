@@ -3,6 +3,7 @@ import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_delete.controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list.controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_details.entity.dart';
+import 'package:flex_workout_logger/features/exercises/ui/screens/exercise_edit.screen.dart';
 import 'package:flex_workout_logger/features/exercises/ui/screens/exercise_view.screen.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,12 +29,12 @@ class ExercisesCard extends ConsumerWidget {
         children: [
           CustomSlidableAction(
             onPressed: (BuildContext context) => {
-              // context.goNamed(
-              //   ExercisesEditScreen.routeName,
-              //   pathParameters: {
-              //     'eid': exercise.id,
-              //   },
-              // );
+              context.goNamed(
+                ExerciseEditScreen.routeName,
+                pathParameters: {
+                  'eid': exercise.id,
+                },
+              ),
             },
             backgroundColor: context.colorScheme.backgroundSecondary,
             foregroundColor: context.colorScheme.foregroundPrimary,

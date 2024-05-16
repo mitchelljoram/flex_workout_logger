@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_details.entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/base_exercise.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/base_weight.validation.dart';
@@ -12,36 +10,23 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/name.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/personal_record.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/type.validation.dart';
-import 'package:flex_workout_logger/utils/failure.dart';
-import 'package:fpdart/fpdart.dart';
+import 'package:flex_workout_logger/features/exercises/infrastructure/providers.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-/// Exercise Repository Interface
-abstract class IExerciseDetailsRepository {
-  /// Get Exercise list
-  FutureOr<Either<Failure, List<ExerciseDetailsEntity>>> getExercises();
+part 'exercises_edit.controller.g.dart';
 
-  /// Get Exercise by id
-  FutureOr<Either<Failure, ExerciseDetailsEntity>> getExerciseById(String id);
+///
+@riverpod
+class ExercisesEditController extends _$ExercisesEditController {
+  @override
+  FutureOr<ExerciseDetailsEntity> build(String id) async {
+    final res = await ref.watch(exerciseDetailsRepositoryProvider).getExerciseById(id);
 
-  /// Create Exercise
-  FutureOr<Either<Failure, ExerciseDetailsEntity>> createExercise(
-    ExerciseDetailsIcon icon,
-    ExerciseDetailsBaseExercise? baseExercise,
-    ExerciseDetailsName name,
-    ExerciseDetailsDescription? description,
-    ExerciseDetailsMovementPattern? movementPattern,
-    ExerciseDetailsEquipment? equipment,
-    ExerciseDetailsEngagement engagement,
-    ExerciseDetailsType type,
-    ExerciseDetailsMuscleGroups primaryMuscleGroups,
-    ExerciseDetailsMuscleGroups secondaryMuscleGroups,
-    ExerciseDetailsBaseWeight baseWeight,
-    ExerciseDetailsPersonalRecord personalRecord,
-  );
+    return res.fold((l) => throw l, (r) => r);
+  }
 
-  /// Update Exercise
-  FutureOr<Either<Failure, ExerciseDetailsEntity>> updateExercise(
-    String id,
+  ///
+  Future<void> handle(
     ExerciseDetailsIcon icon,
     ExerciseDetailsBaseExercise? baseExercise,
     ExerciseDetailsName name,
@@ -54,11 +39,27 @@ abstract class IExerciseDetailsRepository {
     ExerciseDetailsMuscleGroups secondaryMuscleGroups,
     ExerciseDetailsBaseWeight baseWeight,
     ExerciseDetailsPersonalRecord personalRecord,
-  );
+  ) async {
+    state = const AsyncLoading();
 
-  /// Delete Exercise by id
-  FutureOr<Either<Failure, bool>> deleteExercise(String id);
-
-  /// Delete many Exercises by id
-  FutureOr<Either<Failure, int>> deleteMultipleExercises(List<String> ids);
+    final res = await ref.read(exerciseDetailsRepositoryProvider).updateExercise(
+      id,
+      icon,
+      baseExercise,
+      name,
+      description,
+      movementPattern,
+      equipment,
+      engagement,
+      type,
+      primaryMuscleGroups,
+      secondaryMuscleGroups,
+      baseWeight,
+      personalRecord,
+    );
+    state = res.fold(
+      (l) => AsyncValue.error(l.error, StackTrace.current),
+      AsyncValue.data,
+    );
+  }
 }

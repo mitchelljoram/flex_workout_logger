@@ -213,21 +213,111 @@ class ExerciseDetailsRepository implements IExerciseDetailsRepository {
 
   @override
   FutureOr<Either<Failure, ExerciseDetailsEntity>> updateExercise(
-    String? id,
-    ExerciseDetailsIcon? icon,
+    String id,
+    ExerciseDetailsIcon icon,
     ExerciseDetailsBaseExercise? baseExercise,
-    ExerciseDetailsName? name,
+    ExerciseDetailsName name,
     ExerciseDetailsDescription? description,
     ExerciseDetailsMovementPattern? movementPattern,
     ExerciseDetailsEquipment? equipment,
-    ExerciseDetailsEngagement? engagement,
-    ExerciseDetailsType? type,
-    ExerciseDetailsMuscleGroups? primaryMuscleGroups,
-    ExerciseDetailsMuscleGroups? secondaryMuscleGroups,
-    ExerciseDetailsBaseWeight? baseWeight,
-    ExerciseDetailsPersonalRecord? personalRecord,
+    ExerciseDetailsEngagement engagement,
+    ExerciseDetailsType type,
+    ExerciseDetailsMuscleGroups primaryMuscleGroups,
+    ExerciseDetailsMuscleGroups secondaryMuscleGroups,
+    ExerciseDetailsBaseWeight baseWeight,
+    ExerciseDetailsPersonalRecord personalRecord,
   ) async {
-    // TODO: implement updateExercise
-    throw UnimplementedError();
+    try {
+      final objectId = ObjectId.fromHexString(id);
+
+      final currentDateTime = DateTimeX.current;
+      final icon_ = icon.value.getOrElse((l) => '');
+      final baseExercise_ = getRealmObjectFromEntity<ExerciseDetailsEntity, ExerciseDetails>(
+        realm,
+        baseExercise?.value.getOrElse((l) => null),
+      );
+      final name_ = name.value.getOrElse((l) => 'No name provided');
+      final description_ = description?.value.getOrElse((l) => '');
+      final movementPattern_ = getRealmObjectFromEntity<MovementPatternEntity, MovementPattern>(
+        realm,
+        movementPattern?.value.getOrElse((l) => null),
+      );
+      final equipment_ = getRealmObjectFromEntity<EquipmentEntity, Equipment>(
+        realm,
+        equipment?.value.getOrElse((l) => null),
+      );;
+      final engagement_ = engagement.value.getOrElse((l) => Engagement.bilateral);
+      final type_ = type.value.getOrElse((l) => ExerciseType.repitition);
+      final primaryMuscleGroups_ = getRealmResultsFromEntityList<MuscleGroupEntity, MuscleGroup>(
+        realm,
+        primaryMuscleGroups.value.getOrElse((l) => []),
+      );
+      final secondaryMuscleGroups_ = getRealmResultsFromEntityList<MuscleGroupEntity, MuscleGroup>(
+        realm,
+        secondaryMuscleGroups.value.getOrElse((l) => []),
+      );
+
+      final _baseWeight = baseWeight.value.getOrElse((l) => BaseWeightEntity(
+        assisted: false,
+        bodyWeight: false,
+        createdAt: DateTimeX.current,
+        updatedAt: DateTimeX.current,
+      ));
+      final baseWeight_ = BaseWeight(
+        _baseWeight!.weightKgs != 0.0 ? _baseWeight.weightKgs : double.parse((_baseWeight.weightLbs / 2.205).toStringAsFixed(2)),
+        _baseWeight.weightLbs != 0.0 ? _baseWeight.weightLbs : double.parse((_baseWeight.weightKgs * 2.205).toStringAsFixed(2)), 
+        _baseWeight.assisted, 
+        _baseWeight.bodyWeight, 
+        _baseWeight.createdAt, 
+        _baseWeight.updatedAt
+      );
+
+      final _personalRecord = personalRecord.value.getOrElse((l) => PersonalRecordEntity(
+        createdAt: DateTimeX.current,
+        updatedAt: DateTimeX.current,
+      ));
+      final personalRecord_ = PersonalRecord(
+        _personalRecord!.oneRepMaxEstimateKgs != 0.0 ? _personalRecord.oneRepMaxEstimateKgs : double.parse((_personalRecord.oneRepMaxEstimateLbs / 2.205).toStringAsFixed(2)),
+        _personalRecord.oneRepMaxEstimateLbs != 0.0 ? _personalRecord.oneRepMaxEstimateLbs : double.parse((_personalRecord.oneRepMaxEstimateKgs * 2.205).toStringAsFixed(2)),
+        _personalRecord.tenRepMaxEstimateKgs != 0.0 ? _personalRecord.tenRepMaxEstimateKgs : double.parse((_personalRecord.tenRepMaxEstimateLbs / 2.205).toStringAsFixed(2)), 
+        _personalRecord.tenRepMaxEstimateLbs != 0.0 ? _personalRecord.oneRepMaxEstimateLbs : double.parse((_personalRecord.oneRepMaxEstimateKgs * 2.205).toStringAsFixed(2)), 
+        _personalRecord.maxWeightKgs, 
+        _personalRecord.maxWeightLbs, 
+        _personalRecord.bestTime, 
+        _personalRecord.createdAt, 
+        _personalRecord.updatedAt
+      );
+
+      final updatedExercise = ExerciseDetails(
+        objectId,
+        icon_,
+        name_,
+        description_ ?? '',
+        engagement_.index,
+        type_.index,
+        currentDateTime,
+        currentDateTime,
+      )
+        ..baseExercise = baseExercise_
+        ..movementPattern = movementPattern_
+        ..equipment = equipment_
+        ..baseWeight = baseWeight_
+        ..personalRecord = personalRecord_;
+
+      realm.write(() {
+        updatedExercise.primaryMuscleGroups.addAll(primaryMuscleGroups_);
+        updatedExercise.secondaryMuscleGroups.addAll(secondaryMuscleGroups_);
+
+        realm.add(updatedExercise, update: true);
+      });
+
+      return right(updatedExercise.toEntity());
+    } catch (e) {
+      return left(
+        Failure.internalServerError(
+          message: e.toString(),
+        ),
+      );
+    }
   }
 }

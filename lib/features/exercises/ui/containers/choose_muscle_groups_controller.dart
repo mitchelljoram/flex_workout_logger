@@ -37,8 +37,8 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
 
   @override
   void initState() {
-    _primaryMuscleGroups = widget.initialPrimaryMuscleGroups;
-    _secondaryMuscleGroups = widget.initialSeconadryMuscleGroups;
+    _primaryMuscleGroups = widget.initialPrimaryMuscleGroups.toList();
+    _secondaryMuscleGroups = widget.initialSeconadryMuscleGroups.toList();
     _movementPattern = widget.movementPattern;
     super.initState();
   }
@@ -59,13 +59,17 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
 
   void _onPrimaryChanged(List<MuscleGroupEntity> newPrimaryMuscleGroups) {
     setState(() {
-      _primaryMuscleGroups = newPrimaryMuscleGroups;
+      _primaryMuscleGroups = newPrimaryMuscleGroups.toList();
+
+      widget.onChanged(_primaryMuscleGroups, _secondaryMuscleGroups);
     });
   }
 
   void _onSecondaryChanged(List<MuscleGroupEntity> newSecondaryMuscleGroups) {
     setState(() {
-      _secondaryMuscleGroups = newSecondaryMuscleGroups;
+      _secondaryMuscleGroups = newSecondaryMuscleGroups.toList();
+
+      widget.onChanged(_primaryMuscleGroups, _secondaryMuscleGroups);
     });
   }
 
