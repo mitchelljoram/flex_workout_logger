@@ -1,5 +1,4 @@
-import 'package:flex_workout_logger/features/exercises/domain/entities/base_weight.entity.dart';
-import 'package:flex_workout_logger/features/exercises/domain/entities/personal_record.entity.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/exercises_edit.controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/base_exercise.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/base_weight.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/description.validation.dart';
@@ -12,26 +11,31 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/personal_record.validation.dart';
 import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/type.validation.dart';
 import 'package:flex_workout_logger/features/exercises/ui/containers/exercise_details_flow.dart';
-import 'package:flex_workout_logger/utils/date_time_extensions.dart';
-import 'package:flex_workout_logger/utils/enums.dart';
+import 'package:flex_workout_logger/ui/widgets/app_error.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-/// Exercises Detail Create Screen
-class ExerciseCreateScreen extends StatelessWidget {
+/// Exercises Detail Edit Screen
+class ExerciseEditScreen extends ConsumerWidget {
   /// Constructor
-  const ExerciseCreateScreen({super.key});
+  const ExerciseEditScreen({required this.id, super.key});
+
+  /// Exercise id
+  final String id;
 
   /// Route name
-  static const routeName = 'exercises_create';
+  static const routeName = 'exercises_edit';
 
   /// Path name where eid is the id of the exercise
-  static const routePath = 'exercises/create';
+  static const routePath = 'exercises/:eid/edit';
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final exercise = ref.watch(exercisesEditControllerProvider(id));
+
     return Scaffold(
       backgroundColor: context.colorScheme.backgroundSecondary,
       appBar: CupertinoNavigationBar(
@@ -47,48 +51,37 @@ class ExerciseCreateScreen extends StatelessWidget {
           iconSize: 24,
         ),
         middle: Text(
-          'Create Exercise',
+          'Edit Exercise',
           style: TextStyle(color: context.colorScheme.foregroundPrimary),
         ),
       ),
-      body: ExerciseDetailsFlow(
-        initialExerciseDetails: ExerciseDetails(
-          id: null,
-          icon: ExerciseDetailsIcon(''),
-          baseExercise: ExerciseDetailsBaseExercise(null,null),
-          name: ExerciseDetailsName(''),
-          description: ExerciseDetailsDescription(''),
-          movementPattern: ExerciseDetailsMovementPattern(null),
-          equipment: ExerciseDetailsEquipment(null),
-          engagement: ExerciseDetailsEngagement(Engagement.bilateral),
-          type: ExerciseDetailsType(ExerciseType.repitition),
-          primaryMuscleGroups: ExerciseDetailsMuscleGroups([]),
-          secondaryMuscleGroups: ExerciseDetailsMuscleGroups([]),
-          baseWeight: ExerciseDetailsBaseWeight(
-            BaseWeightEntity(
-              weightKgs: 0.0,
-              weightLbs: 0.0,
-              assisted: false,
-              bodyWeight: false,
-              createdAt: DateTimeX.current,
-              updatedAt: DateTimeX.current
-            )
+      body: exercise.when(
+        data: (data) => ExerciseDetailsFlow(
+          initialExerciseDetails: ExerciseDetails(
+            id: id,
+            icon: ExerciseDetailsIcon(data.icon),
+            baseExercise: ExerciseDetailsBaseExercise(null,data.baseExercise),
+            name: ExerciseDetailsName(data.name),
+            description: ExerciseDetailsDescription(data.description),
+            movementPattern: ExerciseDetailsMovementPattern(data.movementPattern),
+            equipment: ExerciseDetailsEquipment(data.equipment),
+            engagement: ExerciseDetailsEngagement(data.engagement),
+            type: ExerciseDetailsType(data.type),
+            primaryMuscleGroups: ExerciseDetailsMuscleGroups(data.primaryMuscleGroups),
+            secondaryMuscleGroups: ExerciseDetailsMuscleGroups(data.secondaryMuscleGroups),
+            baseWeight: ExerciseDetailsBaseWeight(data.baseWeight),
+            personalRecord: ExerciseDetailsPersonalRecord(
+              data.personalRecord
+            ),
           ),
-          personalRecord: ExerciseDetailsPersonalRecord(
-            PersonalRecordEntity(
-              oneRepMaxEstimateKgs: 0.0,
-              oneRepMaxEstimateLbs: 0.0,
-              tenRepMaxEstimateKgs: 0.0,
-              tenRepMaxEstimateLbs: 0.0,
-              maxWeightKgs: 0.0,
-              maxWeightLbs: 0.0,
-              bestTime: 0,
-              createdAt: DateTimeX.current,
-              updatedAt: DateTimeX.current
-            )
-          ),
+        ), 
+        error: (o, e) => AppError(
+          title: o.toString(),
         ),
-      )
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
     );
   }
 }

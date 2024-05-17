@@ -1,5 +1,6 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_create.controller.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/exercises_edit.controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list.controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/base_weight.entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_details.entity.dart';
@@ -36,6 +37,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class ExerciseDetails {
+  final String? id;
   final ExerciseDetailsIcon icon;
   final ExerciseDetailsBaseExercise baseExercise;
   final ExerciseDetailsName name;
@@ -49,22 +51,26 @@ class ExerciseDetails {
   final ExerciseDetailsBaseWeight baseWeight;
   final ExerciseDetailsPersonalRecord personalRecord;
 
-  const ExerciseDetails({
-    required this.icon,
-    required this.baseExercise,
-    required this.name,
-    required this.description,
-    required this.movementPattern,
-    required this.equipment,
-    required this.engagement,
-    required this.type,
-    required this.primaryMuscleGroups,
-    required this.secondaryMuscleGroups,
-    required this.baseWeight,
-    required this.personalRecord,
-  });
+  ExerciseDetails(
+    {
+      required this.id,
+      required this.icon,
+      required this.baseExercise,
+      required this.name,
+      required this.description,
+      required this.movementPattern,
+      required this.equipment,
+      required this.engagement,
+      required this.type,
+      required this.primaryMuscleGroups,
+      required this.secondaryMuscleGroups,
+      required this.baseWeight,
+      required this.personalRecord,
+    }
+  );
 
   ExerciseDetails copyWith({
+    String? id,
     ExerciseDetailsIcon? icon,
     ExerciseDetailsBaseExercise? baseExercise,
     ExerciseDetailsName? name,
@@ -79,6 +85,7 @@ class ExerciseDetails {
     ExerciseDetailsPersonalRecord? personalRecord,
   }) {
     return ExerciseDetails(
+      id: id ?? this.id,
       icon: icon ?? this.icon,
       baseExercise: baseExercise ?? this.baseExercise,
       name: name ?? this.name,
@@ -96,6 +103,7 @@ class ExerciseDetails {
 }
 
 ExerciseDetails exerciseDetails = ExerciseDetails(
+  id: null,
   icon: ExerciseDetailsIcon(''),
   baseExercise: ExerciseDetailsBaseExercise(null, null),
   name: ExerciseDetailsName(''),
@@ -145,39 +153,71 @@ class ExerciseDetailsFlow extends ConsumerWidget{
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<AsyncValue<ExerciseDetailsEntity?>>(exercisesCreateControllerProvider,
-        (previous, next) {
-      next.maybeWhen(
-        data: (data) {
-          if (data == null) return;
-
-          ref.read(exercisesListControllerProvider.notifier).addExercise(data);
-          context.pop();
-        },
-        orElse: () {},
-      );
-    });
-
     exerciseDetails = initialExerciseDetails;
+
+    if (exerciseDetails.id == null) {
+      ref.listen<AsyncValue<ExerciseDetailsEntity?>>(
+          exercisesCreateControllerProvider, (previous, next) {
+        next.maybeWhen(
+          data: (data) {
+            if (data == null) return;
+
+            ref.read(exercisesListControllerProvider.notifier).addExercise(data);
+            context.pop();
+          },
+          orElse: () {},
+        );
+      });
+    } else {
+      ref.listen<AsyncValue<ExerciseDetailsEntity?>>(
+          exercisesEditControllerProvider(exerciseDetails.id!), (previous, next) {
+        next.maybeWhen(
+          data: (data) {
+            if (previous?.value == null || data == null) return;
+
+            ref.read(exercisesListControllerProvider.notifier).editExercise(data);
+            context.pop();
+          },
+          orElse: () {},
+        );
+      });
+    }
 
     return FlowBuilder<CreateExerciseStages>(
       state: CreateExerciseStages.stage1,
       onGeneratePages: onGeneratePages,
       onComplete: (CreateExerciseStages stage) {
-        ref.read(exercisesCreateControllerProvider.notifier).handle(
-          exerciseDetails.icon,
-          exerciseDetails.baseExercise,
-          exerciseDetails.name,
-          exerciseDetails.description,
-          exerciseDetails.movementPattern,
-          exerciseDetails.equipment,
-          exerciseDetails.engagement,
-          exerciseDetails.type,
-          exerciseDetails.primaryMuscleGroups,
-          exerciseDetails.secondaryMuscleGroups,
-          exerciseDetails.baseWeight,
-          exerciseDetails.personalRecord
-        );
+        if (exerciseDetails.id == null) {
+          ref.read(exercisesCreateControllerProvider.notifier).handle(
+            exerciseDetails.icon,
+            exerciseDetails.baseExercise,
+            exerciseDetails.name,
+            exerciseDetails.description,
+            exerciseDetails.movementPattern,
+            exerciseDetails.equipment,
+            exerciseDetails.engagement,
+            exerciseDetails.type,
+            exerciseDetails.primaryMuscleGroups,
+            exerciseDetails.secondaryMuscleGroups,
+            exerciseDetails.baseWeight,
+            exerciseDetails.personalRecord
+          );
+        } else {
+          ref.read(exercisesEditControllerProvider(exerciseDetails.id!).notifier).handle(
+            exerciseDetails.icon,
+            exerciseDetails.baseExercise,
+            exerciseDetails.name,
+            exerciseDetails.description,
+            exerciseDetails.movementPattern,
+            exerciseDetails.equipment,
+            exerciseDetails.engagement,
+            exerciseDetails.type,
+            exerciseDetails.primaryMuscleGroups,
+            exerciseDetails.secondaryMuscleGroups,
+            exerciseDetails.baseWeight,
+            exerciseDetails.personalRecord
+          );
+        }
       },
     );
   }
@@ -751,7 +791,7 @@ class _ExerciseDetailsCreateFormPage3State extends ConsumerState<ExerciseDetails
                             }, 
                             initialPrimaryMuscleGroups: _primaryMuscleGroups!.value.getOrElse((l) => []), 
                             initialSeconadryMuscleGroups: _secondaryMuscleGroups!.value.getOrElse((l) => []),
-                            movementPattern: _movementPattern?.value.getOrElse((l) => null),
+                            movementPattern: _movementPattern!.value.getOrElse((l) => null),
                           ),
                         ),
                       ),
@@ -889,7 +929,7 @@ class _ExerciseDetailsCreateFormPage4State extends ConsumerState<ExerciseDetails
                     horizontal: AppLayout.defaultPadding,
                   ),
                   child: Text(
-                    'Create',
+                    exerciseDetails.id == null ? 'Create' : 'Save Changes',
                     style: context.textTheme.bodyLarge.copyWith(
                       color: context.colorScheme.backgroundSecondary,
                     ),

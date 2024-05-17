@@ -2,6 +2,7 @@ import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_delete.controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list.controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_details.entity.dart';
+import 'package:flex_workout_logger/features/exercises/ui/screens/exercise_edit.screen.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/muscle_groups_targeted.dart';
 import 'package:flex_workout_logger/ui/widgets/icon_text_button.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
@@ -133,12 +134,12 @@ class ExerciseDetailsView extends ConsumerWidget {
                     icon: CupertinoIcons.pencil,
                     text: 'Edit',
                     onPressed: () => {
-                      // context.goNamed(
-                      //   ExercisesEditScreen.routeName,
-                      //   pathParameters: {
-                      //     'eid': exercise.id,
-                      //   },
-                      // )
+                      context.goNamed(
+                        ExerciseEditScreen.routeName,
+                        pathParameters: {
+                          'eid': exercise.id,
+                        },
+                      ),
                     }
                   ),
                   const SizedBox(width: AppLayout.defaultPadding),
