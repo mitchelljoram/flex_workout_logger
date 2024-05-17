@@ -1,8 +1,21 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/exercises_create.controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_delete.controller.dart';
 import 'package:flex_workout_logger/features/exercises/controllers/exercises_list.controller.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_details.entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/base_exercise.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/base_weight.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/description.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/engagement.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/equipment.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/icon.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/movement_pattern.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/muscle_groups.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/name.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/personal_record.validation.dart';
+import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/type.validation.dart';
 import 'package:flex_workout_logger/features/exercises/ui/screens/exercise_edit.screen.dart';
+import 'package:flex_workout_logger/features/exercises/ui/screens/exercise_view.screen.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/muscle_groups_targeted.dart';
 import 'package:flex_workout_logger/ui/widgets/icon_text_button.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
@@ -21,6 +34,19 @@ class ExerciseDetailsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<AsyncValue<ExerciseDetailsEntity?>>(
+        exercisesCreateControllerProvider, (previous, next) {
+      next.maybeWhen(
+        data: (data) {
+          if (data == null) return;
+
+          ref.read(exercisesListControllerProvider.notifier).addExercise(data);
+          context.pop();
+        },
+        orElse: () {},
+      );
+    });
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,16 +169,40 @@ class ExerciseDetailsView extends ConsumerWidget {
                     }
                   ),
                   const SizedBox(width: AppLayout.defaultPadding),
-                  const IconTextButton(
+                  IconTextButton(
                     icon: CupertinoIcons.flag,
                     text: 'Goal',
                     onPressed: null,
                   ),
                   const SizedBox(width: AppLayout.defaultPadding),
-                  const IconTextButton(
+                  IconTextButton(
                     icon: CupertinoIcons.square_on_square,
                     text: 'Duplicate',
-                    onPressed: null,
+                    onPressed: () async {
+                      final res = await ref.read(exercisesCreateControllerProvider.notifier).handle(
+                        ExerciseDetailsIcon(exercise.icon),
+                        ExerciseDetailsBaseExercise(null, exercise.baseExercise),
+                        ExerciseDetailsName(exercise.name + ' copy'),
+                        ExerciseDetailsDescription(exercise.description),
+                        ExerciseDetailsMovementPattern(exercise.movementPattern),
+                        ExerciseDetailsEquipment(exercise.equipment),
+                        ExerciseDetailsEngagement(exercise.engagement),
+                        ExerciseDetailsType(exercise.type),
+                        ExerciseDetailsMuscleGroups(exercise.primaryMuscleGroups),
+                        ExerciseDetailsMuscleGroups(exercise.secondaryMuscleGroups),
+                        ExerciseDetailsBaseWeight(exercise.baseWeight),
+                        ExerciseDetailsPersonalRecord(exercise.personalRecord),
+                      );
+
+                      if (res != null){
+                        context.goNamed(
+                          ExerciseViewScreen.routeName,
+                          pathParameters: {
+                            'eid': res,
+                          },
+                        );
+                      }
+                    },
                   ),
                   const SizedBox(width: AppLayout.defaultPadding),
                   IconTextButton(

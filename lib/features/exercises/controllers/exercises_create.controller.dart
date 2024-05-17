@@ -24,7 +24,7 @@ class ExercisesCreateController extends _$ExercisesCreateController {
   }
 
   ///
-  Future<void> handle(
+  Future<String?> handle(
     ExerciseDetailsIcon icon,
     ExerciseDetailsBaseExercise? baseExercise,
     ExerciseDetailsName name,
@@ -58,5 +58,11 @@ class ExercisesCreateController extends _$ExercisesCreateController {
       (l) => AsyncValue.error(l.error, StackTrace.current),
       AsyncValue.data,
     );
+
+    if (state.hasValue && !state.hasError) {
+      return state.value!.id;
+    }
+
+    return null;
   }
 }
