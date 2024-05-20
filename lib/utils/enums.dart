@@ -1,3 +1,7 @@
+import 'package:flex_workout_logger/features/exercises/domain/entities/base_weight.entity.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/equipment.entity.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
 abstract interface class Enumeration<T extends Enum> {
   late String name;
   String? description;
@@ -139,6 +143,119 @@ enum BodyWeight implements Enumeration<BodyWeight> {
 
   // ignore: unused_element
   const BodyWeight({required this.name, this.description});
+
+  @override
+  final String name;
+
+  @override
+  final String? description;
+
+  @override
+  set name(String name) => name;
+
+  @override
+  set description(String? description) => description;
+}
+
+/// Set Type enum
+enum SetType implements Enumeration<SetType> {
+  /// Warmup
+  warmup(
+    name: 'Warmup',
+  ),
+
+  /// Technical
+  technical(
+    name: 'Technical',
+  );
+
+  // ignore: unused_element
+  const SetType({required this.name, this.description});
+
+  @override
+  final String name;
+
+  @override
+  final String? description;
+
+  @override
+  set name(String name) => name;
+
+  @override
+  set description(String? description) => description;
+}
+
+/// Rest Units enum
+enum RestUnits implements Enumeration<RestUnits> {
+  /// Seconds
+  seconds(
+    name: 'Seconds',
+  ),
+
+  /// Minutes
+  minutes(
+    name: 'Minutes',
+  );
+
+  // ignore: unused_element
+  const RestUnits({required this.name, this.description});
+
+  @override
+  final String name;
+
+  @override
+  final String? description;
+
+  @override
+  set name(String name) => name;
+
+  @override
+  set description(String? description) => description;
+}
+
+/// Rate of Percieved Exertion (RPE) enum
+enum RPE implements Enumeration<RPE> {
+  /// 1
+  RPE1(
+    name: '1',
+  ),
+
+  /// 10
+  RPE10(
+    name: '10',
+  );
+
+  // ignore: unused_element
+  const RPE({required this.name, this.description});
+
+  @override
+  final String name;
+
+  @override
+  final String? description;
+
+  @override
+  set name(String name) => name;
+
+  @override
+  set description(String? description) => description;
+}
+
+
+/// Reps in Reserve (RiR) enum
+enum RiR implements Enumeration<RiR> {
+  /// 1
+  RiR1(
+    name: '1',
+  ),
+
+  /// 10
+  RiR10(
+    name: '10',
+  );
+
+  // ignore: unused_element
+  const RiR({required this.name, this.description});
 
   @override
   final String name;

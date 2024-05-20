@@ -4,6 +4,9 @@ import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_
 import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern.entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/muscle_group.entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/personal_record.entity.dart';
+import 'package:flex_workout_logger/features/workouts/domain/entities/exercise.entity.dart';
+import 'package:flex_workout_logger/features/workouts/domain/entities/set.entity.dart';
+import 'package:flex_workout_logger/features/workouts/domain/entities/workout.entity.dart';
 import 'package:flex_workout_logger/utils/enums.dart';
 import 'package:realm/realm.dart';
 
@@ -248,7 +251,22 @@ class _Workout {
 }
 
 /// _Workout extension
-/// TODO: Add WorkoutEntity converter
+extension ConvertWorkout on _Workout {
+  /// Convert [_Workout] to [WorkoutEntity]
+  WorkoutEntity toEntity() {
+    return WorkoutEntity(
+      id: id.hexString, 
+      icon: icon, 
+      name: name, 
+      focus: focus, 
+      description: description, 
+      numberOfLifts: numberOfLifts, 
+      estimatedTime: estimatedTime, 
+      createdAt: createdAt, 
+      updatedAt: updatedAt
+    );
+  }
+}
 
 @RealmModel(ObjectType.embeddedObject)
 class _Exercise{
@@ -266,41 +284,75 @@ class _Exercise{
 }
 
 /// _Exercise extension
-/// TODO: Add ExerciseEntity converter
+extension ConvertExercise on _Exercise {
+  /// Convert [_Exercise] to [ExerciseEntity]
+  ExerciseEntity toEntity() {
+    return ExerciseEntity(
+      exercise: exercise?.toEntity(),
+      warmupSets: warmupSets.map((e) => e.toEntity()).toList(),
+      workingSets: workingSets.map((e) => e.toEntity()).toList(),
+      notes: notes,
+      alternatives: alternatives.map((e) => e.toEntity()).toList(),
+      createdAt: createdAt, 
+      updatedAt: updatedAt
+    );
+  }
+}
 
 @RealmModel(ObjectType.embeddedObject)
 class _Set{
   @MapTo('type')
   late int typeAsInt;
-  // SetType get type => SetType.values[typeAsInt];
-  // set type(SetType value) => typeAsInt = value.index;
+  SetType get type => SetType.values[typeAsInt];
+  set type(SetType value) => typeAsInt = value.index;
 
   late int minNumberReps;
   late int maxNumberReps;
+
+  late double time;
 
   late double minRestTime;
   late double maxRestTime;
 
   @MapTo('restUnit')
   late int restUnitAsInt;
-  // RestUnits get restUnit => RestUnits.values[restUnitAsInt];
-  // set restUnit(RestUnits value) => restUnitAsInt = value.index;
+  RestUnits get restUnit => RestUnits.values[restUnitAsInt];
+  set restUnit(RestUnits value) => restUnitAsInt = value.index;
 
   late double minIntensity;
   late double maxIntensity;
 
   @MapTo('exertion')
   late int exertionAsInt;
-  // RPE get exertion => RPE.values[exertionAsInt];
-  // set exertion(RPE value) => exertionAsInt = value.index;
-  /// TODO: RiR?
+  RPE get exertion => RPE.values[exertionAsInt];
+  set exertion(RPE value) => exertionAsInt = value.index;
+  RiR get exertion => RiR.values[exertionAsInt];
+  set exertion(RiR value) => exertionAsInt = value.index;
 
   late DateTime createdAt;
   late DateTime updatedAt;
 }
 
 /// _Set extension
-/// TODO: Add SetEntity converter
+extension ConvertSet on _Set {
+  /// Convert [_Set] to [SetEntity]
+  SetEntity toEntity() {
+    return SetEntity(
+      type: type,
+      minNumberReps: minNumberReps,
+      maxNumberReps: maxNumberReps,
+      time: time,
+      minRestTime: minRestTime,
+      maxRestTime: maxRestTime,
+      restUnits: restUnit,
+      minIntensity: minIntensity,
+      maxIntensity: maxIntensity,
+      exertion: exertion,
+      createdAt: createdAt, 
+      updatedAt: updatedAt
+    );
+  }
+}
 
 
 /// Programs
