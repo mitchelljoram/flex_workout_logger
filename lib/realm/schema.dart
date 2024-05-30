@@ -322,12 +322,15 @@ class _Set{
   late double minIntensity;
   late double maxIntensity;
 
-  @MapTo('exertion')
-  late int exertionAsInt;
-  RPE get exertion => RPE.values[exertionAsInt];
-  set exertion(RPE value) => exertionAsInt = value.index;
-  RiR get exertion => RiR.values[exertionAsInt];
-  set exertion(RiR value) => exertionAsInt = value.index;
+  @MapTo('exertionRPE')
+  late int exertionRPEAsInt;
+  RPE get exertionRPE => RPE.values[exertionRPEAsInt];
+  set exertionRPE(RPE value) => exertionRPEAsInt = value.index;
+
+  @MapTo('exertionRiR')
+  late int exertionRiRAsInt;
+  RiR get exertionRiR => RiR.values[exertionRiRAsInt];
+  set exertionRiR(RiR value) => exertionRiRAsInt = value.index;
 
   late DateTime createdAt;
   late DateTime updatedAt;
@@ -347,7 +350,8 @@ extension ConvertSet on _Set {
       restUnits: restUnit,
       minIntensity: minIntensity,
       maxIntensity: maxIntensity,
-      exertion: exertion,
+      exertionRPE: exertionRPE,
+      exertionRiR: exertionRiR,
       createdAt: createdAt, 
       updatedAt: updatedAt
     );

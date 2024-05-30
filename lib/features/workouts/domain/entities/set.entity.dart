@@ -1,5 +1,4 @@
 import 'package:flex_workout_logger/utils/enums.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'set.entity.freezed.dart';
@@ -18,7 +17,8 @@ class SetEntity with _$SetEntity {
     required RestUnits restUnits,
     required double minIntensity,
     required double maxIntensity,
-    required Either<RPE, RiR> exertion,
+    required RPE exertionRPE,
+    required RiR exertionRiR,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _SetEntity;

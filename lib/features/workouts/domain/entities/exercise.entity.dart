@@ -2,7 +2,7 @@ import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_
 import 'package:flex_workout_logger/features/workouts/domain/entities/set.entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'set.entity.freezed.dart';
+part 'exercise.entity.freezed.dart';
 
 /// Strongly Typed Model [ExerciseEntity]
 @freezed
