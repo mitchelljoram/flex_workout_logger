@@ -2,6 +2,7 @@ import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/ui/containers/exercises_list.dart';
 import 'package:flex_workout_logger/features/exercises/ui/screens/exercise_create.screen.dart';
 import 'package:flex_workout_logger/features/workouts/ui/containers/workout_list.dart';
+import 'package:flex_workout_logger/features/workouts/ui/screens/workout_create.screen.dart';
 import 'package:flex_workout_logger/ui/widgets/library_segment_controller.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
@@ -78,9 +79,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
                         //   ProgramCreateScreen.routeName,
                         // ),
                       } else if (_selectedLibrary == 2) {
-                        // context.goNamed(
-                        //   WorkoutCreateScreen.routeName,
-                        // ),
+                        context.goNamed(
+                          WorkoutCreateScreen.routeName,
+                        ),
                       } else {
                         context.goNamed(
                           ExerciseCreateScreen.routeName
