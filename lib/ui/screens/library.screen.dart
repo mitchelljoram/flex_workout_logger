@@ -91,7 +91,16 @@ class _LibraryScreenState extends State<LibraryScreen> {
               ),
             ),
           ),
-          SliverToBoxAdapter(child: ExercisesList()),
+          SliverToBoxAdapter(
+            child: IndexedStack(
+              index: _selectedLibrary - 1,
+              children : [
+                Container(),
+                Container(),
+                ExercisesList(),
+              ]
+            ),
+          ),
         ],
       ),
     );
