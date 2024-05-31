@@ -1,4 +1,4 @@
-import 'package:flex_workout_logger/features/exercises/infrastructure/providers.dart';
+import 'package:flex_workout_logger/features/workouts/infrastructure/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'workout_delete.controller.g.dart';

@@ -1,3 +1,4 @@
+import 'package:flex_workout_logger/features/workouts/infrastructure/repositories/workout.repository.dart';
 import 'package:flex_workout_logger/realm/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
