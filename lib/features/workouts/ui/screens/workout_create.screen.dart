@@ -1,17 +1,4 @@
-import 'package:flex_workout_logger/features/exercises/domain/entities/base_weight.entity.dart';
-import 'package:flex_workout_logger/features/exercises/domain/entities/personal_record.entity.dart';
-import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/base_exercise.validation.dart';
-import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/base_weight.validation.dart';
-import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/description.validation.dart';
-import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/engagement.validation.dart';
-import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/equipment.validation.dart';
-import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/icon.validation.dart';
-import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/movement_pattern.validation.dart';
-import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/muscle_groups.validation.dart';
-import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/name.validation.dart';
-import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/personal_record.validation.dart';
-import 'package:flex_workout_logger/features/exercises/domain/validations/exercise_details/type.validation.dart';
-import 'package:flex_workout_logger/features/exercises/ui/containers/exercise_details_flow.dart';
+import 'package:flex_workout_logger/features/workouts/ui/containers/workout_flow.dart';
 import 'package:flex_workout_logger/utils/date_time_extensions.dart';
 import 'package:flex_workout_logger/utils/enums.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
@@ -51,42 +38,9 @@ class WorkoutCreateScreen extends StatelessWidget {
           style: TextStyle(color: context.colorScheme.foregroundPrimary),
         ),
       ),
-      body: ExerciseDetailsFlow(
-        initialExerciseDetails: ExerciseDetails(
+      body: WorkoutFlow(
+        initialWorkout: Workout(
           id: null,
-          icon: ExerciseDetailsIcon(''),
-          baseExercise: ExerciseDetailsBaseExercise(null,null),
-          name: ExerciseDetailsName(''),
-          description: ExerciseDetailsDescription(''),
-          movementPattern: ExerciseDetailsMovementPattern(null),
-          equipment: ExerciseDetailsEquipment(null),
-          engagement: ExerciseDetailsEngagement(Engagement.bilateral),
-          type: ExerciseDetailsType(ExerciseType.repitition),
-          primaryMuscleGroups: ExerciseDetailsMuscleGroups([]),
-          secondaryMuscleGroups: ExerciseDetailsMuscleGroups([]),
-          baseWeight: ExerciseDetailsBaseWeight(
-            BaseWeightEntity(
-              weightKgs: 0.0,
-              weightLbs: 0.0,
-              assisted: false,
-              bodyWeight: false,
-              createdAt: DateTimeX.current,
-              updatedAt: DateTimeX.current
-            )
-          ),
-          personalRecord: ExerciseDetailsPersonalRecord(
-            PersonalRecordEntity(
-              oneRepMaxEstimateKgs: 0.0,
-              oneRepMaxEstimateLbs: 0.0,
-              tenRepMaxEstimateKgs: 0.0,
-              tenRepMaxEstimateLbs: 0.0,
-              maxWeightKgs: 0.0,
-              maxWeightLbs: 0.0,
-              bestTime: 0,
-              createdAt: DateTimeX.current,
-              updatedAt: DateTimeX.current
-            )
-          ),
         ),
       )
     );
