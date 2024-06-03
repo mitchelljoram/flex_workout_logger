@@ -24,7 +24,7 @@ Either<Failure, String> _validate(String input) {
   if (input.isEmpty) {
     return left(
       const Failure.unprocessableEntity(
-        message: 'The workout must have a name.',
+        message: 'The workout must have a focus.',
       ),
     );
   } else if (input.length > MAX_FOCUS_LENGTH) {

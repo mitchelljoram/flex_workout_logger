@@ -224,7 +224,7 @@ class ExerciseDetailsFlow extends ConsumerWidget{
 }
 
 
-/// Exercise Details Create Form Page 1 - Icon, base exercise, name, and description
+/// Exercise Details Flow Page 1 - Icon, base exercise, name, and description
 class ExerciseDetailsFlowPage1 extends ConsumerStatefulWidget {
   static MaterialPage page() => MaterialPage(child: ExerciseDetailsFlowPage1());
 
@@ -380,7 +380,7 @@ class _ExerciseDetailsFlowPage1State extends ConsumerState<ExerciseDetailsFlowPa
                               ),
                               const SizedBox(height: AppLayout.defaultPadding),
                               FlexableTextField(
-                                label: _selectedVariation == 1 ? 'Exercise Name' : 'Variation Name',
+                                label: 'Name',
                                 hintText: _selectedVariation == 1
                                     ? 'Bench Press, Squat, etc.'
                                     : 'Paused, 3” Bands, Alternating, etc...',
@@ -454,7 +454,7 @@ class _ExerciseDetailsFlowPage1State extends ConsumerState<ExerciseDetailsFlowPa
 }
 
 
-/// Exercise Details Create Form Page 2 - Movement pattern, equipment, engagement, and type
+/// Exercise Details Flow Page 2 - Movement pattern, equipment, engagement, and type
 class ExerciseDetailsFlowPage2 extends ConsumerStatefulWidget {
   static MaterialPage page() => MaterialPage(child: ExerciseDetailsFlowPage2());
 
@@ -653,7 +653,7 @@ class _ExerciseDetailsFlowPage2State extends ConsumerState<ExerciseDetailsFlowPa
 }
 
 
-/// Exercise Details Create Form Page 3 - Muscle groups
+/// Exercise Details Flow Page 3 - Muscle groups
 class ExerciseDetailsFlowPage3 extends ConsumerStatefulWidget {
   static MaterialPage page() => MaterialPage(child: ExerciseDetailsFlowPage3());
 
@@ -822,7 +822,7 @@ class _ExerciseDetailsFlowPage3State extends ConsumerState<ExerciseDetailsFlowPa
 }
 
 
-/// Exercise Details Create Form Page 4 - Base weight, personal record
+/// Exercise Details Flow Page 4 - Base weight, personal record
 class ExerciseDetailsFlowPage4 extends ConsumerStatefulWidget {
   static MaterialPage page() => MaterialPage(child: ExerciseDetailsFlowPage4());
 
@@ -1008,7 +1008,7 @@ class _ExerciseDetailsFlowPage4State extends ConsumerState<ExerciseDetailsFlowPa
   }
 }
 
-/// Exercise Details Create Form - Base weight
+/// Exercise Details Flow - Base weight
 class ExerciseDetailsFlowBaseWeight extends ConsumerStatefulWidget {
   static MaterialPage page() => MaterialPage(child: ExerciseDetailsFlowBaseWeight());
 

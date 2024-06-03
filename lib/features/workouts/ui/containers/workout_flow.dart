@@ -142,7 +142,7 @@ class WorkoutFlow extends ConsumerWidget{
 }
 
 
-/// Workout Create Form Page 1 - Icon, name, focus, program, and description
+/// Workout Flow Page 1 - Icon, name, focus, program, and description
 class WorkoutFlowPage1 extends ConsumerStatefulWidget {
   static MaterialPage page() => MaterialPage(child: WorkoutFlowPage1());
 
@@ -341,7 +341,7 @@ class _WorkoutFlowPage1State extends ConsumerState<WorkoutFlowPage1> {
 }
 
 
-/// Workout Create Form Page 2 - Exercises and Sets
+/// Workout Flow Page 2 - Exercises and Sets
 class WorkoutFlowPage2 extends ConsumerStatefulWidget {
   static MaterialPage page() => MaterialPage(child: WorkoutFlowPage2());
 
