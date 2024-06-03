@@ -296,7 +296,7 @@ class _WorkoutFlowPage1State extends ConsumerState<WorkoutFlowPage1> {
                               ),
                               const SizedBox(height: AppLayout.defaultPadding),
 
-                              // TODO: Implement add to an existing program
+                              // TODO: Implement add to an existing program widget
                               // const SizedBox(height: AppLayout.defaultPadding),
 
                               FlexableTextField(
