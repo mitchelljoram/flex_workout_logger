@@ -120,25 +120,25 @@ ExerciseDetails exerciseDetails = ExerciseDetails(
 
 const int TOTAL_STEPS = 4;
 
-enum CreateExerciseStages {stage1, stage2, stage3, stage4, baseWeight}
+enum ExerciseDetailsFlowStages {stage1, stage2, stage3, stage4, baseWeight}
 
 List<Page> onGeneratePages(
-  CreateExerciseStages stage, 
+  ExerciseDetailsFlowStages stage, 
   List<Page> pages,
 ) {
   switch(stage) {
-    case CreateExerciseStages.stage1: 
-      return [ExerciseDetailsCreateFormPage1.page()];
-    case CreateExerciseStages.stage2: 
-      return [ExerciseDetailsCreateFormPage2.page()];
-    case CreateExerciseStages.stage3: 
-      return [ExerciseDetailsCreateFormPage3.page()];
-    case CreateExerciseStages.stage4: 
-      return [ExerciseDetailsCreateFormPage4.page()];
-    case CreateExerciseStages.baseWeight:
-      return [ExerciseDetailsCreateFormBaseWeight.page()];
+    case ExerciseDetailsFlowStages.stage1: 
+      return [ExerciseDetailsFlowPage1.page()];
+    case ExerciseDetailsFlowStages.stage2: 
+      return [ExerciseDetailsFlowPage2.page()];
+    case ExerciseDetailsFlowStages.stage3: 
+      return [ExerciseDetailsFlowPage3.page()];
+    case ExerciseDetailsFlowStages.stage4: 
+      return [ExerciseDetailsFlowPage4.page()];
+    case ExerciseDetailsFlowStages.baseWeight:
+      return [ExerciseDetailsFlowBaseWeight.page()];
     default: 
-      return [ExerciseDetailsCreateFormPage1.page()];
+      return [ExerciseDetailsFlowPage1.page()];
   }
 }
 
@@ -183,10 +183,10 @@ class ExerciseDetailsFlow extends ConsumerWidget{
       });
     }
 
-    return FlowBuilder<CreateExerciseStages>(
-      state: CreateExerciseStages.stage1,
+    return FlowBuilder<ExerciseDetailsFlowStages>(
+      state: ExerciseDetailsFlowStages.stage1,
       onGeneratePages: onGeneratePages,
-      onComplete: (CreateExerciseStages stage) {
+      onComplete: (ExerciseDetailsFlowStages stage) {
         if (exerciseDetails.id == null) {
           ref.read(exercisesCreateControllerProvider.notifier).handle(
             exerciseDetails.icon,
@@ -224,15 +224,15 @@ class ExerciseDetailsFlow extends ConsumerWidget{
 }
 
 
-/// Exercise Details Create Form Page 1 - Icon, base exercise, name, and description
-class ExerciseDetailsCreateFormPage1 extends ConsumerStatefulWidget {
-  static MaterialPage page() => MaterialPage(child: ExerciseDetailsCreateFormPage1());
+/// Exercise Details Flow Page 1 - Icon, base exercise, name, and description
+class ExerciseDetailsFlowPage1 extends ConsumerStatefulWidget {
+  static MaterialPage page() => MaterialPage(child: ExerciseDetailsFlowPage1());
 
   @override
-  ConsumerState<ExerciseDetailsCreateFormPage1> createState() => _ExerciseDetailsCreateFormPage1State();
+  ConsumerState<ExerciseDetailsFlowPage1> createState() => _ExerciseDetailsFlowPage1State();
 }
 
-class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetailsCreateFormPage1> {
+class _ExerciseDetailsFlowPage1State extends ConsumerState<ExerciseDetailsFlowPage1> {
   final _formKey = GlobalKey<FormState>();
   final int _currentStep = 1;
 
@@ -284,7 +284,7 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
       description: _description,
     );
 
-    context.flow<CreateExerciseStages>().update((next) => CreateExerciseStages.stage2);
+    context.flow<ExerciseDetailsFlowStages>().update((next) => ExerciseDetailsFlowStages.stage2);
   }
 
   void _onVariationChanged(int index) {
@@ -380,7 +380,7 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
                               ),
                               const SizedBox(height: AppLayout.defaultPadding),
                               FlexableTextField(
-                                label: _selectedVariation == 1 ? 'Exercise Name' : 'Variation Name',
+                                label: 'Name',
                                 hintText: _selectedVariation == 1
                                     ? 'Bench Press, Squat, etc.'
                                     : 'Paused, 3” Bands, Alternating, etc...',
@@ -454,15 +454,15 @@ class _ExerciseDetailsCreateFormPage1State extends ConsumerState<ExerciseDetails
 }
 
 
-/// Exercise Details Create Form Page 2 - Movement pattern, equipment, engagement, and type
-class ExerciseDetailsCreateFormPage2 extends ConsumerStatefulWidget {
-  static MaterialPage page() => MaterialPage(child: ExerciseDetailsCreateFormPage2());
+/// Exercise Details Flow Page 2 - Movement pattern, equipment, engagement, and type
+class ExerciseDetailsFlowPage2 extends ConsumerStatefulWidget {
+  static MaterialPage page() => MaterialPage(child: ExerciseDetailsFlowPage2());
 
   @override
-  ConsumerState<ExerciseDetailsCreateFormPage2> createState() => _ExerciseDetailsCreateFormPage2State();
+  ConsumerState<ExerciseDetailsFlowPage2> createState() => _ExerciseDetailsFlowPage2State();
 }
 
-class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetailsCreateFormPage2> {
+class _ExerciseDetailsFlowPage2State extends ConsumerState<ExerciseDetailsFlowPage2> {
   final _formKey = GlobalKey<FormState>();
   final int _currentStep = 2;
 
@@ -502,7 +502,7 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
       type: _type,
     );
 
-    context.flow<CreateExerciseStages>().update((prev) => CreateExerciseStages.stage1);
+    context.flow<ExerciseDetailsFlowStages>().update((prev) => ExerciseDetailsFlowStages.stage1);
   }
 
   void handleFlowNext() {
@@ -513,7 +513,7 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
       type: _type,
     );
 
-    context.flow<CreateExerciseStages>().update((next) => CreateExerciseStages.stage3);
+    context.flow<ExerciseDetailsFlowStages>().update((next) => ExerciseDetailsFlowStages.stage3);
   }
 
   @override
@@ -653,15 +653,15 @@ class _ExerciseDetailsCreateFormPage2State extends ConsumerState<ExerciseDetails
 }
 
 
-/// Exercise Details Create Form Page 3 - Muscle groups
-class ExerciseDetailsCreateFormPage3 extends ConsumerStatefulWidget {
-  static MaterialPage page() => MaterialPage(child: ExerciseDetailsCreateFormPage3());
+/// Exercise Details Flow Page 3 - Muscle groups
+class ExerciseDetailsFlowPage3 extends ConsumerStatefulWidget {
+  static MaterialPage page() => MaterialPage(child: ExerciseDetailsFlowPage3());
 
   @override
-  ConsumerState<ExerciseDetailsCreateFormPage3> createState() => _ExerciseDetailsCreateFormPage3State();
+  ConsumerState<ExerciseDetailsFlowPage3> createState() => _ExerciseDetailsFlowPage3State();
 }
 
-class _ExerciseDetailsCreateFormPage3State extends ConsumerState<ExerciseDetailsCreateFormPage3> {
+class _ExerciseDetailsFlowPage3State extends ConsumerState<ExerciseDetailsFlowPage3> {
   final _formKey = GlobalKey<FormState>();
   final int _currentStep = 3;
 
@@ -695,7 +695,7 @@ class _ExerciseDetailsCreateFormPage3State extends ConsumerState<ExerciseDetails
       secondaryMuscleGroups: _secondaryMuscleGroups,
     );
 
-    context.flow<CreateExerciseStages>().update((prev) => CreateExerciseStages.stage2);
+    context.flow<ExerciseDetailsFlowStages>().update((prev) => ExerciseDetailsFlowStages.stage2);
   }
 
   void handleFlowNext() {
@@ -704,7 +704,7 @@ class _ExerciseDetailsCreateFormPage3State extends ConsumerState<ExerciseDetails
       secondaryMuscleGroups: _secondaryMuscleGroups,
     );
 
-    context.flow<CreateExerciseStages>().update((next) => CreateExerciseStages.stage4);
+    context.flow<ExerciseDetailsFlowStages>().update((next) => ExerciseDetailsFlowStages.stage4);
   }
 
   @override
@@ -822,15 +822,15 @@ class _ExerciseDetailsCreateFormPage3State extends ConsumerState<ExerciseDetails
 }
 
 
-/// Exercise Details Create Form Page 4 - Base weight, personal record
-class ExerciseDetailsCreateFormPage4 extends ConsumerStatefulWidget {
-  static MaterialPage page() => MaterialPage(child: ExerciseDetailsCreateFormPage4());
+/// Exercise Details Flow Page 4 - Base weight, personal record
+class ExerciseDetailsFlowPage4 extends ConsumerStatefulWidget {
+  static MaterialPage page() => MaterialPage(child: ExerciseDetailsFlowPage4());
 
   @override
-  ConsumerState<ExerciseDetailsCreateFormPage4> createState() => _ExerciseDetailsCreateFormPage4State();
+  ConsumerState<ExerciseDetailsFlowPage4> createState() => _ExerciseDetailsFlowPage4State();
 }
 
-class _ExerciseDetailsCreateFormPage4State extends ConsumerState<ExerciseDetailsCreateFormPage4> {
+class _ExerciseDetailsFlowPage4State extends ConsumerState<ExerciseDetailsFlowPage4> {
   final _formKey = GlobalKey<FormState>();
   final int _currentStep = 4;
 
@@ -860,7 +860,7 @@ class _ExerciseDetailsCreateFormPage4State extends ConsumerState<ExerciseDetails
       personalRecord: _personalRecord,
     );
 
-    context.flow<CreateExerciseStages>().complete();
+    context.flow<ExerciseDetailsFlowStages>().complete();
   }
 
   void handleFlowPrev() {
@@ -869,7 +869,7 @@ class _ExerciseDetailsCreateFormPage4State extends ConsumerState<ExerciseDetails
       personalRecord: _personalRecord,
     );
 
-    context.flow<CreateExerciseStages>().update((prev) => CreateExerciseStages.stage3);
+    context.flow<ExerciseDetailsFlowStages>().update((prev) => ExerciseDetailsFlowStages.stage3);
   }
 
   @override
@@ -967,7 +967,7 @@ class _ExerciseDetailsCreateFormPage4State extends ConsumerState<ExerciseDetails
                                     personalRecord: _personalRecord,
                                   );
 
-                                  context.flow<CreateExerciseStages>().update((next) => CreateExerciseStages.baseWeight);
+                                  context.flow<ExerciseDetailsFlowStages>().update((next) => ExerciseDetailsFlowStages.baseWeight);
                                 },
                               ),
                               const SizedBox(
@@ -1008,15 +1008,15 @@ class _ExerciseDetailsCreateFormPage4State extends ConsumerState<ExerciseDetails
   }
 }
 
-/// Exercise Details Create Form - Base weight
-class ExerciseDetailsCreateFormBaseWeight extends ConsumerStatefulWidget {
-  static MaterialPage page() => MaterialPage(child: ExerciseDetailsCreateFormBaseWeight());
+/// Exercise Details Flow - Base weight
+class ExerciseDetailsFlowBaseWeight extends ConsumerStatefulWidget {
+  static MaterialPage page() => MaterialPage(child: ExerciseDetailsFlowBaseWeight());
 
   @override
-  ConsumerState<ExerciseDetailsCreateFormBaseWeight> createState() => _ExerciseDetailsCreateFormBaseWeightState();
+  ConsumerState<ExerciseDetailsFlowBaseWeight> createState() => _ExerciseDetailsFlowBaseWeightState();
 }
 
-class _ExerciseDetailsCreateFormBaseWeightState extends ConsumerState<ExerciseDetailsCreateFormBaseWeight> {
+class _ExerciseDetailsFlowBaseWeightState extends ConsumerState<ExerciseDetailsFlowBaseWeight> {
   ExerciseDetailsBaseWeight? _baseWeight;
   double _weight = 0.0;
   WeightUnits _initialUnit = WeightUnits.kilograms;
@@ -1057,7 +1057,7 @@ class _ExerciseDetailsCreateFormBaseWeightState extends ConsumerState<ExerciseDe
       baseWeight: _baseWeight,
     );
 
-    context.flow<CreateExerciseStages>().update((prev) => CreateExerciseStages.stage4);
+    context.flow<ExerciseDetailsFlowStages>().update((prev) => ExerciseDetailsFlowStages.stage4);
   }
 
   @override
