@@ -1,6 +1,9 @@
+import 'package:flex_workout_logger/features/workouts/domain/validations/description.validation.dart';
+import 'package:flex_workout_logger/features/workouts/domain/validations/exercises.validation.dart';
+import 'package:flex_workout_logger/features/workouts/domain/validations/focus.validation.dart';
+import 'package:flex_workout_logger/features/workouts/domain/validations/icon.validation.dart';
+import 'package:flex_workout_logger/features/workouts/domain/validations/name.validation.dart';
 import 'package:flex_workout_logger/features/workouts/ui/containers/workout_flow.dart';
-import 'package:flex_workout_logger/utils/date_time_extensions.dart';
-import 'package:flex_workout_logger/utils/enums.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +44,11 @@ class WorkoutCreateScreen extends StatelessWidget {
       body: WorkoutFlow(
         initialWorkout: Workout(
           id: null,
+          icon: WorkoutIcon(''),
+          name: WorkoutName(''),
+          focus: WorkoutFocus(''),
+          description: WorkoutDescription(''),
+          exercises: WorkoutExercises([]),
         ),
       )
     );
