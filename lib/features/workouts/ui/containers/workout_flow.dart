@@ -8,6 +8,7 @@ import 'package:flex_workout_logger/features/workouts/domain/validations/exercis
 import 'package:flex_workout_logger/features/workouts/domain/validations/focus.validation.dart';
 import 'package:flex_workout_logger/features/workouts/domain/validations/icon.validation.dart';
 import 'package:flex_workout_logger/features/workouts/domain/validations/name.validation.dart';
+import 'package:flex_workout_logger/features/workouts/ui/containers/choose_exercises_controller.dart';
 import 'package:flex_workout_logger/ui/widgets/choose_icon_controller.dart';
 import 'package:flex_workout_logger/ui/widgets/flexable_textfield.dart';
 import 'package:flex_workout_logger/ui/widgets/step_indicator.dart';
@@ -351,7 +352,7 @@ class WorkoutFlowPage2 extends ConsumerStatefulWidget {
 
 class _WorkoutFlowPage2State extends ConsumerState<WorkoutFlowPage2> {
   final _formKey = GlobalKey<FormState>();
-  final int _currentStep = 4;
+  final int _currentStep = 2;
 
   WorkoutExercises? _exercises;
 
@@ -471,6 +472,19 @@ class _WorkoutFlowPage2State extends ConsumerState<WorkoutFlowPage2> {
                           ),
                           child: Column(
                             children: [
+                              Text(
+                                'Exercises',
+                                style: context.textTheme.headlineLarge.copyWith(
+                                  color: context.colorScheme.foregroundPrimary,
+                                ),
+                              ),
+                              SizedBox(
+                                height: AppLayout.largePadding,
+                              ),
+                              ChooseExercisesController(
+                                onChanged: (value) => _exercises = WorkoutExercises(value), 
+                                initialExercises: _exercises!.value.getOrElse((l) => []),
+                              ),
                             ],
                           ),
                         ),
