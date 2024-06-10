@@ -163,30 +163,27 @@ class BubbleIconButton extends StatelessWidget{
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(25),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppLayout.defaultPadding,
-              vertical: AppLayout.extraMiniPadding
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  icon,
-                  size: 12,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: 12,
+                color: context.colorScheme.foregroundPrimary,
+              ),
+              const SizedBox(
+                width: AppLayout.smallPadding,
+              ),
+              Text(
+                label,
+                style: context.textTheme.bodySmall.copyWith(
                   color: context.colorScheme.foregroundPrimary,
                 ),
-                const SizedBox(
-                  width: AppLayout.smallPadding,
-                ),
-                Text(
-                  label,
-                  style: context.textTheme.bodySmall.copyWith(
-                    color: context.colorScheme.foregroundPrimary,
-                  ),
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(
+                width: AppLayout.extraMiniPadding,
+              ),
+            ],
           ),
         ),
       ),

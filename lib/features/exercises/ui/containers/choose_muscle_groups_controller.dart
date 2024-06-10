@@ -5,6 +5,8 @@ import 'package:flex_workout_logger/features/exercises/controllers/muscle_group_
 import 'package:flex_workout_logger/features/exercises/domain/entities/movement_pattern.entity.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/muscle_group.entity.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/autofill_segment_controller.dart';
+import 'package:flex_workout_logger/ui/widgets/bubbles.dart';
+import 'package:flex_workout_logger/ui/widgets/entity_list_tiles.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -162,94 +164,16 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      height: AppLayout.smallPadding,
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          width: 24,
-                          height: 24,
-                          child: SvgPicture.asset(
-                            'assets/icons/muscle_groups/primary/${pmg.icon}',
-                            fit: BoxFit.contain
-                          ),
-                        ),
-                        SizedBox(
-                          width: AppLayout.miniPadding,
-                        ),
-                        Text(
-                          pmg.name,
-                          style: context.textTheme.labelLarge.copyWith(
-                            color: context.colorScheme.foregroundPrimary,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: AppLayout.smallPadding,
-                    ),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: AppLayout.extraLargePadding,
-                        ),
-                        Container(
-                          child: InkWell(
-                            onTap: () {},
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  CupertinoIcons.info_circle,
-                                  size: 16
-                                ),
-                                SizedBox(
-                                  width: AppLayout.extraMiniPadding,
-                                ),
-                                Text(
-                                  'Details',
-                                  style: context.textTheme.labelSmall.copyWith(
-                                    color: context.colorScheme.foregroundPrimary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: AppLayout.defaultPadding,
-                        ),
-                        Container(
-                          child: InkWell(
-                            onTap: () {
-                              final newPrimaryMuscleGroups = _primaryMuscleGroups;
-                              newPrimaryMuscleGroups.remove(pmg);
+                    MuscleGroupListTile(
+                      muscleGroup: pmg, 
+                      iconPath: 'assets/icons/muscle_groups/primary/${pmg.icon}', 
+                      detailsOnTap: () {}, 
+                      removeOnTap: () {
+                        final newPrimaryMuscleGroups = _primaryMuscleGroups;
+                        newPrimaryMuscleGroups.remove(pmg);
 
-                              _onPrimaryChanged(newPrimaryMuscleGroups);
-                            },
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  CupertinoIcons.minus_circle,
-                                  size: 16,
-                                  color: Color.fromRGBO(242, 184, 181, 1),
-                                ),
-                                SizedBox(
-                                  width: AppLayout.extraMiniPadding,
-                                ),
-                                Text(
-                                  'Remove',
-                                  style: context.textTheme.labelSmall.copyWith(
-                                    color: context.colorScheme.foregroundPrimary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
+                        _onPrimaryChanged(newPrimaryMuscleGroups);
+                      },
                     ),
                     Divider(
                       indent: AppLayout.extraLargePadding,
@@ -260,49 +184,20 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
               SizedBox(
                 height: AppLayout.smallPadding,
               ),
-              Container(
-                decoration: BoxDecoration(
-                  color: context.colorScheme.backgroundTertiary,
-                  borderRadius: BorderRadius.circular(999)
-                ),
-                child: InkWell(
-                  onTap:() async {
-                    var res = await _showPrimaryBottomSheet(
-                      context, 
-                      muscleGroups.value!,
-                      _primaryMuscleGroups,
-                      _secondaryMuscleGroups
-                    );
+              BubbleIconButton(
+                label: 'Add Muscle Groups', 
+                backgroundColor: context.colorScheme.backgroundTertiary, 
+                icon: CupertinoIcons.add, 
+                onTap: () async {
+                  var res = await _showPrimaryBottomSheet(
+                    context, 
+                    muscleGroups.value!,
+                    _primaryMuscleGroups,
+                    _secondaryMuscleGroups
+                  );
 
-                    _onPrimaryChanged(res);
-                  },
-                  borderRadius: BorderRadius.circular(25),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppLayout.defaultPadding,
-                      vertical: AppLayout.extraMiniPadding
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          CupertinoIcons.add,
-                          size: 12,
-                          color: context.colorScheme.foregroundPrimary,
-                        ),
-                        const SizedBox(
-                          width: AppLayout.smallPadding,
-                        ),
-                        Text(
-                          'Add Muscle Groups',
-                          style: context.textTheme.bodySmall.copyWith(
-                            color: context.colorScheme.foregroundPrimary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                  _onPrimaryChanged(res);
+                },
               ),
             ],
           ),
@@ -327,94 +222,16 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      height: AppLayout.smallPadding,
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          width: 24,
-                          height: 24,
-                          child: SvgPicture.asset(
-                            'assets/icons/muscle_groups/secondary/${smg.icon}',
-                            fit: BoxFit.contain
-                          ),
-                        ),
-                        SizedBox(
-                          width: AppLayout.miniPadding,
-                        ),
-                        Text(
-                          smg.name,
-                          style: context.textTheme.labelLarge.copyWith(
-                            color: context.colorScheme.foregroundPrimary,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: AppLayout.smallPadding,
-                    ),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: AppLayout.extraLargePadding,
-                        ),
-                        Container(
-                          child: InkWell(
-                            onTap: () {},
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  CupertinoIcons.info_circle,
-                                  size: 16
-                                ),
-                                SizedBox(
-                                  width: AppLayout.extraMiniPadding,
-                                ),
-                                Text(
-                                  'Details',
-                                  style: context.textTheme.labelSmall.copyWith(
-                                    color: context.colorScheme.foregroundPrimary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: AppLayout.defaultPadding,
-                        ),
-                        Container(
-                          child: InkWell(
-                            onTap: () {
-                              final newSecondaryMuscleGroups = _secondaryMuscleGroups;
-                              newSecondaryMuscleGroups.remove(smg);
+                    MuscleGroupListTile(
+                      muscleGroup: smg, 
+                      iconPath: 'assets/icons/muscle_groups/secondary/${smg.icon}', 
+                      detailsOnTap: () {}, 
+                      removeOnTap: () {
+                        final newSecondaryMuscleGroups = _secondaryMuscleGroups;
+                        newSecondaryMuscleGroups.remove(smg);
 
-                              _onSecondaryChanged(newSecondaryMuscleGroups);
-                            },
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  CupertinoIcons.minus_circle,
-                                  size: 16,
-                                  color: Color.fromRGBO(242, 184, 181, 1),
-                                ),
-                                SizedBox(
-                                  width: AppLayout.extraMiniPadding,
-                                ),
-                                Text(
-                                  'Remove',
-                                  style: context.textTheme.labelSmall.copyWith(
-                                    color: context.colorScheme.foregroundPrimary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
+                        _onSecondaryChanged(newSecondaryMuscleGroups);
+                      },
                     ),
                     Divider(
                       indent: AppLayout.extraLargePadding,
@@ -425,49 +242,20 @@ class _ChooseMuscleGroupsControllerState extends ConsumerState<ChooseMuscleGroup
               SizedBox(
                 height: AppLayout.smallPadding,
               ),
-              Container(
-                decoration: BoxDecoration(
-                  color: context.colorScheme.backgroundTertiary,
-                  borderRadius: BorderRadius.circular(999)
-                ),
-                child: InkWell(
-                  onTap:() async {
-                    var res = await _showSecondaryBottomSheet(
-                      context, 
-                      muscleGroups.value!,
-                      _primaryMuscleGroups,
-                      _secondaryMuscleGroups
-                    );
+              BubbleIconButton(
+                label: 'Add Muscle Groups', 
+                backgroundColor: context.colorScheme.backgroundTertiary, 
+                icon: CupertinoIcons.add, 
+                onTap: () async {
+                  var res = await _showSecondaryBottomSheet(
+                    context, 
+                    muscleGroups.value!,
+                    _primaryMuscleGroups,
+                    _secondaryMuscleGroups
+                  );
 
-                    _onSecondaryChanged(res);
-                  },
-                  borderRadius: BorderRadius.circular(25),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppLayout.defaultPadding,
-                      vertical: AppLayout.extraMiniPadding
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          CupertinoIcons.add,
-                          size: 12,
-                          color: context.colorScheme.foregroundPrimary,
-                        ),
-                        const SizedBox(
-                          width: AppLayout.smallPadding,
-                        ),
-                        Text(
-                          'Add Muscle Groups',
-                          style: context.textTheme.bodySmall.copyWith(
-                            color: context.colorScheme.foregroundPrimary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                  _onSecondaryChanged(res);
+                },
               ),
             ],
           ),

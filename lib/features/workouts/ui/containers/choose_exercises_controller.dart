@@ -174,7 +174,10 @@ class _SetsCardState extends State<SetsCard> {
               children: [
                 SetListTile(
                   set: s, 
-                  index: index
+                  index: index,
+                  editOnTap: () {},
+                  duplicateOnTap: () {},
+                  removeOnTap: () {},
                 ),
                 Divider(
                   indent: AppLayout.extraLargePadding,

@@ -1,6 +1,7 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/muscle_group.entity.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/front_back_segment_controller.dart';
+import 'package:flex_workout_logger/ui/widgets/bubbles.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -125,10 +126,9 @@ class _MuscleGroupsTargetedState extends State<MuscleGroupsTargeted> {
                           runSpacing: AppLayout.miniPadding,
                           children: [
                             ...widget.primaryTargeted.map((pmg) => 
-                              _bubble(
-                                context,
-                                pmg.name,
-                                null
+                              BubbleLabel(
+                                label: pmg.name,
+                                backgroundColor: context.colorScheme.backgroundTertiary,
                               ),
                             )
                           ],
@@ -174,10 +174,9 @@ class _MuscleGroupsTargetedState extends State<MuscleGroupsTargeted> {
                           runSpacing: AppLayout.miniPadding,
                           children: [
                             ...widget.secondaryTargeted.map((smg) => 
-                              _bubble(
-                                context,
-                                smg.name,
-                                null
+                              BubbleLabel(
+                                label: smg.name,
+                                backgroundColor: context.colorScheme.backgroundTertiary,
                               ),
                             )
                           ],
@@ -256,40 +255,6 @@ class _MuscleGroupsTargetedState extends State<MuscleGroupsTargeted> {
           )
         ),
       ],
-    );
-  }
-
-  Widget _bubble(BuildContext context, String text, String? icon) {
-    return ClipRRect(
-      borderRadius: const BorderRadius.all(Radius.circular(999)),
-      child: Container(
-        color: context.colorScheme.backgroundTertiary,
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppLayout.smallPadding,
-          vertical: AppLayout.extraMiniPadding,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon != null && icon.isNotEmpty)
-              Padding(
-                padding: EdgeInsets.only(
-                  right: AppLayout.miniPadding,
-                ),
-                child: ImageIcon(
-                  AssetImage('assets/icons/${icon}'),
-                  size: 12,
-                ),
-              ),
-            Text(
-              text,
-              style: context.textTheme.labelMedium.copyWith(
-                color: context.colorScheme.foregroundPrimary,
-              ),
-            ),
-          ],
-        )
-      ),
     );
   }
 }

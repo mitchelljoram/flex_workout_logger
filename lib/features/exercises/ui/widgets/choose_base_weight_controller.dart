@@ -1,5 +1,6 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
 import 'package:flex_workout_logger/features/exercises/domain/entities/base_weight.entity.dart';
+import 'package:flex_workout_logger/ui/widgets/bubbles.dart';
 import 'package:flex_workout_logger/utils/date_time_extensions.dart';
 import 'package:flex_workout_logger/utils/enums.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
@@ -125,42 +126,13 @@ class _ChooseBaseWeightControllerState extends State<ChooseBaseWeightController>
         const SizedBox(
           height: AppLayout.defaultPadding,
         ),
-        Container(
-          decoration: BoxDecoration(
-            color: context.colorScheme.backgroundTertiary,
-            borderRadius: BorderRadius.circular(999)
-          ),
-          child: InkWell(
-            onTap:() {
-              widget.handleFlowBaseWeight();
-            },
-            borderRadius: BorderRadius.circular(25),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppLayout.defaultPadding,
-                vertical: AppLayout.extraMiniPadding
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    CupertinoIcons.add,
-                    size: 12,
-                    color: context.colorScheme.foregroundPrimary,
-                  ),
-                  const SizedBox(
-                    width: AppLayout.smallPadding,
-                  ),
-                  Text(
-                    'Setup Base Weight',
-                    style: context.textTheme.bodySmall.copyWith(
-                      color: context.colorScheme.foregroundPrimary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+        BubbleIconButton(
+          label: 'Setup Base Weight', 
+          backgroundColor: context.colorScheme.backgroundTertiary, 
+          icon: CupertinoIcons.add, 
+          onTap: () {
+            widget.handleFlowBaseWeight();
+          },
         ),
       ],
     );

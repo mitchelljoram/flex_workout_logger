@@ -17,6 +17,7 @@ import 'package:flex_workout_logger/features/exercises/domain/validations/exerci
 import 'package:flex_workout_logger/features/exercises/ui/screens/exercise_edit.screen.dart';
 import 'package:flex_workout_logger/features/exercises/ui/screens/exercise_view.screen.dart';
 import 'package:flex_workout_logger/features/exercises/ui/widgets/muscle_groups_targeted.dart';
+import 'package:flex_workout_logger/ui/widgets/bubbles.dart';
 import 'package:flex_workout_logger/ui/widgets/icon_text_button.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
@@ -304,26 +305,26 @@ class ExerciseDetailsView extends ConsumerWidget {
                       spacing: AppLayout.miniPadding,
                       runSpacing: AppLayout.miniPadding,
                       children: [
-                        _bubble(
-                          context,
-                          exercise.movementPattern!.name,
-                          exercise.movementPattern!.icon,
+                        BubbleImageLabel(
+                          label: exercise.movementPattern!.name,
+                          backgroundColor: context.colorScheme.backgroundTertiary,
+                          image: exercise.movementPattern!.icon,
                         ),
                         if (exercise.equipment != null)
-                          _bubble(
-                            context,
-                            exercise.equipment!.name,
-                            exercise.equipment!.icon,
+                          BubbleImageLabel(
+                            label: exercise.equipment!.name,
+                            backgroundColor: context.colorScheme.backgroundTertiary,
+                            image: exercise.equipment!.icon,
                           ),
-                        _bubble(
-                          context, 
-                          exercise.engagement.name,
-                          'engagement.100x100.png',
+                        BubbleImageLabel(
+                          label: exercise.engagement.name,
+                          backgroundColor: context.colorScheme.backgroundTertiary,
+                          image: 'engagement.100x100.png',
                         ),
-                        _bubble(
-                          context, 
-                          exercise.type.name,
-                          'type.100x100.png',
+                        BubbleImageLabel(
+                          label: exercise.type.name,
+                          backgroundColor: context.colorScheme.backgroundTertiary,
+                          image: 'type.100x100.png',
                         ),
                       ],
                     ),
@@ -359,40 +360,6 @@ class ExerciseDetailsView extends ConsumerWidget {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _bubble(BuildContext context, String text, String? icon) {
-    return ClipRRect(
-      borderRadius: const BorderRadius.all(Radius.circular(999)),
-      child: Container(
-        color: context.colorScheme.backgroundTertiary,
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppLayout.smallPadding,
-          vertical: AppLayout.extraMiniPadding,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon != null && icon.isNotEmpty)
-              Padding(
-                padding: EdgeInsets.only(
-                  right: AppLayout.miniPadding,
-                ),
-                child: ImageIcon(
-                  AssetImage('assets/icons/${icon}'),
-                  size: 12,
-                ),
-              ),
-            Text(
-              text,
-              style: context.textTheme.labelMedium.copyWith(
-                color: context.colorScheme.foregroundPrimary,
-              ),
-            ),
-          ],
-        )
-      ),
     );
   }
 }
