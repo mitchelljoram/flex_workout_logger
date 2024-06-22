@@ -471,6 +471,8 @@ class _WorkoutFlowPage2State extends ConsumerState<WorkoutFlowPage2> {
                             vertical: AppLayout.extraLargePadding,
                           ),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 'Exercises',

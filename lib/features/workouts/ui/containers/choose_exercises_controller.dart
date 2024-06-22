@@ -1,8 +1,11 @@
 import 'package:flex_workout_logger/config/theme/app_layout.dart';
+import 'package:flex_workout_logger/features/exercises/controllers/exercises_list.controller.dart';
+import 'package:flex_workout_logger/features/exercises/domain/entities/exercise_details.entity.dart';
 import 'package:flex_workout_logger/features/workouts/domain/entities/exercise.entity.dart';
 import 'package:flex_workout_logger/features/workouts/domain/entities/set.entity.dart';
 import 'package:flex_workout_logger/ui/widgets/bubbles.dart';
 import 'package:flex_workout_logger/ui/widgets/entity_list_tiles.dart';
+import 'package:flex_workout_logger/utils/date_time_extensions.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,11 +27,11 @@ class ChooseExercisesController extends ConsumerStatefulWidget {
 
 class _ChooseExercisesControllerState extends ConsumerState<ChooseExercisesController> {
 
-  List<ExerciseEntity> _exercises = [];
+  List<ExerciseEntity> _chosenExercises = [];
 
   @override
   void initState() {
-    _exercises = widget.initialExercises.toList();
+    _chosenExercises = widget.initialExercises.toList();
     super.initState();
   }
 
@@ -38,6 +41,13 @@ class _ChooseExercisesControllerState extends ConsumerState<ChooseExercisesContr
   }
 
   void _onAddExercise(ExerciseEntity exerciseToAdd) {
+    setState(() {
+      _chosenExercises.add(exerciseToAdd);
+
+      print(_chosenExercises);
+
+      widget.onChanged(_chosenExercises);
+    });
   }
 
   void _onRemoveExercise(ExerciseEntity exerciseToRemove) {
@@ -45,11 +55,13 @@ class _ChooseExercisesControllerState extends ConsumerState<ChooseExercisesContr
 
   @override
   Widget build(BuildContext context) {
+    final exercises = ref.watch(exercisesListControllerProvider);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ..._exercises.map((e) => 
+        ..._chosenExercises.map((e) => 
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,6 +69,7 @@ class _ChooseExercisesControllerState extends ConsumerState<ChooseExercisesContr
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
                 children: [
                   Text(
                     e.exercise!.name,
@@ -65,19 +78,15 @@ class _ChooseExercisesControllerState extends ConsumerState<ChooseExercisesContr
                     ),
                   ),
                   Spacer(),
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () {}, 
-                    icon: const Icon(
-                      CupertinoIcons.ellipsis_circle,
-                    ),
+                  Icon(
+                    CupertinoIcons.ellipsis_circle,
                     color: context.colorScheme.foregroundSecondary,
-                    iconSize: 24,
+                    size: 24,
                   )
                 ],
               ),
               SizedBox(
-                height: AppLayout.smallPadding,
+                height: AppLayout.miniPadding,
               ),
               SetsCard(
                 label: 'Warmup',
@@ -90,17 +99,34 @@ class _ChooseExercisesControllerState extends ConsumerState<ChooseExercisesContr
                 label: 'Working',
                 initialSets: e.workingSets,
               ),
+              SizedBox(
+                height: AppLayout.defaultPadding,
+              ),
             ],
           )
-        ),
-        SizedBox(
-          height: AppLayout.defaultPadding,
         ),
         BubbleIconButton(
           label: 'Add Exercise',
           backgroundColor: context.colorScheme.backgroundTertiary, 
           icon: CupertinoIcons.add, 
-          onTap: () async {}
+          onTap: () async {
+            var res = await _showExercisesBottomSheet(
+              context, 
+              exercises.value!
+            );
+            
+            ExerciseEntity exerciseToAdd = ExerciseEntity(
+              exercise: res,
+              warmupSets: [],
+              workingSets: [],
+              notes: '',
+              alternatives: [],
+              createdAt: DateTimeX.current, 
+              updatedAt: DateTimeX.current
+            );
+
+            _onAddExercise(exerciseToAdd);
+          }
         ),
       ],
     );
@@ -149,6 +175,7 @@ class _SetsCardState extends State<SetsCard> {
     int index = 0;
 
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
         color: context.colorScheme.backgroundTertiary,
         borderRadius: BorderRadius.circular(10)
@@ -165,7 +192,7 @@ class _SetsCardState extends State<SetsCard> {
             ),
           ),
           SizedBox(
-            width: AppLayout.defaultPadding,
+            height: AppLayout.defaultPadding,
           ),
           ..._sets.map((s) {
             index++;
@@ -182,12 +209,12 @@ class _SetsCardState extends State<SetsCard> {
                 Divider(
                   indent: AppLayout.extraLargePadding,
                 ),
+                SizedBox(
+                  height: AppLayout.miniPadding,
+                ),
               ]
             );
           }),
-          SizedBox(
-            width: AppLayout.miniPadding,
-          ),
           BubbleIconButton(
             label: 'Add Set',
             backgroundColor: context.colorScheme.foregroundQuaternary, 
@@ -198,4 +225,56 @@ class _SetsCardState extends State<SetsCard> {
       ),
     );
   }
+}
+
+Future<T?> _showExercisesBottomSheet<T>(
+  BuildContext context,
+  List<ExerciseDetailsEntity> exercises,
+) {
+  final _items = exercises;
+
+  return showModalBottomSheet<T>(
+    context: context,
+    showDragHandle: true,
+    scrollControlDisabledMaxHeightRatio: 0.9,
+    backgroundColor: context.colorScheme.backgroundSecondary,
+    elevation: 0,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+    ),
+    builder: (context) => StatefulBuilder(
+      builder: (context, setState) => Stack(
+        children: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                child: ColoredBox(
+                  color: context.colorScheme.backgroundSecondary,
+                  child: ListView.separated(
+                    itemCount: _items.length,
+                    separatorBuilder: (context, index) => Divider(
+                      color: context.colorScheme.divider,
+                      height: 1,
+                      indent: 64,
+                    ),
+                    itemBuilder: (context, index) {
+                      final currentItem = _items[index];
+
+                      return ExerciseListTile(
+                        exercise: currentItem,
+                        onTap: () {
+                          Navigator.of(context).pop(currentItem);
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
 }
