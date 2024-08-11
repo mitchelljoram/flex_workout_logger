@@ -164,9 +164,39 @@ enum SetType implements Enumeration<SetType> {
     name: 'Warmup',
   ),
 
-  /// Technical
+  /// Normal Set
+  normal(
+    name: 'Normal Set',
+  ),
+
+  /// Myo-reps
+  myoreps(
+    name: 'Myo-reps',
+  ),
+
+  /// Technical Set
   technical(
-    name: 'Technical',
+    name: 'Technical Set',
+  ),
+
+  /// Integrated Partials
+  ipartials(
+    name: 'Integrated Partials',
+  ),
+
+  /// Long-length Partials
+  llpartials(
+    name: 'Long-length Partials',
+  ),
+
+  /// Dropset
+  dropset(
+    name: 'Dropset',
+  ),
+
+  /// Long-length Partials
+  mdropset(
+    name: 'Machanical Dropset',
   );
 
   // ignore: unused_element
