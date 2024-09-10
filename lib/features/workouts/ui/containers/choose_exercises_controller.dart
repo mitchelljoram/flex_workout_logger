@@ -7,6 +7,7 @@ import 'package:flex_workout_logger/ui/widgets/bubbles.dart';
 import 'package:flex_workout_logger/ui/widgets/entity_list_tiles.dart';
 import 'package:flex_workout_logger/ui/widgets/enum_dropdown_menu.dart';
 import 'package:flex_workout_logger/ui/widgets/flexable_textfield.dart';
+import 'package:flex_workout_logger/ui/widgets/textfield_dropdown_input.dart';
 import 'package:flex_workout_logger/utils/date_time_extensions.dart';
 import 'package:flex_workout_logger/utils/enums.dart';
 import 'package:flex_workout_logger/utils/ui_extensions.dart';
@@ -406,13 +407,28 @@ Future<T?> _showSetBottomSheet<T>(
           SizedBox(
             height: AppLayout.defaultPadding,
           ),
-          EnumDropdownMenu(
-            labelText: 'Type of set', 
-            hintText: 'Select a type of set', 
-            width: MediaQuery.sizeOf(context).width - (AppLayout.defaultPadding * 2), 
-            dropdownEntries: isWarmup ? [SetType.warmup] : [SetType.normal, SetType.technical, SetType.dropset, SetType.ipartials, SetType.llpartials, SetType.mdropset, SetType.myoreps],
-            initalEntry: initialType,
-            isWarmup: isWarmup,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Type of set',
+                style: context.textTheme.labelMedium.copyWith(
+                  color: context.colorScheme.foregroundPrimary,
+                ),
+              ),
+              const SizedBox(
+                height: 4,
+              ),
+              EnumDropdownMenu( 
+                hintText: 'Select a type of set', 
+                width: MediaQuery.sizeOf(context).width - (AppLayout.defaultPadding * 2), 
+                dropdownEntries: isWarmup ? [SetType.warmup] : [SetType.normal, SetType.technical, SetType.dropset, SetType.ipartials, SetType.llpartials, SetType.mdropset, SetType.myoreps],
+                initalEntry: _type,
+                onChanged: (value) {},
+                isDisabled: isWarmup,
+              ),
+            ],
           ),
           SizedBox(
             height: AppLayout.defaultPadding,
@@ -430,6 +446,30 @@ Future<T?> _showSetBottomSheet<T>(
             controller: null, // TODO: add reps controller
             readOnly: false,
             isRequired: true,
+          ),
+          SizedBox(
+            height: AppLayout.defaultPadding,
+          ),
+          TextfieldDropdownInput(
+            label: 'Intensity', 
+            textfieldHintText: '85-87.5', 
+            dropdownHintText: 'Select an RPE',
+            dropdownEntries: RPE.values, 
+            validator: (value) {}, // TODO: add intensity validation
+            onChanged: (value, unit) {}, // TODO: add intensity on changed
+            readOnly: false
+          ),
+          SizedBox(
+            height: AppLayout.defaultPadding,
+          ),
+          TextfieldDropdownInput(
+            label: 'Rest Duration', 
+            textfieldHintText: '3-5', 
+            dropdownHintText: 'Select a time unit',
+            dropdownEntries: RestUnits.values, 
+            validator: (value) {}, // TODO: add rest duration validation
+            onChanged: (value, unit) {}, // TODO: add rest duration on changed
+            readOnly: false
           ),
         ],
       ),
