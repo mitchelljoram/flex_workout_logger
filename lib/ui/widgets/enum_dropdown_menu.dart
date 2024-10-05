@@ -81,7 +81,7 @@ class _EnumDropdownMenuState extends State<EnumDropdownMenu> {
         ),
         textStyle: context.textTheme.bodyMedium,
         menuStyle: MenuStyle(
-          backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+          backgroundColor: WidgetStateProperty.resolveWith<Color?>(
             (states) => context.colorScheme.backgroundTertiary,
           ),
         ),

@@ -10,7 +10,7 @@ import 'package:flex_workout_logger/features/workouts/domain/entities/workout.en
 import 'package:flex_workout_logger/utils/enums.dart';
 import 'package:realm/realm.dart';
 
-part 'schema.g.dart';
+part 'schema.realm.dart';
 
 /// Exercises
 

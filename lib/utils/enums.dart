@@ -1,7 +1,3 @@
-import 'package:flex_workout_logger/features/exercises/domain/entities/base_weight.entity.dart';
-import 'package:flex_workout_logger/features/exercises/domain/entities/equipment.entity.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-
 abstract interface class Enumeration<T extends Enum> {
   late String name;
   String? description;

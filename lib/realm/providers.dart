@@ -24,7 +24,7 @@ Future<Realm> realm(RealmRef ref) async {
       /// Workout Tracker
       LiveWorkout.schema, LiveExercise.schema, LiveSet.schema, 
     ],
-    initialDataCallback: realmSeed,
+    //initialDataCallback: realmSeed,
   );
   return Realm(config);
 }

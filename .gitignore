@@ -33,6 +33,7 @@ migrate_working_dir/
 /coverage/
 **/*.freezed.dart
 **/*.mocks.dart
+**/*.realm.dart
 **/*.g.dart
 
 # Symbolication related

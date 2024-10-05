@@ -368,7 +368,7 @@ Future<T?> _showSetBottomSheet<T>(
               IconButton(
                 padding: EdgeInsets.zero,
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                  backgroundColor: WidgetStateProperty.resolveWith<Color?>(
                     (states) => context.colorScheme.backgroundTertiary,
                   ),
                 ),
@@ -402,7 +402,7 @@ Future<T?> _showSetBottomSheet<T>(
               IconButton(
                 padding: EdgeInsets.zero,
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                  backgroundColor: WidgetStateProperty.resolveWith<Color?>(
                     (states) => context.colorScheme.foregroundPrimary,
                   ),
                 ),
