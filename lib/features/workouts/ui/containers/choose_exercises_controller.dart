@@ -184,9 +184,15 @@ class _SetsCardState extends State<SetsCard> {
   }
 
   void _onAddSet(SetEntity setToAdd) {
+    setState(() {
+      _sets.add(setToAdd);
+    });
   }
 
   void _onRemoveSet(SetEntity setToRemove) {
+    setState(() {
+      _sets.remove(setToRemove);
+    });
   }
 
   @override
@@ -250,11 +256,14 @@ class _SetsCardState extends State<SetsCard> {
                 0, 
                 0, 
                 0, 
-                0, 
+                0,
+                RPE.RPEdefault, 
                 0, 
                 0, 
                 RestUnits.minutes
               );
+
+              _onAddSet(res as SetEntity);
             }
           ),
         ]
@@ -321,6 +330,7 @@ Future<T?> _showSetBottomSheet<T>(
   double initialTime,
   double? initialMinIntensity,
   double? initialMaxIntensity,
+  RPE initialRPE,
   double? initialMinRest,
   double? initialMaxRest,
   RestUnits? initialRestUnits,
@@ -328,12 +338,15 @@ Future<T?> _showSetBottomSheet<T>(
   SetType? _type = isWarmup ? SetType.warmup : initialType;
   int _minReps = exerciseType == ExerciseType.repitition ? initialMinReps : 0;
   int _maxReps = exerciseType == ExerciseType.repitition ? initialMaxReps : 0;
+  final _repsTextController = TextEditingController();
+  _repsTextController.text = '${_minReps == 0 ? '' : _minReps}${_maxReps == 0 ? '' : '-${_maxReps}'}';
   double _time = exerciseType == ExerciseType.timed ? initialTime : 0;
   double _minIntensity = initialMinIntensity ?? 0.0;
   double _maxIntensity = initialMaxIntensity ?? 0.0;
+  RPE _RPE = initialRPE;
   double _minRest = initialMinRest ?? 0.0;
   double _maxRest = initialMaxRest ?? 0.0;
-  RestUnits _restUnits = RestUnits.minutes;
+  RestUnits _restUnit = RestUnits.minutes;
 
   return showModalBottomSheet<T>(
     context: context,
@@ -395,7 +408,23 @@ Future<T?> _showSetBottomSheet<T>(
                 ),
                 color: context.colorScheme.backgroundPrimary,
                 onPressed: () {
-                  Navigator.of(context).pop(null);
+                  var set = new SetEntity (
+                    type: _type as SetType, 
+                    minNumberReps: _minReps, 
+                    maxNumberReps: _maxReps, 
+                    time: _time, 
+                    minRestTime: _minRest, 
+                    maxRestTime: _maxRest, 
+                    restUnits: _restUnit, 
+                    minIntensity: _minIntensity, 
+                    maxIntensity: _maxIntensity, 
+                    exertionRPE: _RPE, 
+                    exertionRiR: RiR.RiRdefault, 
+                    createdAt: DateTimeX.current, 
+                    updatedAt: DateTimeX.current
+                  );
+
+                  Navigator.of(context).pop(set);
                 }, 
                 icon: Icon(
                   CupertinoIcons.check_mark,
@@ -424,8 +453,10 @@ Future<T?> _showSetBottomSheet<T>(
                 hintText: 'Select a type of set', 
                 width: MediaQuery.sizeOf(context).width - (AppLayout.defaultPadding * 2), 
                 dropdownEntries: isWarmup ? [SetType.warmup] : [SetType.normal, SetType.technical, SetType.dropset, SetType.ipartials, SetType.llpartials, SetType.mdropset, SetType.myoreps],
-                initalEntry: _type,
-                onChanged: (value) {},
+                initialEntry: _type,
+                onChanged: (value) {
+                  _type = value as SetType;
+                },
                 isDisabled: isWarmup,
               ),
             ],
@@ -437,13 +468,25 @@ Future<T?> _showSetBottomSheet<T>(
             label: 'Number of reps',
             hintText: '8-10',
             errorText: null,
+            validator: (value) {
+              if (value == null) return;
+
+              var reps = value.split('-');
+
+              var minReps = int.tryParse(reps[0].trim());
+              assert(minReps is int);
+
+              if (reps.length > 1) {
+                var maxReps = int.tryParse(reps[1].trim());
+                assert(maxReps is int);
+              }
+            },
             onChanged: (value) {
               var reps = value.split('-');
               _minReps = int.parse(reps[0].trim());
               _maxReps = reps.length > 1 ? int.parse(reps[1].trim()) : _minReps;
             },
-            validator: (value) => null, // TODO: add reps validation
-            controller: null, // TODO: add reps controller
+            controller: _repsTextController,
             readOnly: false,
             isRequired: true,
           ),
@@ -452,11 +495,34 @@ Future<T?> _showSetBottomSheet<T>(
           ),
           TextfieldDropdownInput(
             label: 'Intensity', 
-            textfieldHintText: '85-87.5', 
+            textfieldHintText: '85.0-87.5', 
             dropdownHintText: 'Select an RPE',
-            dropdownEntries: RPE.values, 
-            validator: (value) {}, // TODO: add intensity validation
-            onChanged: (value, unit) {}, // TODO: add intensity on changed
+            dropdownEntries: RPE.values,
+            initialUnit: _RPE,
+            validator: (value) {
+              if (value == null) return;
+
+              var intensities = value.split('-');
+
+              var minIntensity = double.tryParse(intensities[0].trim());
+              assert(minIntensity is double);
+
+              if (intensities.length > 1) {
+                var maxIntensity = double.tryParse(intensities[1].trim());
+                assert(maxIntensity is double);
+              }
+            },
+            onChanged: (value, unit) {
+              if (unit != null) {
+                _RPE = unit as RPE;
+              }
+
+              if (value != null) {
+                var intensities = value.split('-');
+                _minIntensity = double.parse(intensities[0].trim());
+                _maxIntensity = intensities.length > 1 ? double.parse(intensities[1].trim()) : _minIntensity;
+              }
+            },
             readOnly: false
           ),
           SizedBox(
@@ -464,11 +530,33 @@ Future<T?> _showSetBottomSheet<T>(
           ),
           TextfieldDropdownInput(
             label: 'Rest Duration', 
-            textfieldHintText: '3-5', 
+            textfieldHintText: '3.0-5.0', 
             dropdownHintText: 'Select a time unit',
             dropdownEntries: RestUnits.values, 
-            validator: (value) {}, // TODO: add rest duration validation
-            onChanged: (value, unit) {}, // TODO: add rest duration on changed
+            validator: (value) {
+              if (value == null) return;
+
+              var restTimes = value.split('-');
+
+              var minRest = double.tryParse(restTimes[0].trim());
+              assert(minRest is double);
+
+              if (restTimes.length > 1) {
+                var maxRest = double.tryParse(restTimes[1].trim());
+                assert(maxRest is double);
+              }
+            },
+            onChanged: (value, unit) {
+              if (unit != null) {
+                _restUnit = unit as RestUnits;
+              }
+
+              if (value != null) {
+                var restTimes = value.split('-');
+                _minRest = double.parse(restTimes[0].trim());
+                _maxRest = restTimes.length > 1 ? double.parse(restTimes[1].trim()) : _minRest;
+              }
+            },
             readOnly: false
           ),
         ],

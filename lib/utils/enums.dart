@@ -245,6 +245,11 @@ enum RestUnits implements Enumeration<RestUnits> {
 
 /// Rate of Percieved Exertion (RPE) enum
 enum RPE implements Enumeration<RPE> {
+  /// Default
+  RPEdefault(
+    name: 'null'
+  ),
+
   /// 1
   RPE1(
     name: '1',
@@ -274,6 +279,11 @@ enum RPE implements Enumeration<RPE> {
 
 /// Reps in Reserve (RiR) enum
 enum RiR implements Enumeration<RiR> {
+  /// Default
+  RiRdefault(
+    name: 'null'
+  ),
+
   /// 1
   RiR1(
     name: '1',

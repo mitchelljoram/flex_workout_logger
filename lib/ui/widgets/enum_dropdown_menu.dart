@@ -10,7 +10,7 @@ class EnumDropdownMenu extends StatefulWidget{
     required this.hintText,
     required this.width,
     required this.dropdownEntries,
-    required this.initalEntry,
+    required this.initialEntry,
     required this.onChanged,
     required this.isDisabled,
   });
@@ -20,7 +20,7 @@ class EnumDropdownMenu extends StatefulWidget{
   final double width;
 
   final List<Enumeration> dropdownEntries;
-  final Enumeration? initalEntry;
+  final Enumeration? initialEntry;
 
   final void Function(Enumeration) onChanged;
 
@@ -43,7 +43,7 @@ class _EnumDropdownMenuState extends State<EnumDropdownMenu> {
         ),
         width: widget.width,
         child: Text(
-          widget.initalEntry!.name,
+          widget.initialEntry!.name,
           style: context.textTheme.bodyMedium.copyWith(
             color: context.colorScheme.foregroundSecondary,
           ),
@@ -60,7 +60,7 @@ class _EnumDropdownMenuState extends State<EnumDropdownMenu> {
         onSelected: (value) => {
           widget.onChanged(value as Enumeration)
         },
-        initialSelection: widget.initalEntry,
+        initialSelection: widget.initialEntry,
         hintText: widget.hintText,
         menuHeight: MediaQuery.sizeOf(context).height * 0.2,
         width: widget.width,

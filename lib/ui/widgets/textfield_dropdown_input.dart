@@ -150,7 +150,7 @@ class _TextfieldDropdownInputState extends State<TextfieldDropdownInput> {
               hintText: widget.dropdownHintText, 
               width: MediaQuery.of(context).size.width * 0.45, 
               dropdownEntries: widget.dropdownEntries, 
-              initalEntry: widget.initialUnit,
+              initialEntry: widget.initialUnit,
               onChanged: _onUnitChanged,
               isDisabled: false
             )
